@@ -6,10 +6,11 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     color: #333;
     background-color: #ffffff;
+    font-size: 16px;
 }
 
 .container {
@@ -55,7 +56,7 @@ body {
     font-weight: 500;
 }
 
-/* Tab Navigation */
+/* Tab Navigation - Exact Oxford Style */
 .tab-navigation {
     background-color: #ffffff;
     border-bottom: 1px solid #e9ecef;
@@ -76,13 +77,17 @@ body {
     border: none;
     padding: 16px 24px;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 400;
     color: #6c757d;
     cursor: pointer;
     border-bottom: 3px solid transparent;
     transition: all 0.2s ease;
     white-space: nowrap;
     position: relative;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    letter-spacing: 0.01em;
+    text-decoration: none !important;
+    border-bottom: none !important;
 }
 
 .tab-btn:hover {
@@ -94,11 +99,7 @@ body {
     color: #007bff;
     border-bottom-color: #007bff;
     background-color: #ffffff;
-}
-
-.tab-btn:first-child.active {
-    color: #007bff;
-    border-bottom-color: #007bff;
+    font-weight: 500;
 }
 
 /* Main Content */
@@ -109,12 +110,12 @@ body {
 
 .content-grid {
     display: grid;
-    grid-template-columns: 300px 1fr;
+    grid-template-columns: 280px 1fr;
     gap: 60px;
     align-items: start;
 }
 
-/* Sidebar */
+/* Sidebar - Exact Oxford Style */
 .sidebar {
     position: sticky;
     top: 120px;
@@ -142,6 +143,7 @@ body {
     color: #495057;
     margin-bottom: 12px;
     margin-top: 30px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .sidebar-title:first-of-type {
@@ -242,6 +244,7 @@ body {
     color: #1a365d;
     margin-bottom: 12px;
     line-height: 1.1;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .profile-title {
@@ -250,6 +253,7 @@ body {
     color: #1a365d;
     line-height: 1.3;
     margin-bottom: 20px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .profile-bio {
@@ -265,6 +269,176 @@ body {
 
 .profile-bio p:last-child {
     margin-bottom: 0;
+}
+
+.hidden {
+    display: none;
+}
+
+.read-more-btn {
+    background: none;
+    border: 1px solid #e9ecef;
+    color: #6c757d;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 12px;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.read-more-btn:hover {
+    background-color: #f8f9fa;
+    border-color: #007bff;
+    color: #007bff;
+}
+
+/* Skills Grid */
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    margin: 32px 0;
+}
+
+.skill-item {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.skill-item:hover {
+    border-color: #007bff;
+    box-shadow: 0 2px 8px rgba(0,123,255,0.1);
+}
+
+.skill-icon {
+    color: #007bff;
+    font-size: 24px;
+    margin-bottom: 12px;
+}
+
+.skill-item h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a365d;
+    margin-bottom: 8px;
+}
+
+.skill-item p {
+    font-size: 14px;
+    color: #6c757d;
+    line-height: 1.5;
+}
+
+/* Timeline */
+.experience-section,
+.education-section {
+    margin: 40px 0;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1a365d;
+    margin-bottom: 24px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #e9ecef;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 32px;
+}
+
+.timeline-content {
+    /* Revert to original: remove padding, background, border, margin, and box-shadow */
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -37px;
+    top: 4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #007bff;
+    border: 3px solid #ffffff;
+    box-shadow: 0 0 0 2px #e9ecef;
+    display: none !important;
+}
+
+.timeline-content h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a365d;
+    margin-bottom: 4px;
+}
+
+.timeline-meta {
+    font-size: 14px;
+    color: #6c757d;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.timeline-content p {
+    font-size: 16px;
+    color: #495057;
+    line-height: 1.6;
+}
+
+/* Education Grid */
+.education-grid {
+    display: grid;
+    gap: 24px;
+}
+
+.education-item {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 24px;
+    background: #ffffff;
+}
+
+.education-item h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a365d;
+    margin-bottom: 8px;
+}
+
+.education-meta {
+    font-size: 14px;
+    color: #6c757d;
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+.education-item p {
+    font-size: 16px;
+    color: #495057;
+    line-height: 1.6;
 }
 
 .share-section {
@@ -324,6 +498,7 @@ body {
     font-weight: 600;
     color: #1a365d;
     margin-bottom: 30px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .research-content,
@@ -362,17 +537,13 @@ body {
 .research-methods li,
 .research-areas-list li {
     margin-bottom: 8px;
-    padding-left: 20px;
-    position: relative;
+    padding-left: 0; /* Remove space for bullet */
+    position: static; /* Remove relative positioning */
 }
 
 .research-methods li::before,
 .research-areas-list li::before {
-    content: "•";
-    color: #007bff;
-    font-weight: bold;
-    position: absolute;
-    left: 0;
+    content: none; /* Remove custom bullet */
 }
 
 .teaching-section ul {
@@ -382,22 +553,32 @@ body {
 
 .teaching-section ul li {
     margin-bottom: 8px;
-    padding-left: 20px;
-    position: relative;
+    padding-left: 0; /* Remove space for bullet */
+    position: static; /* Remove relative positioning */
 }
 
 .teaching-section ul li::before {
-    content: "•";
-    color: #007bff;
-    font-weight: bold;
-    position: absolute;
-    left: 0;
+    content: none; /* Remove custom bullet */
 }
 
 .news-item {
     margin-bottom: 30px;
     padding-bottom: 20px;
     border-bottom: 1px solid #e9ecef;
+}
+
+.news-item-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+}
+
+.news-item-link:focus .news-item,
+.news-item-link:hover .news-item {
+    box-shadow: 0 4px 16px rgba(0,123,255,0.12);
+    border-color: #007bff;
+    outline: none;
 }
 
 .news-item:last-child {
@@ -460,6 +641,56 @@ body {
     transform: translateY(-1px);
 }
 
+.policy-desk-logo {
+    font-weight: 900;
+    font-size: 1.5rem;
+    background: linear-gradient(90deg, #00c853 0%, #2196f3 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+    letter-spacing: 1px;
+    margin-left: 24px;
+    font-family: 'Segoe UI', 'Arial', sans-serif;
+    display: flex;
+    align-items: center;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 8px;
+}
+
+.policy-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 32px; /* Increased space below logo */
+  min-height: 4.5rem; /* Reserve space for logo before animation */
+}
+
+#policy-desk-logo {
+  font-size: 3rem;
+  font-weight: bold;
+  letter-spacing: 0.04em;
+  color: #222;
+  opacity: 0;
+  transition: opacity 1.2s cubic-bezier(0.4,0,0.2,1), color 0.3s;
+}
+
+.profile-title {
+  margin-top: 24px !important; /* Ensure subtitle is always spaced below logo */
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, #2196f3 0%, #21cb7a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity 1.2s cubic-bezier(0.4,0,0.2,1);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .content-grid {
@@ -504,6 +735,27 @@ body {
         flex-direction: row;
         flex-wrap: wrap;
     }
+
+    .skills-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .timeline {
+        padding-left: 20px;
+    }
+
+    .timeline::before {
+        left: 10px;
+    }
+
+    .timeline-marker {
+        left: -32px;
+        top: 4px;
+    }
+
+    .timeline-content {
+        /* Revert to original: remove margin and padding changes */
+    }
 }
 
 @media (max-width: 480px) {
@@ -526,5 +778,15 @@ body {
     .content-title {
         font-size: 24px;
     }
+}
+
+#blog-tab-text {
+  transition: color 0.3s, opacity 0.3s;
+  opacity: 1;
+}
+
+#policy-desk-tab-text {
+  transition: color 0.3s, opacity 0.4s;
+  opacity: 1;
 }
 

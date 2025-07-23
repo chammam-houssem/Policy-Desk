@@ -702,6 +702,12 @@ body {
 .article2-bg {
     background-image: url('Images/image2.jpg');
 }
+.article1-bg {
+    background-image: url('Images/image1.jpg');
+}
+.article3-bg {
+    background-image: url('Images/image3.jpg');
+}
 
 .article-bg::before {
     content: "";
@@ -723,6 +729,15 @@ body {
     position: relative;
     top: 60px;
     z-index: 2;
+}
+
+.article-img,
+.graph-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 24px 0;
+    border-radius: 8px;
 }
 
 @media (max-width: 800px) {

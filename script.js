@@ -27,6 +27,13 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             location.hash = `#${targetTab}`;
         }
+
+        // Smooth scroll the main content area to the top
+        // const mainContentArea = document.querySelector('.main-content-area');
+        // if (mainContentArea) {
+        //     mainContentArea.scrollTo({ top: 0, behavior: 'smooth' });
+        // }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // Add click event listeners to tab buttons

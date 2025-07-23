@@ -3,35 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Houssem tester | Public Policy tester </title>
+    <title>Houssem Chammam | Public Policy Analyst</title>
     <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/3/3a/Wind_turbine_icon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Header with breadcrumb -->
-    <header class="header">
-        <div class="container">
-            <nav class="breadcrumb">
-                <a href="#" class="breadcrumb-link">Home</a>
-                <span class="breadcrumb-separator">›</span>
-                <a href="#" class="breadcrumb-link">People</a>
-                <span class="breadcrumb-separator">›</span>
-                <span class="breadcrumb-current">Houssem Chammam</span>
-            </nav>
-        </div>
-    </header>
-
     <!-- Tab Navigation -->
     <nav class="tab-navigation">
         <div class="container">
             <div class="tab-nav">
                 <button class="tab-btn active" data-tab="overview">Overview</button>
                 <button class="tab-btn" data-tab="research">Research</button>
-                <button class="tab-btn" data-tab="teaching">Teaching & Supervision</button>
-                <button class="tab-btn" data-tab="news">News</button>
-                <button class="tab-btn" data-tab="publications">Publications</button>
-                <button class="tab-btn" data-tab="media">In the media</button>
+                <a class="tab-btn" href="blog.html">Blog</a>
             </div>
         </div>
     </nav>
@@ -44,7 +28,7 @@
                 <aside class="sidebar">
                     <div class="profile-section">
                         <div class="profile-photo">
-                            <img src="images/profile-placeholder.png" alt="Houssem Chammam" class="profile-img">
+                            <img src="../../manus/Images/Headshot2.PNG" alt="Houssem Chammam" class="profile-img">
                         </div>
 
                         <div class="contact-section">
@@ -80,11 +64,103 @@
                         </div>
 
                         <div class="profile-bio">
-                            <p>I'm a public policy analyst specializing in public finance, energy, and sustainable development. I've led research and advocacy projects in Tunisia, the US, and across the Mediterranean, working to advance the energy transition in complex, resource-constrained settings.</p>
+                            <div id="profile-preview">
+                                <p>I'm a public policy analyst specializing in public finance, energy, and sustainable development. I've led research and advocacy projects in Tunisia, the US, and across the Mediterranean, working to advance the energy transition in complex, resource-constrained settings.</p>
+                                <button onclick="toggleProfile()" class="read-more-btn">
+                                    <span>Read more</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                            </div>
+                            <div id="profile-full" class="hidden">
+                                <p>I'm a public policy analyst specializing in public finance, energy, and sustainable development. I've led research and advocacy projects in Tunisia, the US, and across the Mediterranean, working to advance the energy transition in complex, resource-constrained settings.</p>
+                                <p>My expertise spans cross-sectoral policy, stakeholder engagement, data analysis, and communicating policy to diverse audiences. I am passionate about building practical solutions for countries facing water scarcity, debt, and political fragmentation. Currently, my work focuses on the intersection of water and energy policy in North Africa and the Mediterranean.</p>
+                                <p>This site brings together my ongoing work, learning, and public interest projects.</p>
+                                <button onclick="toggleProfile()" class="read-more-btn">
+                                    <span>Show less</span>
+                                    <i class="fas fa-chevron-up"></i>
+                                </button>
+                            </div>
+                        </div>
 
-                            <p>My expertise spans cross-sectoral policy, stakeholder engagement, data analysis, and communicating policy to diverse audiences. I am passionate about building practical solutions for countries facing water scarcity, debt, and political fragmentation. Currently, my work focuses on the intersection of water and energy policy in North Africa and the Mediterranean.</p>
+                        <!-- Skills/Methods Section -->
+                        <div class="skills-grid">
+                            <div class="skill-item">
+                                <div class="skill-icon">
+                                    <i class="fas fa-layer-group"></i>
+                                </div>
+                                <h3>Mixed Methods</h3>
+                                <p>Blending quantitative & qualitative research for practical policy solutions.</p>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <h3>Data-Driven Analysis</h3>
+                                <p>Transforming data and evidence into actionable policy advice.</p>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon">
+                                    <i class="fas fa-bullhorn"></i>
+                                </div>
+                                <h3>Advocacy for Impact</h3>
+                                <p>Strategic engagement to drive sustainable policy change.</p>
+                            </div>
+                        </div>
 
-                            <p>I regularly contribute to policy research and advocacy initiatives, having worked with organizations such as Al Bawsala, the North African Policy Initiative, and GIGA. I hold a Master of Public Policy from the Willy Brandt School in Germany and a Bachelor's in Political Science from Carleton College in the USA.</p>
+                        <!-- Experience Timeline -->
+                        <div class="experience-section">
+                            <h2 class="section-title">Experience</h2>
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker"></div>
+                                    <div class="timeline-content">
+                                        <h3>Public Policy & Finance Lead</h3>
+                                        <p class="timeline-meta">Al Bawsala • 2021 – 2023</p>
+                                        <p>Led research, coalition strategy, and advocacy during IMF negotiations. Designed interactive fiscal tools and co-authored key publications on debt, subsidy reform, and austerity.</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker"></div>
+                                    <div class="timeline-content">
+                                        <h3>Program Officer (Trainee)</h3>
+                                        <p class="timeline-meta">North African Policy Initiative • 2025</p>
+                                        <p>Co-designed a youth-led Mediterranean policy platform and led training modules on policy research and stakeholder engagement.</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker"></div>
+                                    <div class="timeline-content">
+                                        <h3>Student Assistant</h3>
+                                        <p class="timeline-meta">GIGA • 2024</p>
+                                        <p>Supported research on authoritarianism and political communication. Managed academic events and built a research database for project teams.</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker"></div>
+                                    <div class="timeline-content">
+                                        <h3>Regional Campaign Co-Manager</h3>
+                                        <p class="timeline-meta">Bernie Sanders 2020 • Minnesota, USA</p>
+                                        <p>Led local campaign operations, policy messaging, and volunteer coordination. Contributed to a winning strategy grounded in the Green New Deal and social justice themes.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Education Section -->
+                        <div class="education-section">
+                            <h2 class="section-title">Education</h2>
+                            <div class="education-grid">
+                                <div class="education-item">
+                                    <h3>Master of Public Policy</h3>
+                                    <p class="education-meta">Willy Brandt School, Germany – DAAD Scholar • 2023 - 2025</p>
+                                    <p>Thesis on fiscal sustainability and climate finance in water-scarce, resource-constrained settings.</p>
+                                </div>
+                                <div class="education-item">
+                                    <h3>Bachelor's in Political Science</h3>
+                                    <p class="education-meta">Carleton College, USA • 2017 - 2021</p>
+                                    <p>Focused on budget law, macroeconomics, and applied fiscal management.</p>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="share-section">
@@ -134,98 +210,8 @@
                         </div>
                     </div>
 
-                    <!-- Teaching & Supervision Tab -->
-                    <div class="tab-content" id="teaching">
-                        <h2 class="content-title">Teaching & Supervision</h2>
-                        <div class="teaching-content">
-                            <div class="teaching-section">
-                                <h3>Teaching Experience</h3>
-                                <p>I have experience in policy training and capacity building, having led training modules on policy research and stakeholder engagement through the North African Policy Initiative.</p>
-                            </div>
-
-                            <div class="teaching-section">
-                                <h3>Areas of Expertise</h3>
-                                <ul>
-                                    <li>Public policy analysis and design</li>
-                                    <li>Fiscal policy and public finance</li>
-                                    <li>Energy and climate policy</li>
-                                    <li>Research methodology and data analysis</li>
-                                    <li>Stakeholder engagement and advocacy</li>
-                                </ul>
-                            </div>
-
-                            <div class="teaching-section">
-                                <h3>Mentorship & Supervision</h3>
-                                <p>I am open to mentoring students and early-career professionals interested in public policy research, particularly in areas related to energy policy, fiscal sustainability, and Mediterranean regional studies.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- News Tab -->
-                    <div class="tab-content" id="news">
-                        <h2 class="content-title">News</h2>
-                        <div class="news-content">
-                            <div class="news-item">
-                                <div class="news-date">2025</div>
-                                <h3>Program Officer Trainee at North African Policy Initiative</h3>
-                                <p>Co-designed a youth-led Mediterranean policy platform and led training modules on policy research and stakeholder engagement.</p>
-                            </div>
-
-                            <div class="news-item">
-                                <div class="news-date">2024</div>
-                                <h3>Student Assistant at GIGA</h3>
-                                <p>Supporting research on authoritarianism and political communication while managing academic events and building research databases.</p>
-                            </div>
-
-                            <div class="news-item">
-                                <div class="news-date">2023-2025</div>
-                                <h3>Master of Public Policy - Willy Brandt School</h3>
-                                <p>DAAD Scholar pursuing thesis on fiscal sustainability and climate finance in water-scarce, resource-constrained settings.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Publications Tab -->
-                    <div class="tab-content" id="publications">
-                        <h2 class="content-title">Publications</h2>
-                        <div class="publications-content">
-                            <div class="publication-section">
-                                <h3>Policy Reports & Research</h3>
-                                <p>During my tenure at Al Bawsala (2021-2023), I co-authored key publications on debt, subsidy reform, and austerity measures in Tunisia, contributing to policy debates during critical IMF negotiations.</p>
-                            </div>
-
-                            <div class="publication-section">
-                                <h3>Interactive Tools</h3>
-                                <p>Designed interactive fiscal tools to help policymakers and civil society understand complex budget and debt dynamics, making fiscal policy more accessible to diverse audiences.</p>
-                            </div>
-
-                            <div class="publication-section">
-                                <h3>Upcoming Work</h3>
-                                <p>Currently working on research related to the water-energy nexus in North Africa and Mediterranean regional cooperation mechanisms for sustainable development.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- In the Media Tab -->
-                    <div class="tab-content" id="media">
-                        <h2 class="content-title">In the Media</h2>
-                        <div class="media-content">
-                            <div class="media-section">
-                                <h3>Policy Commentary</h3>
-                                <p>Regular contributor to policy discussions on energy transition, fiscal sustainability, and Mediterranean cooperation through various platforms and policy networks.</p>
-                            </div>
-
-                            <div class="media-section">
-                                <h3>Speaking Engagements</h3>
-                                <p>Participated in academic conferences and policy forums discussing energy policy, public finance, and regional cooperation in the Mediterranean.</p>
-                            </div>
-
-                            <div class="media-section">
-                                <h3>Expert Consultation</h3>
-                                <p>Provided policy analysis and recommendations to organizations working on energy transition and fiscal policy in North Africa and the Mediterranean region.</p>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Blog Tab (new, empty) -->
+                    <!-- Remove Blog Tab Content -->
                 </div>
             </div>
         </div>
@@ -251,6 +237,14 @@
     </footer>
 
     <script src="script.js"></script>
+    <script>
+        function toggleProfile() {
+            const preview = document.getElementById('profile-preview');
+            const full = document.getElementById('profile-full');
+            preview.classList.toggle('hidden');
+            full.classList.toggle('hidden');
+        }
+    </script>
 </body>
 </html>
 

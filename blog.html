@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Houssem Chammam | Blog</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/3/3a/Wind_turbine_icon.svg" type="image/svg+xml">
+</head>
+<body>
+  <nav class="tab-navigation">
+    <div class="container">
+      <div class="tab-nav">
+        <a href="index22.html" class="tab-btn">Overview</a>
+        <a href="index22.html#research" class="tab-btn">Research</a>
+        <a href="blog.html" class="tab-btn active">Blog<span id="blog-colon" style="display:none;">:</span> <span id="policy-desk-tab-text" class="gradient-text"></span></a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="container">
+      <div class="profile-header" style="text-align:center; margin-bottom: 40px;">
+        <h2 class="profile-title" style="margin-top: 24px;">Insights on public policy, energy, and sustainable development.</h2>
+      </div>
+      <div class="content-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px;">
+        <!-- Blog Post 1 -->
+        <a href="#" class="news-item-link">
+          <div class="news-item" style="background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden;">
+            <img src="images/image1.jpg" alt="Blog Test 1" style="width:100%; height:180px; object-fit:cover;">
+            <div style="padding: 24px;">
+              <div class="news-date">April 4, 2025 • 5 min read</div>
+              <h3 style="font-size: 22px; font-weight: bold; margin: 12px 0;">Blog-Test 1</h3>
+              <p style="color: #495057;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vitae velit ex. Mauris dapibus risus quis suscipit vulputate.</p>
+              <div style="margin: 12px 0;">
+                <span class="dept-tag">Policy</span>
+                <span class="dept-tag">Energy</span>
+              </div>
+              <span class="contact-social" style="margin-top: 10px; display: inline-block;">Read more →</span>
+            </div>
+          </div>
+        </a>
+        <!-- Blog Post 2 -->
+        <a href="#" class="news-item-link">
+          <div class="news-item" style="background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden;">
+            <img src="images/image2.jpg" alt="Blog Test 2" style="width:100%; height:180px; object-fit:cover;">
+            <div style="padding: 24px;">
+              <div class="news-date">April 4, 2025 • 6 min read</div>
+              <h3 style="font-size: 22px; font-weight: bold; margin: 12px 0;">Blog-Test 2</h3>
+              <p style="color: #495057;">Curabitur convallis, sem sit amet interdum ultrices, lectus augue viverra tellus, nec facilisis erat elit id massa.</p>
+              <div style="margin: 12px 0;">
+                <span class="dept-tag">Sustainability</span>
+                <span class="dept-tag">Development</span>
+              </div>
+              <span class="contact-social" style="margin-top: 10px; display: inline-block;">Read more →</span>
+            </div>
+          </div>
+        </a>
+        <!-- Blog Post 3 -->
+        <a href="#" class="news-item-link">
+          <div class="news-item" style="background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden;">
+            <img src="images/image3.jpg" alt="Blog Test 3" style="width:100%; height:180px; object-fit:cover;">
+            <div style="padding: 24px;">
+              <div class="news-date">April 4, 2025 • 7 min read</div>
+              <h3 style="font-size: 22px; font-weight: bold; margin: 12px 0;">Blog-Test 3</h3>
+              <p style="color: #495057;">Praesent euismod, justo vel consectetur cursus, enim erat dictum urna, eget facilisis erat elit id massa.</p>
+              <div style="margin: 12px 0;">
+                <span class="dept-tag">Climate</span>
+                <span class="dept-tag">Mediterranean</span>
+              </div>
+              <span class="contact-social" style="margin-top: 10px; display: inline-block;">Read more →</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-text">
+        <p>&copy; 2025 Houssem Chammam. All rights reserved.</p>
+      </div>
+      <div class="footer-social">
+        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+      </div>
+    </div>
+  </footer>
+  <script>
+document.addEventListener("DOMContentLoaded", function() {
+  const tabText = document.getElementById('policy-desk-tab-text');
+  const blogColon = document.getElementById('blog-colon');
+  const fullText = "The Policy Desk";
+  let current = "";
+  let i = 0;
+
+  tabText.style.opacity = 0;
+
+  function typeWriter() {
+    if (i === 0) {
+      tabText.style.opacity = 1;
+    }
+    if (i < fullText.length) {
+      current += fullText.charAt(i);
+      tabText.textContent = current;
+      i++;
+      setTimeout(typeWriter, 60);
+    } else {
+      // Show the colon after animation finishes
+      blogColon.style.display = '';
+    }
+  }
+
+  setTimeout(typeWriter, 400);
+});
+</script>
+</body>
+</html> 

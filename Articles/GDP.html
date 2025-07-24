@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Global GDP Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="antialiased">
+
+  <nav class="tab-navigation">
+    <div class="container">
+      <div class="tab-nav">
+        <a href="../index.html" class="tab-btn">Overview</a>
+        <a href="../index.html#research" class="tab-btn">Research</a>
+        <a href="../blog.html" class="tab-btn">Blog</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mx-auto p-4 md:p-8">
+    <header class="text-center mb-8">
+      <h1 class="text-4xl font-bold">Three-Topic Interactive Page</h1>
+      <p class="text-lg text-gray-600 mt-2">Explore insights by switching between tabs</p>
+    </header>
+
+    <nav class="flex justify-center items-center flex-wrap gap-2 md:gap-4 mb-8">
+      <a class="tab-btn px-4 py-2 rounded-lg font-semibold text-white bg-[#36a853]" data-tab="topic1" href="#">Topic 1</a>
+      <a class="tab-btn px-4 py-2 rounded-lg font-semibold text-[#3d405b] hover:bg-[#FDCB6E] hover:text-[#3d405b] transition-colors duration-200" data-tab="topic2" href="#">Topic 2</a>
+      <a class="tab-btn px-4 py-2 rounded-lg font-semibold text-[#3d405b] hover:bg-[#FDCB6E] hover:text-[#3d405b] transition-colors duration-200" data-tab="topic3" href="#">Topic 3</a>
+    </nav>
+
+    <main>
+      <section id="topic1" class="tab-content active">
+        <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+          <h2 class="text-2xl font-bold mb-4">Top 30 Economies Comparison</h2>
+          <p class="text-gray-700 mb-6">
+            Explore how the top 30 global economies have changed in size between 1995 and 2024. Use the buttons below to switch between the two years.
+          </p>
+          <div class="text-center mb-4">
+            <button id="btn-1995" class="btn btn-secondary active" type="button">Top 30 in 1995</button>
+            <button id="btn-2024" class="btn btn-secondary" type="button">Top 30 in 2024</button>
+          </div>
+          <div class="chart-container">
+            <canvas id="top30Chart"></canvas>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <h2 class="text-2xl font-bold mb-4">GDP Share Comparison</h2>
+          <p class="text-gray-700 mb-6">
+            Compare the GDP share of selected countries or regions over time.
+          </p>
+          <div class="chart-container">
+            <canvas id="gdpShareChart"></canvas>
+          </div>
+        </div>
+      </section>
+      <section id="topic2" class="tab-content">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <h2 class="text-2xl font-bold mb-4">Topic 2</h2>
+          <p class="text-gray-700">This section will contain content related to Topic 2.</p>
+        </div>
+      </section>
+      <section id="topic3" class="tab-content">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <h2 class="text-2xl font-bold mb-4">Topic 3</h2>
+          <p class="text-gray-700">This section will contain content related to Topic 3.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const tabButtons = document.querySelectorAll('.tab-btn[data-tab]');
+      const tabContents = document.querySelectorAll('.tab-content');
+
+      if (tabButtons.length && tabContents.length) {
+        function switchTab(tab) {
+          tabButtons.forEach(btn => {
+            btn.classList.remove('bg-[#36a853]', 'text-white');
+            btn.classList.add('text-[#3d405b]');
+          });
+          tabContents.forEach(content => content.classList.remove('active'));
+          let btn = document.querySelector('.tab-btn[data-tab="' + tab + '"]');
+          let content = document.getElementById(tab);
+          if (btn) {
+            btn.classList.add('bg-[#36a853]', 'text-white');
+            btn.classList.remove('text-[#3d405b]');
+          }
+          if (content) content.classList.add('active');
+        }
+        function showFromHash() {
+          let hash = window.location.hash.replace('#', '');
+          if (hash && document.getElementById(hash)) {
+            switchTab(hash);
+          } else {
+            switchTab('topic1'); // default tab
+          }
+        }
+        window.addEventListener('hashchange', showFromHash);
+        showFromHash();
+        
+        tabButtons.forEach(btn => {
+          btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            switchTab(this.getAttribute('data-tab'));
+          });
+        });
+      }
+
+      // DATA
+      const top30Data = {
+        '1995': {
+          labels: ["United States", "Japan", "Germany", "France", "United Kingdom", "Italy", "China", "Brazil", "Canada", "Spain", "South Korea", "Australia", "Mexico", "Netherlands", "Russia", "India", "Switzerland", "Belgium", "Argentina", "Sweden", "Austria", "Turkey", "Norway", "Denmark", "Saudi Arabia", "Poland", "Thailand", "Finland", "South Africa", "Indonesia"],
+          values: [7639, 5450, 2592, 1542, 1278, 1181, 736, 764, 617, 599, 559, 377, 393, 354, 395, 375, 318, 249, 281, 238, 217, 170, 142, 142, 162, 131, 163, 119, 136, 222],
+        },
+        '2024': {
+          labels: [
+    "United States", "China (+3)", "Japan (-1)", "Germany (-1)", "India (+9)", "United Kingdom (-2)", "France (-1)",
+    "Italy (-1)", "Brazil (-1)", "Canada (-1)", "Australia (+2)", "Russian Federation", "Spain (-3)", "Mexico (-3)",
+    "Turkiye (+4)", "Indonesia (+1)", "Netherlands (-3)", "Switzerland (-3)", "Poland (+6)", "Sweden (0)", "Argentina (-4)",
+    "Nigeria (+9)", "Belgium (-4)", "Iran, Islamic Rep. (+2)", "Ireland (+17)", "Thailand (+1)", "Philippines (+9)", "Norway (-5)", "Malaysia (+9)"
+  ],
+          values: [28779, 18540, 4334, 4629, 4112, 3532, 3131, 2265, 2173, 2146, 1701, 2062, 1579, 1557, 1340, 1461, 1124, 983, 641, 846, 641, 723, 636, 627, 610, 632, 627, 525, 521],
+        }
+      };
+
+      // LABEL STATUS for 2024
+      const labelStatus2024 = [
+        "unchanged", // United States
+        "up",        // China
+        "down",      // Japan
+        "down",      // Germany
+        "up",        // India
+        "down",      // United Kingdom
+        "down",      // France
+        "down",      // Italy
+        "down",      // Brazil
+        "down",      // Canada
+        "up",        // Australia
+        "unchanged", // Russian Federation
+        "down",      // Spain
+        "down",      // Mexico
+        "up",        // Turkiye
+        "up",        // Indonesia
+        "down",      // Netherlands
+        "down",      // Switzerland
+        "up",        // Poland
+        "unchanged", // Sweden
+        "down",      // Argentina
+        "up",        // Nigeria
+        "down",      // Belgium
+        "up",        // Iran, Islamic Rep.
+        "up",        // Ireland
+        "up",        // Thailand
+        "up",        // Philippines
+        "down",      // Norway
+        "up"         // Malaysia
+      ];
+
+      // COLORS for LABELS
+      const statusToColor = {
+        "up": "#36a853",
+        "down": "#e07a5f",
+        "unchanged": "#999999"
+      };
+
+      // GDP SHARE CHART DATA
+      const shareCountries2024 = [
+        "United States", "China", "Japan", "Germany", "India", "United Kingdom", "France", "Italy", "Brazil", "Canada",
+        "Australia", "Russian Federation", "Spain", "Mexico", "Turkiye", "Indonesia"
+      ];
+      const share1995 = [28.68, 4.81, 9.78, 6.75, 1.54, 4.95, 4.52, 4.32, 2.76, 2.47, 1.83, 1.86, 2.07, 1.87, 0.87, 0.98];
+      const share2024 = [24.58, 20.04, 4.99, 3.99, 3.77, 3.55, 2.93, 2.20, 2.20, 1.99, 1.81, 1.75, 1.54, 1.46, 1.40, 1.34];
+
+      let currentYear = '1995';
+      let top30Chart;
+
+      // FUNCTION TO GET LABEL COLOR FOR 2024 ONLY
+      function getLabelColor(context) {
+        if (currentYear === '2024') {
+          const idx = context.index;
+          return statusToColor[labelStatus2024[idx]] || '#3d405b';
+        }
+        return '#3d405b';
+      }
+
+      function initTop30Chart() {
+        const ctx = document.getElementById('top30Chart').getContext('2d');
+        top30Chart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: top30Data['1995'].labels,
+            datasets: [{
+              label: 'GDP in 1995 (B USD)',
+              data: top30Data['1995'].values,
+              backgroundColor: "#A2D2FF",
+              maxBarThickness: 22,
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: true },
+              title: { display: false }
+            },
+            scales: {
+              x: {
+                ticks: {
+                  maxRotation: 60,
+                  minRotation: 60,
+                  color: getLabelColor,
+                  font: { size: 12 }
+                }
+              },
+              y: {
+                beginAtZero: true,
+                ticks: { color: '#3d405b', font: { size: 12 } }
+              }
+            }
+          }
+        });
+      }
+      function showTop30Chart(year) {
+        currentYear = year;
+        const data = top30Data[year];
+        top30Chart.data.labels = data.labels;
+        top30Chart.data.datasets[0].data = data.values;
+        top30Chart.data.datasets[0].label = `GDP in ${year} (B USD)`;
+        top30Chart.data.datasets[0].backgroundColor = (year === '2024') ? "#FDCB6E" : "#A2D2FF";
+        // Set label color: for 2024 use the up/down/unchanged logic, for 1995 use default
+        top30Chart.options.scales.x.ticks.color = getLabelColor;
+        top30Chart.update();
+        document.getElementById('btn-1995').classList.toggle('active', year === '1995');
+        document.getElementById('btn-2024').classList.toggle('active', year === '2024');
+      }
+
+      let gdpShareChart;
+      function initGDPShareChart() {
+        const ctx = document.getElementById('gdpShareChart').getContext('2d');
+        gdpShareChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: shareCountries2024,
+            datasets: [
+              {
+                label: 'Share in 2024 (%)',
+                data: share2024,
+                backgroundColor: "#FDCB6E",
+                maxBarThickness: 22,
+              },
+              {
+                label: 'Share in 1995 (%)',
+                data: share1995,
+                backgroundColor: "#A2D2FF",
+                maxBarThickness: 22,
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: true },
+              title: {
+                display: true,
+                text: 'Top Economies in 2024: Share of Global GDP (Compared to 1995)'
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return `${context.dataset.label}: ${context.parsed.y}%`;
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                ticks: { color: '#3d405b', font: { size: 11 }, maxRotation: 60, minRotation: 60 },
+                stacked: false
+              },
+              y: {
+                beginAtZero: true,
+                title: { display: true, text: 'Share of Global GDP (%)', color: '#3d405b' },
+                ticks: { color: '#3d405b', font: { size: 12 } }
+              }
+            }
+          }
+        });
+      }
+      // Charts initialization
+      setTimeout(() => {
+        initTop30Chart();
+        showTop30Chart('1995');
+        initGDPShareChart();
+      }, 100); // Delay to ensure canvas is present
+      // Chart toggle button handlers
+      document.getElementById('btn-1995').addEventListener('click', function() {
+        showTop30Chart('1995');
+      });
+      document.getElementById('btn-2024').addEventListener('click', function() {
+        showTop30Chart('2024');
+      });
+    });
+  </script>
+
+</body>
+</html>

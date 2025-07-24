@@ -17,7 +17,7 @@
       <div class="tab-nav">
         <a href="../index.html" class="tab-btn">Overview</a>
         <a href="../index.html#research" class="tab-btn">Research</a>
-        <a href="../blog.html" class="tab-btn">Blog</a>
+        <a href="../blog.html" class="tab-btn active">Blog<span id="blog-colon" style="display:none;">:</span> <span id="policy-desk-tab-text" class="gradient-text"></span></a>
       </div>
     </div>
   </nav>
@@ -76,9 +76,9 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // GDP tab logic (existing)
       const tabButtons = document.querySelectorAll('.tab-btn[data-tab]');
       const tabContents = document.querySelectorAll('.tab-content');
-
       if (tabButtons.length && tabContents.length) {
         function switchTab(tab) {
           tabButtons.forEach(btn => {
@@ -104,13 +104,35 @@
         }
         window.addEventListener('hashchange', showFromHash);
         showFromHash();
-        
         tabButtons.forEach(btn => {
           btn.addEventListener('click', function(e) {
             e.preventDefault();
             switchTab(this.getAttribute('data-tab'));
           });
         });
+      }
+      // Blog tab animated text (copied from blog.html)
+      const tabText = document.getElementById('policy-desk-tab-text');
+      const blogColon = document.getElementById('blog-colon');
+      if (tabText && blogColon) {
+        const fullText = "The Policy Desk";
+        let current = "";
+        let i = 0;
+        tabText.style.opacity = 0;
+        function typeWriter() {
+          if (i === 0) {
+            tabText.style.opacity = 1;
+          }
+          if (i < fullText.length) {
+            current += fullText.charAt(i);
+            tabText.textContent = current;
+            i++;
+            setTimeout(typeWriter, 60);
+          } else {
+            blogColon.style.display = '';
+          }
+        }
+        setTimeout(typeWriter, 400);
       }
 
       // DATA

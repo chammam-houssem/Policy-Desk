@@ -2,14 +2,136 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+<<<<<<< Updated upstream
     <title>Article 1 - The Future of Renewable Energy</title>
 </head>
 <body>
     <article>
         <img class="article-image" src="../Images/image1.jpg" alt="Renewable Energy">
+=======
+    <title>The Future of Renewable Energy</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/3/3a/Wind_turbine_icon.svg" type="image/svg+xml">
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+<body class="article-bg article1-bg">
+    <nav class="tab-navigation">
+      <div class="container">
+        <div class="tab-nav">
+          <a href="../index.html" class="tab-btn">Overview</a>
+          <a href="../index.html#research" class="tab-btn">Research</a>
+          <a href="../blog.html" class="tab-btn active">Blog<span id="blog-colon" style="display:none;">:</span> <span id="policy-desk-tab-text" class="gradient-text"></span></a>
+        </div>
+      </div>
+    </nav>
+    <div class="article-overlay">
+>>>>>>> Stashed changes
         <h1 class="article-title">The Future of Renewable Energy</h1>
         <p class="article-description"><mark>Exploring how renewable energy sources are shaping the future of global power generation and sustainability.</mark></p>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vitae velit ex. Mauris dapibus risus quis suscipit vulputate.</p>
+<<<<<<< Updated upstream
     </article>
+=======
+    </div>
+    <!-- Chart container -->
+    <div style="max-width: 600px; margin: 40px auto;">
+      <canvas id="countryBarChart"></canvas>
+    </div>
+
+    <!-- PapaParse and Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      // Path to the CSV file (relative to this HTML file)
+      const csvPath = '../Country_Data.csv';
+      // Filter for these country-year pairs
+      const filterPairs = [
+        { country: 'Germany', year: '1995' },
+        { country: 'Germany', year: '2024' },
+        { country: 'Tunisia', year: '1995' },
+        { country: 'Tunisia', year: '2024' }
+      ];
+      // Load and parse the CSV
+      Papa.parse(csvPath, {
+        download: true,
+        header: true,
+        complete: function(results) {
+          // Filter the data
+          const filtered = results.data.filter(row =>
+            filterPairs.some(pair =>
+              row.Country && row.Country.trim().toLowerCase() === pair.country.toLowerCase() &&
+              row.Year && row.Year.trim() === pair.year
+            )
+          );
+          // Prepare data for the chart
+          const labels = filtered.map(row => `${row.Country} ${row.Year}`);
+          const data = filtered.map(row => parseFloat(row.GDP_Billion));
+          // Draw the chart
+          const ctx = document.getElementById('countryBarChart').getContext('2d');
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: labels,
+              datasets: [{
+                label: 'GDP (Billion USD)',
+                data: data,
+                backgroundColor: [
+                  'rgba(54, 162, 235, 0.7)',
+                  'rgba(54, 162, 235, 0.4)',
+                  'rgba(255, 99, 132, 0.7)',
+                  'rgba(255, 99, 132, 0.4)'
+                ]
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: { display: false },
+                title: {
+                  display: true,
+                  text: 'GDP of Germany and Tunisia (1995 & 2024)'
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: { display: true, text: 'GDP (Billion USD)' }
+                }
+              }
+            }
+          });
+        }
+      });
+    </script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const tabText = document.getElementById('policy-desk-tab-text');
+      const blogColon = document.getElementById('blog-colon');
+      const fullText = "The Policy Desk";
+      let current = "";
+      let i = 0;
+
+      tabText.style.opacity = 0;
+
+      function typeWriter() {
+        if (i === 0) {
+          tabText.style.opacity = 1;
+        }
+        if (i < fullText.length) {
+          current += fullText.charAt(i);
+          tabText.textContent = current;
+          i++;
+          setTimeout(typeWriter, 60);
+        } else {
+          blogColon.style.display = '';
+        }
+      }
+
+      setTimeout(typeWriter, 400);
+    });
+    </script>
+>>>>>>> Stashed changes
 </body>
 </html> 

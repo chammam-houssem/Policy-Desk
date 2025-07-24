@@ -1,15 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Article 1 - The Future of Renewable Energy</title>
+    <link rel="stylesheet" href="../styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <article>
-        <img class="article-image" src="../Images/image1.jpg" alt="Renewable Energy">
+        <img class="article-image" src="../Images/image1.jpg" alt="Renewable Energy" />
         <h1 class="article-title">The Future of Renewable Energy</h1>
         <p class="article-description"><mark>Exploring how renewable energy sources are shaping the future of global power generation and sustainability.</mark></p>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vitae velit ex. Mauris dapibus risus quis suscipit vulputate.</p>
     </article>
+
+    <div style="max-width:600px;margin:40px auto;">
+        <canvas id="gdpChart"></canvas>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        Papa.parse('../Country_Data.csv', {
+            download: true,
+            header: true,
+            complete: function(results) {
+                const data = results.data.filter(row => row.Mediterranean === '1' && row.Year === '2021');
+                const labels = data.map(row => row.Country);
+                const values = data.map(row => parseFloat(row.GDP));
+
+                new Chart(document.getElementById('gdpChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'GDP 2021 (USD millions)',
+                            data: values,
+                            backgroundColor: '#36a853'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            }
+        });
+    });
+    </script>
 </body>
-</html> 
+</html>

@@ -877,3 +877,23 @@ body {
 
 /* Remove previous .content-grid flex styles and related media queries */
 
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+.btn-secondary {
+  background-color: #E07A5F !important;
+  color: #fff !important;
+  border: 1px solid #f5c6cb;
+}
+.btn-secondary:hover {
+  background-color: #d96c4f !important;
+}
+.btn.active {
+  border-color: #3d405b;
+  transform: scale(1.05);
+}
+

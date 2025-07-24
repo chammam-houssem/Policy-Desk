@@ -74,7 +74,6 @@
     </main>
   </div>
 
-  <!-- Only this page's tab logic (doesn't interfere with the rest of the site) -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const tabButtons = document.querySelectorAll('.tab-btn[data-tab]');
@@ -107,30 +106,83 @@
         showFromHash();
       }
 
-      // Chart logic below
+      // DATA
       const top30Data = {
         '1995': {
           labels: ["United States", "Japan", "Germany", "France", "United Kingdom", "Italy", "China", "Brazil", "Canada", "Spain", "South Korea", "Australia", "Mexico", "Netherlands", "Russia", "India", "Switzerland", "Belgium", "Argentina", "Sweden", "Austria", "Turkey", "Norway", "Denmark", "Saudi Arabia", "Poland", "Thailand", "Finland", "South Africa", "Indonesia"],
           values: [7639, 5450, 2592, 1542, 1278, 1181, 736, 764, 617, 599, 559, 377, 393, 354, 395, 375, 318, 249, 281, 238, 217, 170, 142, 142, 162, 131, 163, 119, 136, 222],
-          color: "#A2D2FF"
         },
         '2024': {
-          labels: ["United States", "China", "Japan", "Germany", "India", "United Kingdom", "France", "Italy", "Brazil", "Canada", "Russia", "South Korea", "Australia", "Spain", "Mexico", "Indonesia", "Turkey", "Netherlands", "Saudi Arabia", "Switzerland", "Argentina", "Poland", "Sweden", "Belgium", "Thailand", "Ireland", "Israel", "Austria", "Norway", "United Arab Emirates"],
-          values: [28779, 18540, 4334, 4629, 4112, 3532, 3131, 2265, 2173, 2146, 2062, 1733, 1701, 1579, 1557, 1461, 1340, 1124, 1099, 983, 641, 846, 723, 636, 632, 627, 610, 536, 525, 521],
-          color: "#FDCB6E"
+          labels: [
+    "United States", "China (+3)", "Japan (-1)", "Germany (-1)", "India (+9)", "United Kingdom (-2)", "France (-1)",
+    "Italy (-1)", "Brazil (-1)", "Canada (-1)", "Australia (+2)", "Russian Federation", "Spain (-3)", "Mexico (-3)",
+    "Turkiye (+4)", "Indonesia (+1)", "Netherlands (-3)", "Switzerland (-3)", "Poland (+6)", "Sweden (0)", "Argentina (-4)",
+    "Nigeria (+9)", "Belgium (-4)", "Iran, Islamic Rep. (+2)", "Ireland (+17)", "Thailand (+1)", "Philippines (+9)", "Norway (-5)", "Malaysia (+9)"
+  ],
+          values: [28779, 18540, 4334, 4629, 4112, 3532, 3131, 2265, 2173, 2146, 1701, 2062, 1579, 1557, 1340, 1461, 1124, 983, 641, 846, 641, 723, 636, 627, 610, 632, 627, 525, 521],
         }
       };
-      const shareCountries2024 = ["United States", "China", "Japan", "Germany", "India", "United Kingdom", "France", "Italy", "Brazil", "Canada", "Australia", "Russian Federation", "Spain", "Mexico", "Turkiye", "Indonesia", "Heavily indebted poor countries (HIPC)", "Netherlands", "Switzerland", "Poland", "Sweden", "Argentina", "Nigeria", "Belgium", "Iran, Islamic Rep.", "Ireland", "Thailand", "Philippines", "Norway", "Malaysia"];
-      const share1995 = [28.68, 4.81, 9.78, 6.75, 1.54, 4.95, 4.52, 4.32, 2.76, 2.47, 1.83, 1.86, 2.07, 1.87, 0.87, 0.98, 0.69, 1.35, 1.22, 0.57, 0.80, 0.90, 0.40, 0.82, 0.56, 0.27, 0.55, 0.31, 0.66, 0.30];
-      const share2024 = [24.58, 20.04, 4.99, 3.99, 3.77, 3.55, 2.93, 2.20, 2.20, 1.99, 1.81, 1.75, 1.54, 1.46, 1.40, 1.34, 1.04, 1.00, 0.88, 0.71, 0.63, 0.63, 0.62, 0.58, 0.57, 0.53, 0.51, 0.49, 0.48, 0.46];
+
+      // LABEL STATUS for 2024
+      const labelStatus2024 = [
+        "unchanged", // United States
+        "up",        // China
+        "down",      // Japan
+        "down",      // Germany
+        "up",        // India
+        "down",      // United Kingdom
+        "down",      // France
+        "down",      // Italy
+        "down",      // Brazil
+        "down",      // Canada
+        "up",        // Australia
+        "unchanged", // Russian Federation
+        "down",      // Spain
+        "down",      // Mexico
+        "up",        // Turkiye
+        "up",        // Indonesia
+        "down",      // Netherlands
+        "down",      // Switzerland
+        "up",        // Poland
+        "unchanged", // Sweden
+        "down",      // Argentina
+        "up",        // Nigeria
+        "down",      // Belgium
+        "up",        // Iran, Islamic Rep.
+        "up",        // Ireland
+        "up",        // Thailand
+        "up",        // Philippines
+        "down",      // Norway
+        "up"         // Malaysia
+      ];
+
+      // COLORS for LABELS
+      const statusToColor = {
+        "up": "#36a853",
+        "down": "#e07a5f",
+        "unchanged": "#999999"
+      };
+
+      // GDP SHARE CHART DATA
+      const shareCountries2024 = [
+        "United States", "China", "Japan", "Germany", "India", "United Kingdom", "France", "Italy", "Brazil", "Canada",
+        "Australia", "Russian Federation", "Spain", "Mexico", "Turkiye", "Indonesia"
+      ];
+      const share1995 = [28.68, 4.81, 9.78, 6.75, 1.54, 4.95, 4.52, 4.32, 2.76, 2.47, 1.83, 1.86, 2.07, 1.87, 0.87, 0.98];
+      const share2024 = [24.58, 20.04, 4.99, 3.99, 3.77, 3.55, 2.93, 2.20, 2.20, 1.99, 1.81, 1.75, 1.54, 1.46, 1.40, 1.34];
+
       let currentYear = '1995';
       let top30Chart;
+
+      // FUNCTION TO GET LABEL COLOR FOR 2024 ONLY
       function getLabelColor(context) {
         if (currentYear === '2024') {
-          // custom coloring if you wish
+          const idx = context.index;
+          return statusToColor[labelStatus2024[idx]] || '#3d405b';
         }
         return '#3d405b';
       }
+
       function initTop30Chart() {
         const ctx = document.getElementById('top30Chart').getContext('2d');
         top30Chart = new Chart(ctx, {
@@ -140,7 +192,7 @@
             datasets: [{
               label: 'GDP in 1995 (B USD)',
               data: top30Data['1995'].values,
-              backgroundColor: top30Data['1995'].color,
+              backgroundColor: "#A2D2FF",
               maxBarThickness: 22,
             }]
           },
@@ -173,12 +225,14 @@
         top30Chart.data.labels = data.labels;
         top30Chart.data.datasets[0].data = data.values;
         top30Chart.data.datasets[0].label = `GDP in ${year} (B USD)`;
-        top30Chart.data.datasets[0].backgroundColor = data.color;
+        top30Chart.data.datasets[0].backgroundColor = (year === '2024') ? "#FDCB6E" : "#A2D2FF";
+        // Set label color: for 2024 use the up/down/unchanged logic, for 1995 use default
         top30Chart.options.scales.x.ticks.color = getLabelColor;
         top30Chart.update();
         document.getElementById('btn-1995').classList.toggle('active', year === '1995');
         document.getElementById('btn-2024').classList.toggle('active', year === '2024');
       }
+
       let gdpShareChart;
       function initGDPShareChart() {
         const ctx = document.getElementById('gdpShareChart').getContext('2d');
@@ -207,7 +261,7 @@
               legend: { display: true },
               title: {
                 display: true,
-                text: 'Top 30 Economies in 2024: Share of Global GDP (Compare 1995 & 2024)'
+                text: 'Top Economies in 2024: Share of Global GDP (Compared to 1995)'
               },
               tooltip: {
                 callbacks: {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Multi-Topic Interactive Dashboard</title>
+  <title>Global GDP Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -11,37 +11,39 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="antialiased">
-    <nav class="tab-navigation">
-      <div class="container">
-        <div class="tab-nav">
-          <a href="../index.html" class="tab-btn">Overview</a>
-          <a href="../index.html#research" class="tab-btn">Research</a>
-          <a href="../blog.html" class="tab-btn active">Blog<span id="blog-colon" style="display:none;">:</span> <span id="policy-desk-tab-text" class="gradient-text"></span></a>
-        </div>
+
+  <nav class="tab-navigation">
+    <div class="container">
+      <div class="tab-nav">
+        <a href="../index.html" class="tab-btn">Overview</a>
+        <a href="../index.html#research" class="tab-btn">Research</a>
+        <a href="../blog.html" class="tab-btn">Blog</a>
       </div>
-    </nav>
-    <div class="container mx-auto p-4 md:p-8">
+    </div>
+  </nav>
+
+  <div class="container mx-auto p-4 md:p-8">
     <header class="text-center mb-8">
       <h1 class="text-4xl font-bold">Three-Topic Interactive Page</h1>
       <p class="text-lg text-gray-600 mt-2">Explore insights by switching between tabs</p>
     </header>
 
     <nav class="flex justify-center items-center flex-wrap gap-2 md:gap-4 mb-8">
-      <a id="nav-topic1" class="nav-link active" href="#" onclick="showSection('topic1'); return false;">Topic 1</a>
-      <a id="nav-topic2" class="nav-link" href="#" onclick="showSection('topic2'); return false;">Topic 2</a>
-      <a id="nav-topic3" class="nav-link" href="#" onclick="showSection('topic3'); return false;">Topic 3</a>
+      <a class="tab-btn active" data-tab="topic1" href="#">Topic 1</a>
+      <a class="tab-btn" data-tab="topic2" href="#">Topic 2</a>
+      <a class="tab-btn" data-tab="topic3" href="#">Topic 3</a>
     </nav>
 
     <main>
-      <section id="content-topic1" class="content-section active">
+      <section id="topic1" class="tab-content active">
         <div class="bg-white p-6 rounded-lg shadow-md mb-8">
           <h2 class="text-2xl font-bold mb-4">Top 30 Economies Comparison</h2>
           <p class="text-gray-700 mb-6">
             Explore how the top 30 global economies have changed in size between 1995 and 2024. Use the buttons below to switch between the two years.
           </p>
           <div class="text-center mb-4">
-            <button id="btn-1995" class="btn btn-secondary active" onclick="showTop30Chart('1995')">Top 30 in 1995</button>
-            <button id="btn-2024" class="btn btn-secondary" onclick="showTop30Chart('2024')">Top 30 in 2024</button>
+            <button id="btn-1995" class="btn btn-secondary active" type="button">Top 30 in 1995</button>
+            <button id="btn-2024" class="btn btn-secondary" type="button">Top 30 in 2024</button>
           </div>
           <div class="chart-container">
             <canvas id="top30Chart"></canvas>
@@ -57,15 +59,13 @@
           </div>
         </div>
       </section>
-
-      <section id="content-topic2" class="content-section">
+      <section id="topic2" class="tab-content">
         <div class="bg-white p-6 rounded-lg shadow-md">
           <h2 class="text-2xl font-bold mb-4">Topic 2</h2>
           <p class="text-gray-700">This section will contain content related to Topic 2.</p>
         </div>
       </section>
-
-      <section id="content-topic3" class="content-section">
+      <section id="topic3" class="tab-content">
         <div class="bg-white p-6 rounded-lg shadow-md">
           <h2 class="text-2xl font-bold mb-4">Topic 3</h2>
           <p class="text-gray-700">This section will contain content related to Topic 3.</p>
@@ -74,9 +74,177 @@
     </main>
   </div>
 
-  <!-- Tab Navigation Functionality -->
-  <!-- Blog tab typewriter effect -->
-  <!-- Chart.js & Top 30 Chart Logic -->
-  <script src="../script.js"></script>
+  <!-- Only this page's tab logic (doesn't interfere with the rest of the site) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const tabButtons = document.querySelectorAll('.tab-btn[data-tab]');
+      const tabContents = document.querySelectorAll('.tab-content');
+
+      if (tabButtons.length && tabContents.length) {
+        function switchTab(tab) {
+          tabButtons.forEach(btn => btn.classList.remove('active'));
+          tabContents.forEach(content => content.classList.remove('active'));
+          let btn = document.querySelector('.tab-btn[data-tab="' + tab + '"]');
+          let content = document.getElementById(tab);
+          if (btn) btn.classList.add('active');
+          if (content) content.classList.add('active');
+        }
+        tabButtons.forEach(btn => {
+          btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            switchTab(this.getAttribute('data-tab'));
+          });
+        });
+        function showFromHash() {
+          let hash = window.location.hash.replace('#', '');
+          if (hash && document.getElementById(hash)) {
+            switchTab(hash);
+          } else {
+            switchTab('topic1'); // default tab
+          }
+        }
+        window.addEventListener('hashchange', showFromHash);
+        showFromHash();
+      }
+
+      // Chart logic below
+      const top30Data = {
+        '1995': {
+          labels: ["United States", "Japan", "Germany", "France", "United Kingdom", "Italy", "China", "Brazil", "Canada", "Spain", "South Korea", "Australia", "Mexico", "Netherlands", "Russia", "India", "Switzerland", "Belgium", "Argentina", "Sweden", "Austria", "Turkey", "Norway", "Denmark", "Saudi Arabia", "Poland", "Thailand", "Finland", "South Africa", "Indonesia"],
+          values: [7639, 5450, 2592, 1542, 1278, 1181, 736, 764, 617, 599, 559, 377, 393, 354, 395, 375, 318, 249, 281, 238, 217, 170, 142, 142, 162, 131, 163, 119, 136, 222],
+          color: "#A2D2FF"
+        },
+        '2024': {
+          labels: ["United States", "China", "Japan", "Germany", "India", "United Kingdom", "France", "Italy", "Brazil", "Canada", "Russia", "South Korea", "Australia", "Spain", "Mexico", "Indonesia", "Turkey", "Netherlands", "Saudi Arabia", "Switzerland", "Argentina", "Poland", "Sweden", "Belgium", "Thailand", "Ireland", "Israel", "Austria", "Norway", "United Arab Emirates"],
+          values: [28779, 18540, 4334, 4629, 4112, 3532, 3131, 2265, 2173, 2146, 2062, 1733, 1701, 1579, 1557, 1461, 1340, 1124, 1099, 983, 641, 846, 723, 636, 632, 627, 610, 536, 525, 521],
+          color: "#FDCB6E"
+        }
+      };
+      const shareCountries2024 = ["United States", "China", "Japan", "Germany", "India", "United Kingdom", "France", "Italy", "Brazil", "Canada", "Australia", "Russian Federation", "Spain", "Mexico", "Turkiye", "Indonesia", "Heavily indebted poor countries (HIPC)", "Netherlands", "Switzerland", "Poland", "Sweden", "Argentina", "Nigeria", "Belgium", "Iran, Islamic Rep.", "Ireland", "Thailand", "Philippines", "Norway", "Malaysia"];
+      const share1995 = [28.68, 4.81, 9.78, 6.75, 1.54, 4.95, 4.52, 4.32, 2.76, 2.47, 1.83, 1.86, 2.07, 1.87, 0.87, 0.98, 0.69, 1.35, 1.22, 0.57, 0.80, 0.90, 0.40, 0.82, 0.56, 0.27, 0.55, 0.31, 0.66, 0.30];
+      const share2024 = [24.58, 20.04, 4.99, 3.99, 3.77, 3.55, 2.93, 2.20, 2.20, 1.99, 1.81, 1.75, 1.54, 1.46, 1.40, 1.34, 1.04, 1.00, 0.88, 0.71, 0.63, 0.63, 0.62, 0.58, 0.57, 0.53, 0.51, 0.49, 0.48, 0.46];
+      let currentYear = '1995';
+      let top30Chart;
+      function getLabelColor(context) {
+        if (currentYear === '2024') {
+          // custom coloring if you wish
+        }
+        return '#3d405b';
+      }
+      function initTop30Chart() {
+        const ctx = document.getElementById('top30Chart').getContext('2d');
+        top30Chart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: top30Data['1995'].labels,
+            datasets: [{
+              label: 'GDP in 1995 (B USD)',
+              data: top30Data['1995'].values,
+              backgroundColor: top30Data['1995'].color,
+              maxBarThickness: 22,
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: true },
+              title: { display: false }
+            },
+            scales: {
+              x: {
+                ticks: {
+                  maxRotation: 60,
+                  minRotation: 60,
+                  color: getLabelColor,
+                  font: { size: 12 }
+                }
+              },
+              y: {
+                beginAtZero: true,
+                ticks: { color: '#3d405b', font: { size: 12 } }
+              }
+            }
+          }
+        });
+      }
+      function showTop30Chart(year) {
+        currentYear = year;
+        const data = top30Data[year];
+        top30Chart.data.labels = data.labels;
+        top30Chart.data.datasets[0].data = data.values;
+        top30Chart.data.datasets[0].label = `GDP in ${year} (B USD)`;
+        top30Chart.data.datasets[0].backgroundColor = data.color;
+        top30Chart.options.scales.x.ticks.color = getLabelColor;
+        top30Chart.update();
+        document.getElementById('btn-1995').classList.toggle('active', year === '1995');
+        document.getElementById('btn-2024').classList.toggle('active', year === '2024');
+      }
+      let gdpShareChart;
+      function initGDPShareChart() {
+        const ctx = document.getElementById('gdpShareChart').getContext('2d');
+        gdpShareChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: shareCountries2024,
+            datasets: [
+              {
+                label: 'Share in 2024 (%)',
+                data: share2024,
+                backgroundColor: "#FDCB6E",
+                maxBarThickness: 22,
+              },
+              {
+                label: 'Share in 1995 (%)',
+                data: share1995,
+                backgroundColor: "#A2D2FF",
+                maxBarThickness: 22,
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: true },
+              title: {
+                display: true,
+                text: 'Top 30 Economies in 2024: Share of Global GDP (Compare 1995 & 2024)'
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return `${context.dataset.label}: ${context.parsed.y}%`;
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                ticks: { color: '#3d405b', font: { size: 11 }, maxRotation: 60, minRotation: 60 },
+                stacked: false
+              },
+              y: {
+                beginAtZero: true,
+                title: { display: true, text: 'Share of Global GDP (%)', color: '#3d405b' },
+                ticks: { color: '#3d405b', font: { size: 12 } }
+              }
+            }
+          }
+        });
+      }
+      // Charts initialization
+      setTimeout(() => {
+        initTop30Chart();
+        showTop30Chart('1995');
+        initGDPShareChart();
+      }, 100); // Delay to ensure canvas is present
+      // Chart toggle button handlers
+      document.getElementById('btn-1995').addEventListener('click', function() {
+        showTop30Chart('1995');
+      });
+      document.getElementById('btn-2024').addEventListener('click', function() {
+        showTop30Chart('2024');
+      });
+    });
+  </script>
 </body>
 </html>

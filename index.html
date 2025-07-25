@@ -9,6 +9,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+      (function(){
+        emailjs.init("veuyszbHGp1Id17Za");
+      })();
+    </script>
     <style>
       .nav-btn {
         font-family: 'Roboto Serif', serif;
@@ -49,6 +55,17 @@
                             <a href="https://www.linkedin.com/in/houssem-chammam/" class="profile-email" target="_blank">
                                 <i class="fab fa-linkedin"></i> LinkedIn Profile
                             </a>
+                            <!-- Write to Me Button -->
+                            <button onclick="document.getElementById('write-box').style.display='block'" class="profile-email">
+                                <i class="fas fa-pen"></i> Write to me
+                            </button>
+
+                            <!-- Contact Form -->
+                            <form id="write-box" style="display:none; margin-top:1rem;" onsubmit="sendEmail(event)">
+                                <textarea name="message" placeholder="Your message" required style="width: 100%; margin-bottom: 0.5rem; padding: 0.5rem;"></textarea>
+                                <input name="from_name" placeholder="Your name (optional)" style="width: 100%; margin-bottom: 0.5rem; padding: 0.5rem;">
+                                <button type="submit" style="width: 100%; padding: 0.5rem; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Send</button>
+                            </form>
                             <a href="Houssem Chammam CV.pdf" class="download-cv-btn" download>Download CV</a>
                         </div>
                     </div>
@@ -236,6 +253,31 @@
                 btn.querySelector('i').classList.remove('fa-chevron-down');
                 btn.querySelector('i').classList.add('fa-chevron-up');
             }
+        }
+
+        function sendEmail(e) {
+            e.preventDefault();
+
+            const form = document.getElementById('write-box');
+            const formData = new FormData(form);
+
+            // Fill in with your EmailJS Service ID and Template ID:
+            const SERVICE_ID = 'service_eutne59';
+            const TEMPLATE_ID = 'template_w6irekz';
+
+            const params = {
+                message: formData.get('message'),
+                from_name: formData.get('from_name') || 'Anonymous'
+            };
+
+            emailjs.send(SERVICE_ID, TEMPLATE_ID, params)
+                .then(function() {
+                    alert('Your message was sent!');
+                    form.reset();
+                    form.style.display = 'none';
+                }, function(error) {
+                    alert('Failed to send message: ' + JSON.stringify(error));
+                });
         }
     </script>
 </body>

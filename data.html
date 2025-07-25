@@ -10,16 +10,27 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .nav-btn {
+      font-family: 'Roboto Serif', serif;
+    }
+    .primary-btn {
+      font-family: 'Inter', sans-serif;
+    }
+    .secondary-btn {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
 </head>
 <body class="antialiased">
     <!-- Tab Navigation -->
     <nav class="tab-navigation">
       <div class="container">
           <div class="tab-nav">
-                             <button onclick="window.location.href='index.html'" class="tab-btn">Overview</button>
-               <button onclick="window.location.href='index.html#research'" class="tab-btn">Research</button>
-               <button onclick="window.location.href='data.html'" class="tab-btn active">Data Projects</button>
-               <button onclick="window.location.href='blog.html'" class="tab-btn">Blog</button>
+               <button onclick="window.location.href='index.html'" class="nav-btn tab-btn">Overview</button>
+               <button onclick="window.location.href='index.html#research'" class="nav-btn tab-btn">Research</button>
+               <button onclick="window.location.href='data.html'" class="nav-btn tab-btn active">Data Projects</button>
+               <button onclick="window.location.href='blog.html'" class="nav-btn tab-btn">Blog</button>
           </div>
       </div>
   </nav>
@@ -31,9 +42,9 @@
     </header>
 
     <nav class="flex justify-center items-center flex-wrap gap-2 md:gap-4 mb-8">
-      <a class="tab-btn px-4 py-2 rounded-lg font-semibold text-white bg-[#36a853]" data-tab="topic1" href="#">Topic 1</a>
-      <a class="tab-btn px-4 py-2 rounded-lg font-semibold text-[#3d405b] hover:bg-[#FDCB6E] hover:text-[#3d405b] transition-colors duration-200" data-tab="topic2" href="#">Topic 2</a>
-      <a class="tab-btn px-4 py-2 rounded-lg font-semibold text-[#3d405b] hover:bg-[#FDCB6E] hover:text-[#3d405b] transition-colors duration-200" data-tab="topic3" href="#">Topic 3</a>
+      <a class="primary-btn tab-btn px-4 py-2 rounded-lg font-semibold text-white bg-[#36a853]" data-tab="topic1" href="#">Topic 1</a>
+      <a class="primary-btn tab-btn px-4 py-2 rounded-lg font-semibold text-[#3d405b] hover:bg-[#FDCB6E] hover:text-[#3d405b] transition-colors duration-200" data-tab="topic2" href="#">Topic 2</a>
+      <a class="primary-btn tab-btn px-4 py-2 rounded-lg font-semibold text-[#3d405b] hover:bg-[#FDCB6E] hover:text-[#3d405b] transition-colors duration-200" data-tab="topic3" href="#">Topic 3</a>
     </nav>
 
     <main>
@@ -44,8 +55,8 @@
             Explore how the top 30 global economies have changed in size between 1995 and 2024. Use the buttons below to switch between the two years.
           </p>
           <div class="text-center mb-4">
-            <button id="btn-1995" class="btn btn-secondary active" type="button">Top 30 in 1995</button>
-            <button id="btn-2024" class="btn btn-secondary" type="button">Top 30 in 2024</button>
+            <button id="btn-1995" class="secondary-btn btn btn-secondary active" type="button">Top 30 in 1995</button>
+            <button id="btn-2024" class="secondary-btn btn btn-secondary" type="button">Top 30 in 2024</button>
           </div>
           <div class="chart-container">
             <canvas id="top30Chart"></canvas>

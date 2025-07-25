@@ -208,6 +208,18 @@ function handleScrollAnimations() {
 window.addEventListener('scroll', handleScrollAnimations);
 handleScrollAnimations(); // Run once on load
 
+// Popup Control Functions
+function openPopup() {
+  document.getElementById('popup-bg').classList.remove('hidden');
+  // Prevent background scroll
+  document.body.style.overflow = 'hidden';
+}
+
+function closePopup() {
+  document.getElementById('popup-bg').classList.add('hidden');
+  // Restore scroll
+  document.body.style.overflow = '';
+}
 
 // --- Custom JS from GDP.html ---
 // Tab Navigation Functionality

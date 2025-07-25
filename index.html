@@ -28,6 +28,19 @@
     </style>
 </head>
 <body>
+    <!-- Modal -->
+    <div id="popup-bg" class="hidden">
+      <div class="modal">
+        <button onclick="closePopup()" class="close-btn">&times;</button>
+        <h3 style="text-align: center; font-weight: 600; margin-bottom: 0.8em;">Write to Me</h3>
+        <form id="write-box" onsubmit="sendEmail(event)">
+          <input type="email" name="reply_to" placeholder="Your email" required>
+          <textarea name="message" placeholder="Your message" required rows="4"></textarea>
+          <button type="submit">Send</button>
+        </form>
+      </div>
+    </div>
+
     <!-- Tab Navigation -->
     <nav class="tab-navigation">
         <div class="container">
@@ -49,26 +62,24 @@
                     <div class="profile-section">
                         <div class="profile-box">
                             <img src="Images/Headshot2.PNG" alt="Houssem Chammam" class="profile-img" style="margin-bottom: 25px;">
-                            <a href="mailto:chammam.houssem@gmail.com" class="profile-email">
+                            <a href="mailto:chammam.houssem@gmail.com" class="profile-email" style="text-align: left; display: flex; align-items: center; gap: 6px;">
                                 <i class="fas fa-envelope"></i> chammam.houssem@gmail.com
                             </a>
-                            <a href="https://www.linkedin.com/in/houssem-chammam/" class="profile-email" target="_blank">
+                            <a href="https://www.linkedin.com/in/houssem-chammam/" class="profile-email" target="_blank" style="text-align: left; display: flex; align-items: center; gap: 6px;">
                                 <i class="fab fa-linkedin"></i> LinkedIn Profile
                             </a>
                             <!-- Write to Me Button -->
-                            <button onclick="document.getElementById('write-box').style.display='block'" class="profile-email">
-                                <i class="fas fa-pen"></i> Write to me
+                            <button onclick="openPopup()"
+                              style="display: flex; align-items: center; gap: 0.4em; background: #fff; color: #2563eb; border: none; border-radius: 8px; padding: 8px 16px; font-weight: 500; box-shadow: 0 2px 6px #0001; cursor: pointer; transition: all 0.2s;">
+                              <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12h2a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2v3a2 2 0 002 2h2m8 0v6a2 2 0 01-2 2H8a2 2 0 01-2-2v-6m10 0l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                              Write to me
                             </button>
 
-                            <!-- Contact Form -->
-                            <form id="write-box" style="display:none; margin-top:1rem;" onsubmit="sendEmail(event)">
-                                <input type="email" name="reply_to" placeholder="Your email" required>
-                                <textarea name="message" placeholder="Your message" required></textarea>
-                                <button type="submit">Send</button>
-                              </form>
-                            <a href="Houssem Chammam CV.pdf" class="download-cv-btn" download>Download CV</a>
-                        </div>
-                    </div>
+                            <a href="Houssem Chammam CV.pdf" class="download-cv-btn" 
+                              style="display: flex; align-items: center; gap: 0.4em; background: #fff; color: #2563eb; border: none; border-radius: 8px; padding: 8px 16px; font-weight: 500; box-shadow: 0 2px 6px #0001; cursor: pointer; transition: all 0.2s; margin-top: 16px; text-decoration: none;">
+                              <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                              Download CV
+                            </a>
                 </aside>
 
                 <!-- Main Content Area -->

@@ -68,20 +68,16 @@
                         <div class="profile-bio">
                             <div id="profile-preview">
                                 <p>I'm a public policy analyst specializing in public finance, energy, and sustainable development. I've led research and advocacy projects in Tunisia, the US, and across the Mediterranean, working to advance the energy transition in complex, resource-constrained settings.</p>
-                                <button onclick="toggleProfile()" class="read-more-btn">
-                                    <span>Read more</span>
-                                    <i class="fas fa-chevron-down"></i>
-                                </button>
                             </div>
                             <div id="profile-full" class="hidden">
                                 <p>I'm a public policy analyst specializing in public finance, energy, and sustainable development. I've led research and advocacy projects in Tunisia, the US, and across the Mediterranean, working to advance the energy transition in complex, resource-constrained settings.</p>
                                 <p>My expertise spans cross-sectoral policy, stakeholder engagement, data analysis, and communicating policy to diverse audiences. I am passionate about building practical solutions for countries facing water scarcity, debt, and political fragmentation. Currently, my work focuses on the intersection of water and energy policy in North Africa and the Mediterranean.</p>
                                 <p>This site brings together my ongoing work, learning, and public interest projects.</p>
-                                <button onclick="toggleProfile()" class="read-more-btn">
-                                    <span>Show less</span>
-                                    <i class="fas fa-chevron-up"></i>
-                                </button>
                             </div>
+                            <button id="profile-toggle-btn" class="read-more-btn" onclick="toggleProfile()">
+                                <span>Read more</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
                         </div>
 
                         <!-- Skills/Methods Section -->
@@ -243,8 +239,20 @@
         function toggleProfile() {
             const preview = document.getElementById('profile-preview');
             const full = document.getElementById('profile-full');
+            const btn = document.getElementById('profile-toggle-btn');
+
+            const isHidden = full.classList.toggle('hidden');
             preview.classList.toggle('hidden');
-            full.classList.toggle('hidden');
+
+            if (isHidden) {
+                btn.querySelector('span').textContent = 'Read more';
+                btn.querySelector('i').classList.remove('fa-chevron-up');
+                btn.querySelector('i').classList.add('fa-chevron-down');
+            } else {
+                btn.querySelector('span').textContent = 'Show less';
+                btn.querySelector('i').classList.remove('fa-chevron-down');
+                btn.querySelector('i').classList.add('fa-chevron-up');
+            }
         }
     </script>
 </body>

@@ -178,6 +178,8 @@ document.addEventListener('DOMContentLoaded', function() {
 // Add loading animation
 window.addEventListener('load', function() {
     document.body.classList.add('loaded');
+    // Ensure page starts at the top even when using anchors
+    window.scrollTo(0, 0);
 });
 
 // Add scroll-based animations

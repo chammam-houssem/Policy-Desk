@@ -62,10 +62,10 @@
 
                             <!-- Contact Form -->
                             <form id="write-box" style="display:none; margin-top:1rem;" onsubmit="sendEmail(event)">
-                                <textarea name="message" placeholder="Your message" required style="width: 100%; margin-bottom: 0.5rem; padding: 0.5rem;"></textarea>
-                                <input name="from_name" placeholder="Your name (optional)" style="width: 100%; margin-bottom: 0.5rem; padding: 0.5rem;">
-                                <button type="submit" style="width: 100%; padding: 0.5rem; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Send</button>
-                            </form>
+                                <input type="email" name="reply_to" placeholder="Your email" required>
+                                <textarea name="message" placeholder="Your message" required></textarea>
+                                <button type="submit">Send</button>
+                              </form>
                             <a href="Houssem Chammam CV.pdf" class="download-cv-btn" download>Download CV</a>
                         </div>
                     </div>
@@ -267,7 +267,7 @@
 
             const params = {
                 message: formData.get('message'),
-                from_name: formData.get('from_name') || 'Anonymous'
+                reply_to: formData.get('reply_to')
             };
 
             emailjs.send(SERVICE_ID, TEMPLATE_ID, params)
@@ -279,6 +279,7 @@
                     alert('Failed to send message: ' + JSON.stringify(error));
                 });
         }
+
     </script>
 </body>
 </html>

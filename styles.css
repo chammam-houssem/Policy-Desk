@@ -9,7 +9,7 @@ body {
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     color: #333;
-    background-color: #ffffff;
+    background-color: #f4f9ff;
     font-size: 16px;
 }
 
@@ -122,19 +122,70 @@ body {
 }
 
 .profile-section {
-    background-color: #ffffff;
+    background-color: transparent;
 }
 
-.profile-photo {
+.profile-box {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
     margin-bottom: 30px;
 }
 
+.profile-photo {
+    margin-bottom: 15px;
+}
+
 .profile-img {
-    width: 200px;
-    height: 200px;
+    width: 240px;
+    height: 240px;
     object-fit: cover;
     border-radius: 4px;
     display: block;
+    margin: 0 auto;
+}
+
+.profile-role {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a365d;
+    margin-top: 10px;
+}
+
+.profile-location {
+    font-size: 14px;
+    color: #6c757d;
+    margin-bottom: 15px;
+}
+
+.profile-email {
+    display: block;
+    color: #007bff;
+    text-decoration: none;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.profile-email i {
+    margin-right: 6px;
+}
+
+.download-cv-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 20px;
+    background: linear-gradient(90deg, #2196f3 0%, #21cb7a 100%);
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: box-shadow 0.2s, filter 0.2s;
+}
+
+.download-cv-btn:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    filter: brightness(0.95);
 }
 
 .sidebar-title {

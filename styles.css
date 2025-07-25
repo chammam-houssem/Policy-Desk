@@ -9,7 +9,7 @@ body {
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     color: #333;
-    background-color: #f4f9ff;
+    background-color: #ffffff;
     font-size: 16px;
 }
 
@@ -126,12 +126,11 @@ body {
 }
 
 .profile-box {
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-    margin-bottom: 30px;
+     background-color: #ffffff;
+     padding: 20px;
+     border-radius: 8px;
+     text-align: center;
+     margin-bottom: 30px;
 }
 
 .profile-photo {

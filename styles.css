@@ -146,6 +146,13 @@ body {
     margin: 0 auto;
 }
 
+.profile-name-side {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a365d;
+    margin-top: 10px;
+}
+
 .profile-role {
     font-size: 18px;
     font-weight: 600;
@@ -385,6 +392,39 @@ body {
     font-size: 14px;
     color: #6c757d;
     line-height: 1.5;
+}
+
+.skill-details {
+    text-align: left;
+    margin-top: 12px;
+}
+
+.skill-details ul {
+    padding-left: 20px;
+    margin-bottom: 12px;
+}
+
+.skill-details li {
+    font-size: 14px;
+    color: #495057;
+    line-height: 1.6;
+}
+
+.read-less-btn {
+    background: none;
+    border: 1px solid #e9ecef;
+    color: #6c757d;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.read-less-btn:hover {
+    background-color: #f8f9fa;
+    border-color: #007bff;
+    color: #007bff;
 }
 
 /* Timeline */

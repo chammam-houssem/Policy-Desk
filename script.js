@@ -426,3 +426,41 @@ window.onload = function() {
   initGDPShareChart();
 };
 
+// Skill details toggle on overview page
+document.addEventListener('DOMContentLoaded', function() {
+  const skillItems = document.querySelectorAll('.skill-item');
+  skillItems.forEach(item => {
+    const details = item.querySelector('.skill-details');
+    const readMore = item.querySelector('.skill-read-more');
+    const readLess = item.querySelector('.skill-read-less');
+    if (!details) return;
+
+    function openDetails() {
+      details.classList.remove('hidden');
+    }
+
+    function closeDetails() {
+      details.classList.add('hidden');
+    }
+
+    item.addEventListener('click', e => {
+      if (e.target === readLess || details.contains(e.target)) return;
+      openDetails();
+    });
+
+    if (readMore) {
+      readMore.addEventListener('click', e => {
+        e.stopPropagation();
+        openDetails();
+      });
+    }
+
+    if (readLess) {
+      readLess.addEventListener('click', e => {
+        e.stopPropagation();
+        closeDetails();
+      });
+    }
+  });
+});
+

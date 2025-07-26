@@ -1,5 +1,10 @@
 // Tab functionality
 document.addEventListener('DOMContentLoaded', function() {
+    // Disable automatic scroll restoration across navigations
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+
     const tabButtons = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
 
@@ -28,12 +33,12 @@ document.addEventListener('DOMContentLoaded', function() {
             location.hash = `#${targetTab}`;
         }
 
-        // Smooth scroll the main content area to the top
-        // const mainContentArea = document.querySelector('.main-content-area');
-        // if (mainContentArea) {
-        //     mainContentArea.scrollTo({ top: 0, behavior: 'smooth' });
-        // }
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Smooth scroll the main content area and window to the top
+        const mainContentArea = document.querySelector('.main-content-area');
+        if (mainContentArea) {
+            mainContentArea.scrollTo({ top: 0, behavior: 'auto' });
+        }
+        window.scrollTo({ top: 0, behavior: 'auto' });
     }
 
     // Add click event listeners to tab buttons
@@ -178,6 +183,12 @@ document.addEventListener('DOMContentLoaded', function() {
 // Add loading animation
 window.addEventListener('load', function() {
     document.body.classList.add('loaded');
+    // Ensure page starts at the top even when using anchors
+    const mainContentArea = document.querySelector('.main-content-area');
+    if (mainContentArea) {
+        mainContentArea.scrollTop = 0;
+    }
+    window.scrollTo(0, 0);
 });
 
 // Add scroll-based animations
@@ -197,6 +208,18 @@ function handleScrollAnimations() {
 window.addEventListener('scroll', handleScrollAnimations);
 handleScrollAnimations(); // Run once on load
 
+// Popup Control Functions
+function openPopup() {
+  document.getElementById('popup-bg').classList.remove('hidden');
+  // Prevent background scroll
+  document.body.style.overflow = 'hidden';
+}
+
+function closePopup() {
+  document.getElementById('popup-bg').classList.add('hidden');
+  // Restore scroll
+  document.body.style.overflow = '';
+}
 
 // --- Custom JS from GDP.html ---
 // Tab Navigation Functionality

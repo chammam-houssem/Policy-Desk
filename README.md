@@ -1,46 +1,86 @@
-# Houssem Chammam - Professional Website
+# Houssem Chammam - Professional Portfolio Website
 
-A clean, professional website inspired by Oxford University's academic profile pages, specifically designed to showcase Houssem Chammam's work as a Public Policy Analyst.
+A modern, data-driven professional portfolio website showcasing my work as a Public Policy Analyst, featuring interactive data visualizations and academic-style presentation.
 
 ## Features
 
-- **Oxford-inspired Design**: Clean, British academic aesthetic with professional typography
-- **Tabbed Navigation**: Interactive tabs for Overview, Research, Teaching & Supervision, News, Publications, and Media
-- **Responsive Layout**: Optimized for both desktop and mobile devices
-- **Accessibility**: ARIA attributes and keyboard navigation support
-- **Social Sharing**: Built-in social media sharing functionality
+### Core Sections
+- **Overview Page**: Professional profile with expandable bio, skills showcase, and detailed experience timeline
+- **Research Section**: Detailed presentation of research focus, methods, and key areas
+- **Data Projects**: Interactive economic data visualizations with Chart.js
+- **Blog**: Dedicated space for policy insights and analysis
+
+### Technical Features
+- **Modern Stack**:
+  - Responsive design with mobile-first approach
+  - Chart.js for interactive data visualizations
+  - Tailwind CSS for modern styling
+  - Font Awesome icons integration
+  - Google Fonts (Roboto, Inter) for typography
+- **Interactive Elements**:
+  - Expandable content sections
+  - Dynamic data comparisons (1995 vs 2024 economic data)
+  - Tabbed navigation with smooth transitions
+  - Social media integration
+- **Professional Features**:
+  - CV download functionality
+  - Direct email contact
+  - LinkedIn profile integration
+  - Social sharing capabilities
+
+## Project Structure
+
+```
+├── index.html          # Main landing page
+├── data.html           # Interactive data visualizations
+├── blog.html           # Blog section
+├── styles.css          # Core styling
+├── script.js          # JavaScript functionality
+└── Images/            # Asset directory
+    └── Headshot2.PNG  # Profile photo
+```
+
+## Data Visualizations
+
+The data projects section features:
+- Top 30 Global Economies Comparison (1995 vs 2024)
+- GDP Share Analysis
+- Interactive time period toggles
+- Color-coded economic trend indicators
 
 ## Design Elements
 
-- Clean, minimalist layout with sidebar profile section
-- Professional color scheme using blues and grays
-- Sticky navigation tabs for easy content browsing
-- Smooth animations and transitions
-- Mobile-responsive grid layout
-
-## Structure
-
-- `index.html` - Main HTML structure
-- `styles.css` - Complete CSS styling
-- `script.js` - JavaScript for tab functionality and interactions
-- `images/` - Directory for profile images and assets
-
-## Usage
-
-1. Replace `images/profile-placeholder.png` with your actual profile photo
-2. Update the content in each tab section as needed
-3. Modify contact information and social links
-4. Customize colors and styling in `styles.css` if desired
-
-## Deployment
-
-This website is ready for deployment to GitHub Pages, Netlify, Vercel, or any static hosting service.
+- **Color Scheme**:
+  - Primary: Blues and grays for professional appeal
+  - Accent: Green (#36a853) and Yellow (#FDCB6E) for interactive elements
+- **Typography**:
+  - Roboto for main content
+  - Inter for data visualizations
+- **Layout**:
+  - Clean, academic-inspired design
+  - Responsive grid system
+  - Sidebar profile section
+  - Mobile-optimized navigation
 
 ## Browser Support
 
 - Modern browsers (Chrome, Firefox, Safari, Edge)
 - Mobile browsers (iOS Safari, Chrome Mobile)
-- Graceful degradation for older browsers
+- Responsive design for all screen sizes
+
+## Development
+
+To run this project locally:
+1. Clone the repository
+2. Open `index.html` in a modern web browser
+3. No build process required - static HTML/CSS/JS
+
+## Dependencies
+
+- Chart.js - For data visualizations
+- Font Awesome 6.4.0 - For icons
+- Tailwind CSS - For styling (via CDN)
+- Google Fonts (Roboto, Inter)
 
 ---
 

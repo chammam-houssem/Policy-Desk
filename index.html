@@ -7,17 +7,48 @@
     <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/3/3a/Wind_turbine_icon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+      (function(){
+        emailjs.init("veuyszbHGp1Id17Za");
+      })();
+    </script>
+    <style>
+      .nav-btn {
+        font-family: 'Roboto Serif', serif;
+      }
+      .primary-btn {
+        font-family: 'Inter', sans-serif;
+      }
+      .secondary-btn {
+        font-family: 'Inter', sans-serif;
+      }
+    </style>
 </head>
 <body>
+    <!-- Modal -->
+    <div id="popup-bg" class="hidden">
+      <div class="modal">
+        <button onclick="closePopup()" class="close-btn">&times;</button>
+        <h3 style="text-align: center; font-weight: 600; margin-bottom: 0.8em;">Write to Me</h3>
+        <form id="write-box" onsubmit="sendEmail(event)">
+          <input type="email" name="reply_to" placeholder="Your email" required>
+          <textarea name="message" placeholder="Your message" required rows="4"></textarea>
+          <button type="submit">Send</button>
+        </form>
+      </div>
+    </div>
+
     <!-- Tab Navigation -->
     <nav class="tab-navigation">
         <div class="container">
             <div class="tab-nav">
-                <button class="tab-btn active" data-tab="overview">Overview</button>
-                <button class="tab-btn" data-tab="research">Research</button>
-                <a class="tab-btn" href="data.html">Data Projects</a>
-                <a class="tab-btn" href="blog.html">Blog</a>
+                <button class="nav-btn tab-btn active" data-tab="overview">Overview</button>
+                <button class="nav-btn tab-btn" data-tab="research">Research</button>
+                <a class="nav-btn tab-btn" href="data.html">Data Projects</a>
+                <a class="nav-btn tab-btn" href="blog.html">Blog</a>
             </div>
         </div>
     </nav>
@@ -29,31 +60,35 @@
                 <!-- Sidebar -->
                 <aside class="sidebar">
                     <div class="profile-section">
-                        <div class="profile-photo">
-                            <img src="Images/Headshot2.PNG" alt="Houssem Chammam" class="profile-img">
-                        </div>
-
-                        <div class="contact-section">
-                            <h3 class="sidebar-title">Contact</h3>
-                            <a href="mailto:chammam.houssem@gmail.com" class="contact-email">
-                                chammam.houssem@gmail.com
+                        <div class="profile-box">
+                            <img src="Images/Headshot2.PNG" alt="Houssem Chammam" class="profile-img" style="margin-bottom: 25px;">
+                            <a href="mailto:chammam.houssem@gmail.com" class="profile-email" style="text-align: left; display: flex; align-items: center; gap: 6px;">
+                                <i class="fas fa-envelope"></i> chammam.houssem@gmail.com
                             </a>
-                            <a href="https://www.linkedin.com/in/houssem-chammam/" class="contact-social" target="_blank">
-                                <i class="fab fa-linkedin"></i>
-                                houssem-chammam
+                            <a href="https://www.linkedin.com/in/houssem-chammam/" class="profile-email" target="_blank" style="text-align: left; display: flex; align-items: center; gap: 6px;">
+                                <i class="fab fa-linkedin"></i> LinkedIn Profile
                             </a>
-                        </div>
 
-                        <div class="research-interests">
-                            <h3 class="sidebar-title">Research interests</h3>
-                            <p class="interests-text">Public finance; energy policy; sustainable development; Mediterranean policy; fiscal sustainability; climate finance</p>
-                        </div>
+                            <a href="Houssem Chammam CV.pdf" class="action-btn download-btn">
+                              <span class="btn-content">
+                                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                </svg>
+                                Download CV
+                              </span>
+                            </a>
 
-                        <div class="department-tags">
-                            <span class="dept-tag">Public Policy Analysis</span>
-                            <span class="dept-tag">Energy & Climate Policy</span>
-                        </div>
-                    </div>
+                            <!-- Write to Me Button -->
+                            <button onclick="openPopup()" class="action-btn contact-btn">
+                              <span class="btn-content">
+                                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                </svg>
+                                Write to me
+                              </span>
+                            </button>
                 </aside>
 
                 <!-- Main Content Area -->
@@ -67,46 +102,17 @@
 
                         <div class="profile-bio">
                             <div id="profile-preview">
-                                <p>I'm a public policy analyst specializing in public finance, energy, and sustainable development. I've led research and advocacy projects in Tunisia, the US, and across the Mediterranean, working to advance the energy transition in complex, resource-constrained settings.</p>
-                                <button onclick="toggleProfile()" class="read-more-btn">
-                                    <span>Read more</span>
-                                    <i class="fas fa-chevron-down"></i>
-                                </button>
+                                <p>I’m a policy analyst with experience leading research and advocacy projects in Tunisia, the US, and across the Mediterranean. Building on my work in public finance and sustainable development, my current research focuses on advancing practical solutions for the energy transition in settings challenged by debt, water scarcity, and institutional complexity.</p>
                             </div>
                             <div id="profile-full" class="hidden">
-                                <p>I'm a public policy analyst specializing in public finance, energy, and sustainable development. I've led research and advocacy projects in Tunisia, the US, and across the Mediterranean, working to advance the energy transition in complex, resource-constrained settings.</p>
-                                <p>My expertise spans cross-sectoral policy, stakeholder engagement, data analysis, and communicating policy to diverse audiences. I am passionate about building practical solutions for countries facing water scarcity, debt, and political fragmentation. Currently, my work focuses on the intersection of water and energy policy in North Africa and the Mediterranean.</p>
-                                <p>This site brings together my ongoing work, learning, and public interest projects.</p>
-                                <button onclick="toggleProfile()" class="read-more-btn">
-                                    <span>Show less</span>
-                                    <i class="fas fa-chevron-up"></i>
-                                </button>
+                                <p>I’m a policy analyst with experience leading research and advocacy projects in Tunisia, the US, and across the Mediterranean. Building on my work in public finance and sustainable development, my current research focuses on advancing practical solutions for the energy transition in settings challenged by debt, water scarcity, and institutional complexity.</p>
+                                <p>I bring expertise in policy evaluation, data analysis, stakeholder engagement, and strategic policy communication. I’m passionate about this work, and I continuously seek opportunities to deepen my knowledge and impact. Currently, my work focuses on the intersection of water scarcity and the energy transition in North Africa and the Mediterranean.</p>
+                                <p>This site brings together my work, ongoing learning, and public data projects.</p>
                             </div>
-                        </div>
-
-                        <!-- Skills/Methods Section -->
-                        <div class="skills-grid">
-                            <div class="skill-item">
-                                <div class="skill-icon">
-                                    <i class="fas fa-layer-group"></i>
-                                </div>
-                                <h3>Mixed Methods</h3>
-                                <p>Blending quantitative & qualitative research for practical policy solutions.</p>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-icon">
-                                    <i class="fas fa-chart-line"></i>
-                                </div>
-                                <h3>Data-Driven Analysis</h3>
-                                <p>Transforming data and evidence into actionable policy advice.</p>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-icon">
-                                    <i class="fas fa-bullhorn"></i>
-                                </div>
-                                <h3>Advocacy for Impact</h3>
-                                <p>Strategic engagement to drive sustainable policy change.</p>
-                            </div>
+                            <button id="profile-toggle-btn" class="read-more-btn" onclick="toggleProfile()">
+                                <span>Read more</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
                         </div>
 
                         <!-- Experience Timeline -->
@@ -116,9 +122,9 @@
                                 <div class="timeline-item">
                                     <div class="timeline-marker"></div>
                                     <div class="timeline-content">
-                                        <h3>Public Policy & Finance Lead</h3>
+                                        <h3>Public Policy & Finance Analyst</h3>
                                         <p class="timeline-meta">Al Bawsala • 2021 – 2023</p>
-                                        <p>Led research, coalition strategy, and advocacy during IMF negotiations. Designed interactive fiscal tools and co-authored key publications on debt, subsidy reform, and austerity.</p>
+                                        <p>Led research, designed interactive fiscal tools and co-authored key publications on Participated in IMF negotiations, COVID-19 recovery planning, and digitalization consultations with ministries.</p>
                                     </div>
                                 </div>
                                 <div class="timeline-item">
@@ -165,18 +171,28 @@
                             </div>
                         </div>
 
-                        <div class="share-section">
-                            <span class="share-label">Share</span>
-                            <div class="share-buttons">
-                                <a href="#" class="share-btn linkedin" title="Share on LinkedIn">
-                                    <i class="fab fa-linkedin"></i>
-                                </a>
-                                <a href="#" class="share-btn twitter" title="Share on Twitter">
-                                    <i class="fab fa-twitter"></i>
-                                </a>
-                                <a href="#" class="share-btn facebook" title="Share on Facebook">
-                                    <i class="fab fa-facebook"></i>
-                                </a>
+                        <!-- Skills/Methods Section -->
+                        <div class="skills-grid">
+                            <div class="skill-item">
+                                <div class="skill-icon">
+                                    <i class="fas fa-layer-group"></i>
+                                </div>
+                                <h3>Mixed Methods</h3>
+                                <p>Blending quantitative & qualitative research for practical policy solutions.</p>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <h3>Data-Driven Analysis</h3>
+                                <p>Transforming data and evidence into actionable policy advice.</p>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon">
+                                    <i class="fas fa-bullhorn"></i>
+                                </div>
+                                <h3>Advocacy for Impact</h3>
+                                <p>Strategic engagement to drive sustainable policy change.</p>
                             </div>
                         </div>
                     </div>
@@ -243,9 +259,47 @@
         function toggleProfile() {
             const preview = document.getElementById('profile-preview');
             const full = document.getElementById('profile-full');
+            const btn = document.getElementById('profile-toggle-btn');
+
+            const isHidden = full.classList.toggle('hidden');
             preview.classList.toggle('hidden');
-            full.classList.toggle('hidden');
+
+            if (isHidden) {
+                btn.querySelector('span').textContent = 'Read more';
+                btn.querySelector('i').classList.remove('fa-chevron-up');
+                btn.querySelector('i').classList.add('fa-chevron-down');
+            } else {
+                btn.querySelector('span').textContent = 'Show less';
+                btn.querySelector('i').classList.remove('fa-chevron-down');
+                btn.querySelector('i').classList.add('fa-chevron-up');
+            }
         }
+
+        function sendEmail(e) {
+            e.preventDefault();
+
+            const form = document.getElementById('write-box');
+            const formData = new FormData(form);
+
+            // Fill in with your EmailJS Service ID and Template ID:
+            const SERVICE_ID = 'service_eutne59';
+            const TEMPLATE_ID = 'template_w6irekz';
+
+            const params = {
+                message: formData.get('message'),
+                reply_to: formData.get('reply_to')
+            };
+
+            emailjs.send(SERVICE_ID, TEMPLATE_ID, params)
+                .then(function() {
+                    alert('Your message was sent!');
+                    form.reset();
+                    form.style.display = 'none';
+                }, function(error) {
+                    alert('Failed to send message: ' + JSON.stringify(error));
+                });
+        }
+
     </script>
 </body>
 </html>

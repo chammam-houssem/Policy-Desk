@@ -42,9 +42,9 @@
     </header>
 
     <nav class="flex justify-center items-center flex-wrap gap-2 md:gap-4 mb-8">
-      <a class="primary-btn tab-btn px-4 py-2 rounded-lg font-semibold text-white bg-[#36a853]" data-tab="topic1" href="#">Topic 1</a>
-      <a class="primary-btn tab-btn px-4 py-2 rounded-lg font-semibold text-[#3d405b] hover:bg-[#FDCB6E] hover:text-[#3d405b] transition-colors duration-200" data-tab="topic2" href="#">Topic 2</a>
-      <a class="primary-btn tab-btn px-4 py-2 rounded-lg font-semibold text-[#3d405b] hover:bg-[#FDCB6E] hover:text-[#3d405b] transition-colors duration-200" data-tab="topic3" href="#">Topic 3</a>
+      <a class="primary-btn tab-btn px-4 py-2 rounded-lg font-semibold text-white bg-[#36a853] hover:bg-[gold] hover:text-[#3d405b] transition-colors duration-200" data-tab="topic1" href="#">Topic 1</a>
+      <a class="primary-btn tab-btn px-4 py-2 rounded-lg font-semibold text-[#3d405b] hover:bg-[gold] hover:text-[#3d405b] transition-colors duration-200" data-tab="topic2" href="#">Topic 2</a>
+      <a class="primary-btn tab-btn px-4 py-2 rounded-lg font-semibold text-[#3d405b] hover:bg-[gold] hover:text-[#3d405b] transition-colors duration-200" data-tab="topic3" href="#">Topic 3</a>
     </nav>
 
     <main>
@@ -102,7 +102,7 @@
           let btn = document.querySelector('.tab-btn[data-tab="' + tab + '"]');
           let content = document.getElementById(tab);
           if (btn) {
-            btn.classList.add('bg-[#36a853]', 'text-white');
+            btn.classList.add('bg-[#36a853]', 'text-white', 'hover:bg-[gold]', 'hover:text-[#3d405b]');
             btn.classList.remove('text-[#3d405b]');
           }
           if (content) content.classList.add('active');

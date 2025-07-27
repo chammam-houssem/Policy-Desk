@@ -2,55 +2,159 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>The Future of Renewable Energy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Future of Renewable Energy | Houssem Chammam</title>
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,400;0,8..144,500;0,8..144,600;1,8..144,400&display=swap" rel="stylesheet">
     <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/3/3a/Wind_turbine_icon.svg" type="image/svg+xml">
 </head>
-<body class="article-bg article1-bg">
+<body>
+    <!-- Navigation -->
     <nav class="tab-navigation">
-      <div class="container">
-        <div class="tab-nav">
-          <a href="../index.html" class="tab-btn">Overview</a>
-          <a href="../index.html#research" class="tab-btn">Research</a>
-          <a href="../blog.html" class="tab-btn active">Blog<span id="blog-colon" style="display:none;">:</span> <span id="policy-desk-tab-text" class="gradient-text"></span></a>
+        <div class="container">
+            <div class="tab-nav">
+                <a href="../index.html" class="tab-btn">Overview</a>
+                <a href="../index.html#research" class="tab-btn">Research</a>
+                <a href="../data.html" class="tab-btn">Data Projects</a>
+                <a href="../blog.html" class="tab-btn active">Blog<span id="blog-colon">:</span> 
+                    <span id="policy-desk-tab-text" class="gradient-text">The Policy Desk</span>
+                </a>
+            </div>
         </div>
-      </div>
     </nav>
-    <div class="article-overlay">
-        <h1 class="article-title">The Future of Renewable Energy</h1>
-        <figure>
-            <img class="article-img" src="../Images/image1.jpg" alt="Renewable Energy">
-        </figure>
-        <p class="article-description"><mark>Exploring how renewable energy sources are shaping the future of global power generation and sustainability.</mark></p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vitae velit ex. Mauris dapibus risus quis suscipit vulputate.</p>
-    </div>
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const tabText = document.getElementById('policy-desk-tab-text');
-      const blogColon = document.getElementById('blog-colon');
-      const fullText = "The Policy Desk";
-      let current = "";
-      let i = 0;
 
-      tabText.style.opacity = 0;
+    <!-- Article Header -->
+    <header class="article-header">
+        <div class="container">
+            <div class="article-breadcrumb">
+                <a href="../blog.html" class="breadcrumb-link">
+                    <i class="fas fa-arrow-left"></i> Back to Blog
+                </a>
+            </div>
+            
+            <div class="article-meta">
+                <div class="article-tags">
+                    <span class="article-tag">Energy Policy</span>
+                    <span class="article-tag">Sustainability</span>
+                </div>
+                <div class="article-date">
+                    <i class="far fa-calendar"></i>
+                    <time datetime="2025-04-04">April 4, 2025</time>
+                    <span class="article-read-time">
+                        <i class="far fa-clock"></i>
+                        5 min read
+                    </span>
+                </div>
+            </div>
 
-      function typeWriter() {
-        if (i === 0) {
-          tabText.style.opacity = 1;
-        }
-        if (i < fullText.length) {
-          current += fullText.charAt(i);
-          tabText.textContent = current;
-          i++;
-          setTimeout(typeWriter, 60);
-        } else {
-          blogColon.style.display = '';
-        }
-      }
+            <h1 class="article-title">The Future of Renewable Energy</h1>
+            <p class="article-subtitle">Exploring how renewable energy sources are shaping the future of global power generation and sustainability.</p>
+            
+            <div class="article-author">
+                <img src="../Images/profile.jpg" alt="Houssem Chammam" class="author-avatar">
+                <div class="author-info">
+                    <span class="author-name">Houssem Chammam</span>
+                    <span class="author-title">Policy Researcher</span>
+                </div>
+            </div>
+        </div>
+    </header>
 
-      setTimeout(typeWriter, 400);
-    });
-    </script>
+    <!-- Article Content -->
+    <main class="article-main">
+        <div class="container">
+            <article class="article-content">
+                <figure class="article-featured-image">
+                    <img src="../Images/image1.jpg" alt="Renewable Energy Infrastructure" class="featured-img">
+                    <figcaption>Wind turbines and solar panels representing the future of renewable energy</figcaption>
+                </figure>
+
+                <div class="article-body">
+                    <p class="article-lead">The global energy landscape is undergoing a profound transformation. As nations grapple with climate change and energy security, renewable energy sources are emerging as the cornerstone of sustainable development strategies worldwide.</p>
+
+                    <h2>The Current State of Renewable Energy</h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vitae velit ex. Mauris dapibus risus quis suscipit vulputate. Sed convallis blandit massa ut auctor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
+
+                    <blockquote class="article-quote">
+                        "The transition to renewable energy is not just an environmental imperative, but an economic opportunity that will define the next century of global development."
+                    </blockquote>
+
+                    <h2>Key Technologies Driving Change</h2>
+                    <p>Curabitur convallis, sem sit amet interdum ultrices, lectus augue viverra tellus, nec facilisis erat elit id massa. Praesent euismod, justo vel consectetur cursus, enim erat dictum urna, eget facilisis nisi magna vel nulla.</p>
+
+                    <ul class="article-list">
+                        <li>Solar photovoltaic systems with improved efficiency</li>
+                        <li>Advanced wind turbine technologies</li>
+                        <li>Energy storage solutions and battery technology</li>
+                        <li>Smart grid infrastructure and management systems</li>
+                    </ul>
+
+                    <h2>Policy Implications and Challenges</h2>
+                    <p>The shift toward renewable energy requires comprehensive policy frameworks that address both technical and socioeconomic challenges. Governments must balance energy transition goals with economic stability and social equity.</p>
+
+                    <div class="article-highlight">
+                        <h3><i class="fas fa-lightbulb"></i> Key Insight</h3>
+                        <p>Successful renewable energy transitions require coordinated efforts across multiple sectors, including finance, technology, and regulatory frameworks.</p>
+                    </div>
+
+                    <h2>Looking Forward</h2>
+                    <p>As we move toward 2030 and beyond, the renewable energy sector will continue to evolve. Emerging technologies, changing policy landscapes, and growing environmental awareness will shape the future of global energy systems.</p>
+                </div>
+
+                <!-- Article Footer -->
+                <footer class="article-footer">
+                    <div class="article-share">
+                        <h3>Share this article</h3>
+                        <div class="share-buttons">
+                            <a href="#" class="share-btn linkedin" title="Share on LinkedIn">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="share-btn twitter" title="Share on Twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="share-btn facebook" title="Share on Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="article-navigation">
+                        <a href="article2.html" class="nav-link nav-prev">
+                            <i class="fas fa-chevron-left"></i>
+                            <div>
+                                <span class="nav-label">Previous Article</span>
+                                <span class="nav-title">Sustainable Development Goals</span>
+                            </div>
+                        </a>
+                        <a href="article3.html" class="nav-link nav-next">
+                            <div>
+                                <span class="nav-label">Next Article</span>
+                                <span class="nav-title">Climate Policy in the Mediterranean</span>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+                </footer>
+            </article>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-text">
+                <p>&copy; 2025 Houssem Chammam. All rights reserved.</p>
+            </div>
+            <div class="footer-social">
+                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../script.js"></script>
 </body>
 </html>

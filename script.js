@@ -438,3 +438,115 @@ window.onload = function() {
   initGDPShareChart();
 };
 
+// Add at the end of your existing script.js
+
+// Enhanced share functionality for articles
+document.addEventListener('DOMContentLoaded', function() {
+  // Article share buttons
+  const articleShareButtons = document.querySelectorAll('.article-share .share-btn');
+  
+  articleShareButtons.forEach(button => {
+      button.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          const url = window.location.href;
+          const title = document.querySelector('.article-title')?.textContent || document.title;
+          const description = document.querySelector('.article-subtitle')?.textContent || '';
+          
+          let shareUrl = '';
+          
+          if (this.classList.contains('linkedin')) {
+              shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(description)}`;
+          } else if (this.classList.contains('twitter')) {
+              shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title + ' - ' + description)}`;
+          } else if (this.classList.contains('facebook')) {
+              shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(title + ' - ' + description)}`;
+          }
+          
+          if (shareUrl) {
+              window.open(shareUrl, '_blank', 'width=600,height=400,scrollbars=yes,resizable=yes');
+          }
+      });
+  });
+  
+  // Smooth scroll for article navigation
+  const articleNavLinks = document.querySelectorAll('.article-navigation .nav-link');
+  articleNavLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+          // Add a subtle loading effect
+          this.style.opacity = '0.7';
+          setTimeout(() => {
+              this.style.opacity = '1';
+          }, 150);
+      });
+  });
+  
+  // Reading progress indicator (optional)
+  function createReadingProgress() {
+      const article = document.querySelector('.article-body');
+      if (!article) return;
+      
+      const progressBar = document.createElement('div');
+      progressBar.className = 'reading-progress';
+      progressBar.innerHTML = '<div class="reading-progress-bar"></div>';
+      document.body.appendChild(progressBar);
+      
+      function updateProgress() {
+          const articleTop = article.offsetTop;
+          const articleHeight = article.offsetHeight;
+          const scrollTop = window.pageYOffset;
+          const windowHeight = window.innerHeight;
+          
+          const progress = Math.max(0, Math.min(100, 
+              ((scrollTop - articleTop + windowHeight * 0.3) / articleHeight) * 100
+          ));
+          
+          progressBar.querySelector('.reading-progress-bar').style.width = progress + '%';
+      }
+      
+      window.addEventListener('scroll', updateProgress);
+      updateProgress();
+  }
+  
+  // Initialize reading progress if on article page
+  if (document.querySelector('.article-content')) {
+      createReadingProgress();
+  }
+});
+
+// Enhanced error handling for CSV loading
+function handleCSVError(error) {
+  console.error('Error loading CSV data:', error);
+  
+  // Show fallback message in chart containers
+  const chartContainers = document.querySelectorAll('.chart-container');
+  chartContainers.forEach(container => {
+      const wrapper = container.querySelector('.chart-wrapper');
+      if (wrapper) {
+          wrapper.innerHTML = `
+              <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #6c757d; text-align: center;">
+                  <div>
+                      <i class="fas fa-chart-bar" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
+                      <p>Chart data temporarily unavailable</p>
+                      <p style="font-size: 12px;">Please check the CSV file location</p>
+                  </div>
+              </div>
+          `;
+      }
+  });
+}
+
+// Add loading states for charts
+document.addEventListener('DOMContentLoaded', function() {
+  const chartWrappers = document.querySelectorAll('.chart-wrapper');
+  chartWrappers.forEach(wrapper => {
+      wrapper.innerHTML = `
+          <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #007bff;">
+              <div style="text-align: center;">
+                  <i class="fas fa-spinner fa-spin" style="font-size: 32px; margin-bottom: 12px;"></i>
+                  <p>Loading chart data...</p>
+              </div>
+          </div>
+      `;
+  });
+});

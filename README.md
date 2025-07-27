@@ -82,6 +82,8 @@ To run this project locally:
 - Tailwind CSS - For styling (via CDN)
 - Google Fonts (Roboto, Inter)
 
+
+
 ---
 
 © 2025 Houssem Chammam. All rights reserved.

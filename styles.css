@@ -1135,3 +1135,488 @@ button[onclick="openPopup()"]:hover,
   }
 }
 
+/* Article Page Styles */
+.article-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 40px 0 60px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.article-breadcrumb {
+    margin-bottom: 24px;
+}
+
+.breadcrumb-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #007bff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 6px;
+    background: rgba(0, 123, 255, 0.1);
+    transition: all 0.2s ease;
+}
+
+.breadcrumb-link:hover {
+    background: rgba(0, 123, 255, 0.15);
+    transform: translateY(-1px);
+}
+
+.article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 24px;
+    align-items: center;
+}
+
+.article-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.article-tag {
+    background: #007bff;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.article-date {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.article-date i {
+    margin-right: 6px;
+}
+
+.article-read-time {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.article-title {
+    font-size: 42px;
+    font-weight: 700;
+    color: #1a365d;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    font-family: 'Inter', -apple-system, sans-serif;
+}
+
+.article-subtitle {
+    font-size: 20px;
+    color: #495057;
+    line-height: 1.5;
+    margin-bottom: 32px;
+    font-weight: 400;
+}
+
+.article-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.author-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e9ecef;
+}
+
+.author-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.author-name {
+    font-weight: 600;
+    color: #1a365d;
+    font-size: 16px;
+}
+
+.author-title {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+/* Article Main Content */
+.article-main {
+    padding: 60px 0;
+}
+
+.article-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.article-featured-image {
+    margin-bottom: 48px;
+}
+
+.featured-img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.article-featured-image figcaption {
+    text-align: center;
+    font-size: 14px;
+    color: #6c757d;
+    margin-top: 16px;
+    font-style: italic;
+}
+
+/* Article Body Typography */
+.article-body {
+    font-size: 18px;
+    line-height: 1.7;
+    color: #495057;
+}
+
+.article-lead {
+    font-size: 22px;
+    font-weight: 500;
+    color: #1a365d;
+    line-height: 1.6;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.article-body h2 {
+    font-size: 28px;
+    font-weight: 600;
+    color: #1a365d;
+    margin: 48px 0 24px;
+    line-height: 1.3;
+}
+
+.article-body h3 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1a365d;
+    margin: 36px 0 18px;
+}
+
+.article-body p {
+    margin-bottom: 24px;
+}
+
+.article-quote {
+    background: #f8f9fa;
+    border-left: 4px solid #007bff;
+    padding: 24px 32px;
+    margin: 32px 0;
+    font-size: 20px;
+    font-style: italic;
+    color: #495057;
+    border-radius: 0 8px 8px 0;
+}
+
+.article-list {
+    margin: 24px 0;
+    padding-left: 0;
+    list-style: none;
+}
+
+.article-list li {
+    padding: 8px 0 8px 32px;
+    position: relative;
+    color: #495057;
+}
+
+.article-list li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.article-highlight {
+    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+    border: 1px solid #e1f5fe;
+    border-radius: 12px;
+    padding: 24px;
+    margin: 32px 0;
+}
+
+.article-highlight h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #1565c0;
+    font-size: 18px;
+    margin: 0 0 12px 0;
+}
+
+.article-highlight p {
+    margin: 0;
+    color: #424242;
+}
+
+/* Article Footer */
+.article-footer {
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 2px solid #e9ecef;
+}
+
+.article-share {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.article-share h3 {
+    font-size: 18px;
+    color: #495057;
+    margin-bottom: 16px;
+}
+
+.share-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.share-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    color: white;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 18px;
+}
+
+.share-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Article Navigation */
+.article-navigation {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+    gap: 16px;
+}
+
+.nav-link:hover {
+    border-color: #007bff;
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
+}
+
+.nav-prev {
+    justify-content: flex-start;
+}
+
+.nav-next {
+    justify-content: flex-end;
+    text-align: right;
+}
+
+.nav-label {
+    font-size: 12px;
+    color: #6c757d;
+    text-transform: uppercase;
+    font-weight: 500;
+    display: block;
+}
+
+.nav-title {
+    font-size: 14px;
+    color: #1a365d;
+    font-weight: 500;
+    display: block;
+    margin-top: 4px;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .article-header {
+        padding: 24px 0 40px;
+    }
+    
+    .article-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .article-title {
+        font-size: 32px;
+    }
+    
+    .article-subtitle {
+        font-size: 18px;
+    }
+    
+    .featured-img {
+        height: 250px;
+    }
+    
+    .article-body {
+        font-size: 16px;
+    }
+    
+    .article-lead {
+        font-size: 18px;
+    }
+    
+    .article-body h2 {
+        font-size: 24px;
+        margin: 32px 0 16px;
+    }
+    
+    .article-quote {
+        padding: 16px 20px;
+        font-size: 18px;
+        margin: 24px 0;
+    }
+    
+    .article-navigation {
+        grid-template-columns: 1fr;
+    }
+    
+    .nav-next {
+        text-align: left;
+        justify-content: flex-start;
+    }
+    
+    .share-buttons {
+        gap: 8px;
+    }
+    
+    .share-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .article-main {
+        padding: 40px 0;
+    }
+    
+    .article-title {
+        font-size: 28px;
+    }
+    
+    .article-subtitle {
+        font-size: 16px;
+    }
+    
+    .featured-img {
+        height: 200px;
+        border-radius: 8px;
+    }
+    
+    .article-highlight {
+        padding: 16px;
+    }
+    
+    .nav-link {
+        padding: 16px;
+        gap: 12px;
+    }
+}
+
+.chart-container {
+    margin: 48px 0;
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 32px 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.chart-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1a365d;
+    text-align: center;
+    margin-bottom: 24px;
+    font-family: 'Inter', -apple-system, sans-serif;
+}
+
+.chart-wrapper {
+    position: relative;
+    height: 400px;
+    margin-bottom: 16px;
+}
+
+.chart-description {
+    font-size: 14px;
+    color: #6c757d;
+    text-align: center;
+    margin: 0;
+    font-style: italic;
+}
+
+/* Mobile responsive charts */
+@media (max-width: 768px) {
+    .chart-container {
+        padding: 24px 16px;
+        margin: 32px 0;
+    }
+    
+    .chart-wrapper {
+        height: 300px;
+    }
+    
+    .chart-title {
+        font-size: 18px;
+    }
+    
+    .chart-description {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .chart-wrapper {
+        height: 250px;
+    }
+    
+    .chart-title {
+        font-size: 16px;
+        margin-bottom: 16px;
+    }
+    
+    .chart-container {
+        padding: 16px 12px;
+    }
+}

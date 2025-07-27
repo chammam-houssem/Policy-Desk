@@ -1,116 +1,4 @@
 /**
- * =================================================================================
- * Reusable Charting Module
- * Author: Houssem Chammam
- * =================================================================================
- * This module provides a function to create charts from CSV files.
- * It's designed to be flexible and reusable across different pages.
- */
-
-// Expose the charting functions to the global window object
-// so they can be called from inline scripts in HTML files.
-window.charting = {
-  /**
-   * Creates and renders a Chart.js chart from a CSV file.
-   * @param {object} config - The configuration object for the chart.
-   * @param {string} config.canvasId - The ID of the <canvas> element.
-   * @param {string} config.csvPath - The path to the CSV data file.
-   * @param {string} config.chartType - The type of chart (e.g., 'bar', 'doughnut', 'line').
-   * @param {function} config.dataProcessor - A function to process the raw CSV data into a format Chart.js understands. It receives the parsed data and should return an object with { labels: [], datasets: [] }.
-   * @param {object} config.chartOptions - The Chart.js options object for styling and configuration.
-   */
-  createChartFromCSV: function({ canvasId, csvPath, chartType, dataProcessor, chartOptions }) {
-      const canvas = document.getElementById(canvasId);
-      if (!canvas) {
-          console.error(`Chart Error: Canvas with ID '${canvasId}' not found.`);
-          return;
-      }
-
-      const chartWrapper = canvas.parentElement;
-
-      // --- 1. Show Loading State ---
-      if (chartWrapper) {
-          // Preserve the canvas element while showing loader
-          const loaderHTML = `
-              <div class="chart-loader" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.8); z-index: 10;">
-                  <div style="text-align: center; color: #007bff;">
-                      <i class="fas fa-spinner fa-spin" style="font-size: 32px; margin-bottom: 12px;"></i>
-                      <p>Loading chart data...</p>
-                  </div>
-              </div>
-          `;
-          chartWrapper.style.position = 'relative';
-          chartWrapper.insertAdjacentHTML('beforeend', loaderHTML);
-      }
-
-      // Destroy any old chart instance attached to the canvas
-      if (window.chartInstances && window.chartInstances[canvasId]) {
-          window.chartInstances[canvasId].destroy();
-      }
-      if (!window.chartInstances) {
-          window.chartInstances = {};
-      }
-
-      // --- 2. Fetch and Parse CSV Data ---
-      Papa.parse(csvPath, {
-          download: true,
-          header: true,
-          skipEmptyLines: true,
-          dynamicTyping: true,
-          complete: (results) => {
-              removeLoader(chartWrapper);
-              if (results.errors.length) {
-                  handleChartError(chartWrapper, canvas, `CSV Parsing Error: ${results.errors[0].message}`);
-                  return;
-              }
-
-              // --- 3. Process Data & Create Chart ---
-              try {
-                  const chartData = dataProcessor(results.data);
-                  const ctx = canvas.getContext('2d');
-                  window.chartInstances[canvasId] = new Chart(ctx, {
-                      type: chartType,
-                      data: chartData,
-                      options: chartOptions
-                  });
-              } catch (e) {
-                  handleChartError(chartWrapper, canvas, `Data Processing Error: ${e.message}`);
-              }
-          },
-          error: (error) => {
-              removeLoader(chartWrapper);
-              handleChartError(chartWrapper, canvas, `Could not load CSV file from '${csvPath}'.`);
-          }
-      });
-  }
-};
-
-function removeLoader(wrapper) {
-  const loader = wrapper ? wrapper.querySelector('.chart-loader') : null;
-  if (loader) {
-      loader.remove();
-  }
-}
-
-function handleChartError(wrapper, canvas, message) {
-  console.error(message);
-  if (wrapper) {
-      // Hide the canvas and show an error message in the wrapper
-      canvas.style.display = 'none';
-      wrapper.innerHTML += `
-          <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #6c757d; text-align: center;">
-              <div>
-                  <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5; color: #ffc107;"></i>
-                  <p><strong>Unable to load chart data</strong></p>
-                  <p style="font-size: 12px;">${message}</p>
-              </div>
-          </div>
-      `;
-  }
-}
-
-
-/**
 * =================================================================================
 * General Site Functionality
 * Author: Houssem Chammam
@@ -290,3 +178,116 @@ window.addEventListener('load', function() {
   window.addEventListener('scroll', handleScrollAnimations, { passive: true });
   handleScrollAnimations(); // Run once on load
 });
+
+
+/**
+ * =================================================================================
+ * Reusable Charting Module
+ * =================================================================================
+ * This module provides a function to create charts from CSV files.
+ * It's designed to be flexible and reusable across different pages.
+ */
+
+// Expose the charting functions to the global window object
+// so they can be called from inline scripts in HTML files.
+window.charting = {
+  /**
+   * Creates and renders a Chart.js chart from a CSV file.
+   * @param {object} config - The configuration object for the chart.
+   * @param {string} config.canvasId - The ID of the <canvas> element.
+   * @param {string} config.csvPath - The path to the CSV data file.
+   * @param {string} config.chartType - The type of chart (e.g., 'bar', 'doughnut', 'line').
+   * @param {function} config.dataProcessor - A function to process the raw CSV data into a format Chart.js understands. It receives the parsed data and should return an object with { labels: [], datasets: [] }.
+   * @param {object} config.chartOptions - The Chart.js options object for styling and configuration.
+   */
+  createChartFromCSV: function({ canvasId, csvPath, chartType, dataProcessor, chartOptions }) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) {
+          console.error(`Chart Error: Canvas with ID '${canvasId}' not found.`);
+          return;
+      }
+
+      const chartWrapper = canvas.parentElement;
+
+      // --- 1. Show Loading State ---
+      if (chartWrapper) {
+          // Preserve the canvas element while showing loader
+          const loaderHTML = `
+              <div class="chart-loader" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.8); z-index: 10;">
+                  <div style="text-align: center; color: #007bff;">
+                      <i class="fas fa-spinner fa-spin" style="font-size: 32px; margin-bottom: 12px;"></i>
+                      <p>Loading chart data...</p>
+                  </div>
+              </div>
+          `;
+          chartWrapper.style.position = 'relative';
+          chartWrapper.insertAdjacentHTML('beforeend', loaderHTML);
+      }
+
+      // Destroy any old chart instance attached to the canvas
+      if (window.chartInstances && window.chartInstances[canvasId]) {
+          window.chartInstances[canvasId].destroy();
+      }
+      if (!window.chartInstances) {
+          window.chartInstances = {};
+      }
+
+      // --- 2. Fetch and Parse CSV Data ---
+      Papa.parse(csvPath, {
+          download: true,
+          header: true,
+          skipEmptyLines: true,
+          dynamicTyping: true,
+          complete: (results) => {
+              removeLoader(chartWrapper);
+              if (results.errors.length) {
+                  handleChartError(chartWrapper, canvas, `CSV Parsing Error: ${results.errors[0].message}`);
+                  return;
+              }
+
+              // --- 3. Process Data & Create Chart ---
+              try {
+                  const chartData = dataProcessor(results.data);
+                  const ctx = canvas.getContext('2d');
+                  window.chartInstances[canvasId] = new Chart(ctx, {
+                      type: chartType,
+                      data: chartData,
+                      options: chartOptions
+                  });
+              } catch (e) {
+                  handleChartError(chartWrapper, canvas, `Data Processing Error: ${e.message}`);
+              }
+          },
+          error: (error) => {
+              removeLoader(chartWrapper);
+              handleChartError(chartWrapper, canvas, `Could not load CSV file from '${csvPath}'.`);
+          }
+      });
+  }
+};
+
+function removeLoader(wrapper) {
+  const loader = wrapper ? wrapper.querySelector('.chart-loader') : null;
+  if (loader) {
+      loader.remove();
+  }
+}
+
+function handleChartError(wrapper, canvas, message) {
+  console.error(message);
+  if (wrapper) {
+      // Hide the canvas and show an error message in the wrapper
+      canvas.style.display = 'none';
+      wrapper.innerHTML += `
+          <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #6c757d; text-align: center;">
+              <div>
+                  <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5; color: #ffc107;"></i>
+                  <p><strong>Unable to load chart data</strong></p>
+                  <p style="font-size: 12px;">${message}</p>
+              </div>
+          </div>
+      `;
+  }
+}
+
+

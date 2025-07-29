@@ -2,64 +2,177 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Rades Power Station: A Glimpse Into Tunisia’s Energy Bottlenecks</title>
-    <!-- Link to main stylesheet -->
-    <link rel="stylesheet" href="../styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rades Power Station: A Glimpse Into Tunisia's Energy Bottlenecks | Houssem Chammam</title>
+    <link rel="stylesheet" href="../styles.css"> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,400;0,8..144,500;0,8..144,600;1,8..144,400&display=swap" rel="stylesheet">
     <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/3/3a/Wind_turbine_icon.svg" type="image/svg+xml">
+    <!-- Chart.js and PapaParse are required for the charting module -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 </head>
-<body class="article-bg article2-bg">
+<body>
+    <!-- Navigation -->
     <nav class="tab-navigation">
-      <div class="container">
-        <div class="tab-nav">
-          <a href="../index.html" class="tab-btn">Overview</a>
-          <a href="../index.html#research" class="tab-btn">Research</a>
-          <a href="../blog.html" class="tab-btn active">Blog<span id="blog-colon" style="display:none;">:</span> <span id="policy-desk-tab-text" class="gradient-text"></span></a>
+        <div class="container">
+            <div class="tab-nav">
+                <a href="../index.html" class="tab-btn">Overview</a>
+                <a href="../index.html#featured" class="tab-btn">Featured Work</a>
+                <a href="../data.html" class="tab-btn">Data Projects</a>
+                <a href="../blog.html" class="tab-btn active">Blog<span id="blog-colon">:</span> 
+                    <span id="policy-desk-tab-text" class="gradient-text">The Policy Desk</span>
+                </a>
+            </div>
         </div>
-      </div>
     </nav>
-    <div class="article-overlay">
-        <h1 class="article-title">Rades Power Station: A Glimpse Into Tunisia’s Energy Bottlenecks</h1>
-        <figure>
-            <img class="article-img" src="https://via.placeholder.com/800x400.png?text=Image+Placeholder" alt="Article image placeholder">
-        </figure>
-        <p>At the edge of the Gulf of Tunis, the Rades power station looms as both a symbol of Tunisia’s industrial backbone and a warning sign of its stalled energy transition. As the country’s largest thermal generation complex, Rades I and II account for nearly 20% of Tunisia’s electricity production. Powered by imported natural gas, the station is emblematic of Tunisia’s energy paradox: a country with vast renewable potential that remains structurally dependent on fossil fuel infrastructure built decades ago.</p>
-        <p>Commissioned in phases since the 1980s, the Rades complex is run by the state utility STEG (Société Tunisienne de l’Électricité et du Gaz). Rades C, the latest expansion — a 450 MW combined-cycle plant backed by Japanese financing — was meant to modernize the site and improve efficiency. Yet persistent grid fragility, fuel supply volatility, and water cooling demands continue to expose the system’s vulnerabilities.</p>
-        <p>The station’s cooling technology draws heavily on seawater, making it energy-intensive and sensitive to marine environmental shifts. In the context of growing water scarcity and climate-related temperature stress, Rades’ reliance on water-intensive thermal generation reveals a structural blind spot. While desalination is being explored for water security, energy planners have yet to account for water risk within electricity production planning — an oversight with long-term consequences.</p>
-        <p>Behind the technical profile lies an institutional story. Despite Tunisia’s formal commitment to decarbonization, Rades continues to receive priority maintenance and planning attention, while renewable integration projects face delays and fragmented oversight. It is not simply a matter of technology. The dominance of STEG and a path-dependent investment logic favoring large-scale gas plants like Rades have slowed the momentum for decentralized renewable uptake.</p>
-        <p>Private investors observe this pattern with caution. The system's prioritization of centralized fossil infrastructure reinforces skepticism about the grid’s readiness to accommodate intermittent solar and wind sources — despite Tunisia’s 300+ sunny days a year. As long as Rades remains a keystone in Tunisia’s energy system, its operational structure will shape investor perceptions of risk and government commitment.</p>
-        <figure>
-            <img class="graph-img" src="https://via.placeholder.com/800x400.png?text=Graph+Placeholder" alt="Graph placeholder">
-        </figure>
-        <p>The energy transition will not succeed through targets alone. What happens at Rades — whether it is retrofitted, replaced, or reimagined — will define not only Tunisia’s emissions trajectory, but also its credibility as a market for sustainable energy investment.</p>
-    </div>
+
+    <!-- Article Header -->
+    <header class="article-header">
+        <div class="container">
+            <div class="article-breadcrumb">
+                <a href="../blog.html" class="breadcrumb-link">
+                    <i class="fas fa-arrow-left"></i> Back to Blog
+                </a>
+            </div>
+            
+            <div class="article-meta">
+                <div class="article-tags">
+                    <span class="article-tag">Energy Policy</span>
+                    <span class="article-tag">Infrastructure</span>
+                </div>
+                <div class="article-date">
+                    <i class="far fa-calendar"></i>
+                    <time datetime="2025-04-04">April 4, 2025</time>
+                    <span class="article-read-time">
+                        <i class="far fa-clock"></i>
+                        4 min read
+                    </span>
+                </div>
+            </div>
+
+            <h1 class="article-title">Rades Power Station: A Glimpse Into Tunisia's Energy Bottlenecks</h1>
+            <p class="article-subtitle">Examining the challenges and implications of Tunisia's largest thermal generation complex and its role in the country's energy transition.</p>
+            
+            <div class="article-author">
+                <img src="../Images/Headshot2.PNG" alt="Houssem Chammam" class="author-avatar">
+                <div class="author-info">
+                    <span class="author-name">Houssem Chammam</span>
+                    <span class="author-title">Policy Researcher</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Article Content -->
+    <main class="article-main">
+        <div class="container">
+            <article class="article-content">
+                <figure class="article-featured-image">
+                    <img src="../Images/image2.jpg" alt="Rades Power Station" class="featured-img">
+                    <figcaption>The Rades power station complex on the Gulf of Tunis</figcaption>
+                </figure>
+
+                <div class="article-body">
+                    <p class="article-lead">At the edge of the Gulf of Tunis, the Rades power station looms as both a symbol of Tunisia's industrial backbone and a warning sign of its stalled energy transition. As the country's largest thermal generation complex, Rades I and II account for nearly 20% of Tunisia's electricity production.</p>
+
+                    <h2>The Infrastructure Challenge</h2>
+                    <p>Commissioned in phases since the 1980s, the Rades complex is run by the state utility STEG (Société Tunisienne de l'Électricité et du Gaz). Rades C, the latest expansion — a 450 MW combined-cycle plant backed by Japanese financing — was meant to modernize the site and improve efficiency. Yet persistent grid fragility, fuel supply volatility, and water cooling demands continue to expose the system's vulnerabilities.</p>
+
+                    <blockquote class="article-quote">
+                        "The dominance of STEG and a path-dependent investment logic favoring large-scale gas plants like Rades have slowed the momentum for decentralized renewable uptake."
+                    </blockquote>
+
+                    <h2>Environmental and Resource Pressures</h2>
+                    <p>The station's cooling technology draws heavily on seawater, making it energy-intensive and sensitive to marine environmental shifts. In the context of growing water scarcity and climate-related temperature stress, Rades' reliance on water-intensive thermal generation reveals a structural blind spot. While desalination is being explored for water security, energy planners have yet to account for water risk within electricity production planning — an oversight with long-term consequences.</p>
+
+                    <p>The Mediterranean Sea, which provides the cooling water for Rades, has experienced unprecedented warming in recent decades, with surface temperatures rising by approximately 1.5°C since the 1980s. This warming trend directly impacts the efficiency of thermal power generation, as warmer intake water reduces the thermal gradient necessary for effective cooling. During peak summer months, when electricity demand is highest, the cooling system's efficiency can drop by 15-20%, forcing the plant to operate at reduced capacity or consume additional fuel to maintain output levels.</p>
+
+                    <p>Beyond temperature concerns, the station faces mounting pressure from marine ecosystem degradation. The continuous intake of seawater for cooling purposes disrupts local marine habitats, affecting fish populations and coastal biodiversity. The discharge of heated water back into the Gulf of Tunis creates thermal pollution zones that can extend several kilometers from the plant, further stressing marine ecosystems already under pressure from urban development and industrial activities along Tunisia's coastline.</p>
+
+                    <p>Water scarcity represents another critical vulnerability. Tunisia's freshwater resources are increasingly strained by population growth, agricultural demands, and climate change impacts. The country's annual renewable water resources per capita have declined from approximately 450 cubic meters in 1990 to less than 350 cubic meters today, placing Tunisia in the category of water-stressed nations. While Rades primarily uses seawater for cooling, the plant's auxiliary systems and staff facilities depend on freshwater supplies that are becoming increasingly scarce and expensive.</p>
+
+                    <p>The combination of rising sea levels and coastal erosion poses additional infrastructure risks. The power station's location on the Gulf of Tunis makes it vulnerable to storm surges and extreme weather events, which are projected to increase in frequency and intensity due to climate change. A 2019 study by the Mediterranean Action Plan estimated that coastal infrastructure in the region, including power plants, faces a 20-30% increase in flood risk by 2050, requiring significant adaptation investments that have yet to be fully accounted for in Tunisia's energy planning.</p>
+
+                    <div class="article-highlight">
+                        <h3><i class="fas fa-lightbulb"></i> Key Insight</h3>
+                        <p>Behind the technical profile lies an institutional story. Despite Tunisia's formal commitment to decarbonization, Rades continues to receive priority maintenance and planning attention, while renewable integration projects face delays and fragmented oversight.</p>
+                    </div>
+
+                    <h2>Investment and Market Implications</h2>
+                    <p>Private investors observe this pattern with caution. The system's prioritization of centralized fossil infrastructure reinforces skepticism about the grid's readiness to accommodate intermittent solar and wind sources — despite Tunisia's 300+ sunny days a year. As long as Rades remains a keystone in Tunisia's energy system, its operational structure will shape investor perceptions of risk and government commitment.</p>
+
+                    <ul class="article-list">
+                        <li>Persistent grid fragility and fuel supply volatility</li>
+                        <li>Water-intensive cooling technology sensitive to environmental shifts</li>
+                        <li>Institutional bias toward centralized fossil infrastructure</li>
+                        <li>Delayed renewable integration projects</li>
+                    </ul>
+
+                    <h2>The Path Forward</h2>
+                    <p>The energy transition will not succeed through targets alone. What happens at Rades — whether it is retrofitted, replaced, or reimagined — will define not only Tunisia's emissions trajectory, but also its credibility as a market for sustainable energy investment.</p>
+
+                    <p>Powered by imported natural gas, the station is emblematic of Tunisia's energy paradox: a country with vast renewable potential that remains structurally dependent on fossil fuel infrastructure built decades ago. It is not simply a matter of technology. The dominance of STEG and a path-dependent investment logic favoring large-scale gas plants like Rades have slowed the momentum for decentralized renewable uptake.</p>
+                </div>
+
+                <!-- Article Footer -->
+                <footer class="article-footer">
+                    <div class="article-share">
+                        <h3>Share this article</h3>
+                        <div class="share-buttons">
+                            <a href="#" class="share-btn linkedin" title="Share on LinkedIn">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="share-btn twitter" title="Share on Twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="share-btn facebook" title="Share on Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="article-navigation">
+                        <a href="article1.html" class="nav-link nav-prev">
+                            <i class="fas fa-chevron-left"></i>
+                            <div>
+                                <span class="nav-label">Previous Article</span>
+                                <span class="nav-title">The Future of Renewable Energy</span>
+                            </div>
+                        </a>
+                        <a href="article3.html" class="nav-link nav-next">
+                            <div>
+                                <span class="nav-label">Next Article</span>
+                                <span class="nav-title">Climate Policy in the Mediterranean</span>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+                </footer>
+            </article>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-text">
+                <p>&copy; 2025 Houssem Chammam. All rights reserved.</p>
+            </div>
+            <div class="footer-social">
+                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../script.js"></script>
     <script>
-document.addEventListener("DOMContentLoaded", function() {
-  const tabText = document.getElementById('policy-desk-tab-text');
-  const blogColon = document.getElementById('blog-colon');
-  const fullText = "The Policy Desk";
-  let current = "";
-  let i = 0;
-
-  tabText.style.opacity = 0;
-
-  function typeWriter() {
-    if (i === 0) {
-      tabText.style.opacity = 1;
-    }
-    if (i < fullText.length) {
-      current += fullText.charAt(i);
-      tabText.textContent = current;
-      i++;
-      setTimeout(typeWriter, 60);
-    } else {
-      // Show the colon after animation finishes
-      blogColon.style.display = '';
-    }
-  }
-
-  setTimeout(typeWriter, 400);
-});
-</script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // No charts needed for this article
+        });
+    </script>
 </body>
 </html> 

@@ -10,7 +10,7 @@
 
 // Enhanced color palette for better accessibility and consistency
 const ChartColorPalette = {
-    colors: ['#06B6D4', '#84CC16', '#10B981', '#2563eb', '#8B5CF6', '#dbeafe', '#06B6D4', '#84CC16'],    
+    colors: ['#06B6D4', '#FCD34D','#84CC16', '#2563eb', '#8B5CF6', '#dbeafe', '#06B6D4', '#84CC16'],    
     get: function(index, alpha = 1) {
         const color = this.colors[index % this.colors.length];
         if (alpha === 1) return color;

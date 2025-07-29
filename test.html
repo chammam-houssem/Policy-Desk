@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chart Palette Demo from CSV</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="script.js"></script>
+  <style>
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background: #f8fafc;
+      margin: 0;
+      padding: 2rem;
+      color: #1e293b;
+    }
+    .chart-container {
+      max-width: 600px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 1rem;
+      box-shadow: 0 2px 16px rgba(30, 58, 138, 0.04);
+      padding: 2rem 1.5rem;
+    }
+    h2 {
+      text-align: center;
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      color: #1e3a8a;
+    }
+  </style>
+</head>
+<body>
+  <div class="chart-container">
+    <h2>Bar Chart – Palette Colors from CSV</h2>
+    <canvas id="barPalette"></canvas>
+  </div>
+  <div class="chart-container">
+    <h2>Doughnut Chart – Palette Colors from CSV</h2>
+    <canvas id="doughnutPalette"></canvas>
+  </div>
+
+  <script>
+    // Use your defined palette
+    const palette = [
+      '#3B82F6', // blue
+      '#EF4444', // red
+      '#10B981', // green
+      '#F59E0B', // amber
+      '#8B5CF6', // violet
+      '#EC4899', // pink
+      '#06B6D4', // cyan
+      '#84CC16'  // lime
+    ];
+
+    // Helper: dataProcessor for palette CSV
+    function csvToPaletteChartData(data) {
+      const labels = data.map(row => row.Category);
+      const values = data.map(row => Number(row.Value));
+      return {
+        labels: labels,
+        datasets: [{
+          label: "Palette Demo",
+          data: values,
+          backgroundColor: palette
+        }]
+      };
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // Bar chart from CSV
+      window.charting.createChartFromCSV({
+        canvasId: 'barPalette',
+        csvPath: 'data/STEG Data.csv',
+        chartType: 'bar',
+        dataProcessor: csvToPaletteChartData,
+        chartOptions: {
+          plugins: { legend: { display: false } },
+          scales: { x: { grid: { display: false } } }
+        }
+      });
+
+      // Doughnut chart from CSV
+      window.charting.createChartFromCSV({
+        canvasId: 'doughnutPalette',
+        csvPath: 'data/STEG Data.csv',
+        chartType: 'doughnut',
+        dataProcessor: csvToPaletteChartData,
+        chartOptions: {
+          plugins: { legend: { position: 'bottom' } }
+        }
+      });
+    });
+  </script>
+</body>
+</html>

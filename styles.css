@@ -421,10 +421,6 @@ body {
     margin-bottom: 32px;
 }
 
-.timeline-content {
-    /* Revert to original: remove padding, background, border, margin, and box-shadow */
-}
-
 .timeline-marker {
     position: absolute;
     left: -37px;
@@ -698,7 +694,6 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-fill-color: transparent;
     letter-spacing: 1px;
     margin-left: 24px;
     font-family: 'Segoe UI', 'Arial', sans-serif;
@@ -735,7 +730,6 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-fill-color: transparent;
   font-weight: bold;
   opacity: 0;
   transition: opacity 1.2s cubic-bezier(0.4,0,0.2,1);
@@ -857,10 +851,6 @@ body {
     .timeline-marker {
         left: -32px;
         top: 4px;
-    }
-
-    .timeline-content {
-        /* Revert to original: remove margin and padding changes */
     }
 }
 

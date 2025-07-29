@@ -421,10 +421,6 @@ body {
     margin-bottom: 32px;
 }
 
-.timeline-content {
-    /* Revert to original: remove padding, background, border, margin, and box-shadow */
-}
-
 .timeline-marker {
     position: absolute;
     left: -37px;
@@ -698,7 +694,6 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-fill-color: transparent;
     letter-spacing: 1px;
     margin-left: 24px;
     font-family: 'Segoe UI', 'Arial', sans-serif;
@@ -735,7 +730,6 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-fill-color: transparent;
   font-weight: bold;
   opacity: 0;
   transition: opacity 1.2s cubic-bezier(0.4,0,0.2,1);
@@ -857,10 +851,6 @@ body {
     .timeline-marker {
         left: -32px;
         top: 4px;
-    }
-
-    .timeline-content {
-        /* Revert to original: remove margin and padding changes */
     }
 }
 
@@ -1576,6 +1566,9 @@ button[onclick="openPopup()"]:hover,
     position: relative;
     height: 400px;
     margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .chart-description {
@@ -1584,6 +1577,43 @@ button[onclick="openPopup()"]:hover,
     text-align: center;
     margin: 0;
     font-style: italic;
+}
+
+/* Chart loading and error states */
+.chart-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.chart-error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #dc3545;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+}
+
+.chart-loading::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e9ecef;
+    border-top: 2px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 /* Mobile responsive charts */

@@ -37,7 +37,7 @@ A modern, data-driven professional portfolio website showcasing my work as a Pub
 ├── styles.css          # Core styling
 ├── script.js          # JavaScript functionality
 └── Images/            # Asset directory
-    └── Headshot2.PNG  # Profile photo
+    └── HoussemChammam.PNG  # Profile photo
 ```
 
 ## Data Visualizations

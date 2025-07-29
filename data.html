@@ -6,12 +6,13 @@
   <title>Houssem Chammam | Data Projects</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    .nav-btn {
+    .nav-btn, .main-nav-btn {
       font-family: 'Roboto Serif', serif;
     }
     .primary-btn {
@@ -23,17 +24,35 @@
   </style>
 </head>
 <body class="antialiased">
-    <!-- Tab Navigation -->
+    <!-- Top Main Navigation Bar -->
     <nav class="tab-navigation">
-      <div class="container">
-          <div class="tab-nav">
-               <button onclick="window.location.href='index.html'" class="nav-btn tab-btn">Overview</button>
-               <button onclick="window.location.href='index.html#research'" class="nav-btn tab-btn">Research</button>
-               <button onclick="window.location.href='data.html'" class="nav-btn tab-btn active">Data Projects</button>
-               <button onclick="window.location.href='blog.html'" class="nav-btn tab-btn">Blog</button>
-          </div>
-      </div>
-  </nav>
+        <div class="container">
+            <div class="tab-nav">
+                <a class="main-nav-btn nav-btn tab-btn" href="index.html">Overview</a>
+                <a class="main-nav-btn nav-btn tab-btn" href="index.html#featured">Featured Work</a>
+                <a class="main-nav-btn nav-btn tab-btn" href="data.html">Data Projects</a>
+                <a class="main-nav-btn nav-btn tab-btn" href="blog.html">Blog</a>
+            </div>
+        </div>
+    </nav>
+    <!-- Dynamic highlight script for the nav bar -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const navLinks = document.querySelectorAll('.main-nav-btn');
+        const currentPath = window.location.pathname.split('/').pop();
+        navLinks.forEach(link => {
+          // Remove all 'active'
+          link.classList.remove('active');
+          // Only compare first part of href (ignore #hash)
+          if(link.getAttribute('href')) {
+            const linkHref = link.getAttribute('href').split('#')[0];
+            if(linkHref === currentPath || (linkHref === 'index.html' && (currentPath === '' || currentPath === '/'))) {
+              link.classList.add('active');
+            }
+          }
+        });
+      });
+    </script>
 
   <div class="container mx-auto p-4 md:p-8">
     <header class="text-center mb-8">
@@ -41,6 +60,7 @@
       <p class="text-lg text-gray-600 mt-2">Explore insights by switching between tabs</p>
     </header>
 
+    <!-- Section Tabs (internal to this page, untouched) -->
     <nav class="flex justify-center items-center flex-wrap gap-2 md:gap-4 mb-8">
       <a class="primary-btn tab-btn px-4 py-2 rounded-lg font-semibold text-white bg-[#36a853] hover:bg-[gold] hover:text-[#3d405b] transition-colors duration-200" data-tab="topic1" href="#">Topic 1</a>
       <a class="primary-btn tab-btn px-4 py-2 rounded-lg font-semibold text-[#3d405b] hover:bg-[gold] hover:text-[#3d405b] transition-colors duration-200" data-tab="topic2" href="#">Topic 2</a>
@@ -73,9 +93,29 @@
         </div>
       </section>
       <section id="topic2" class="tab-content">
+        <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+          <h2 class="text-2xl font-bold mb-4">Global Renewable Energy Capacity</h2>
+          <p class="text-gray-700 mb-6">
+            Explore renewable energy capacity distribution across different regions and energy sources worldwide.
+          </p>
+          <div class="flex justify-center mb-4">
+            <a href="Data/renewable_energy_data.csv" download class="primary-btn px-4 py-2 rounded-lg font-semibold text-white bg-[#36a853] hover:bg-[gold] hover:text-[#3d405b] transition-colors duration-200 inline-flex items-center gap-2">
+              <i class="fas fa-download"></i>
+              Download CSV Data
+            </a>
+          </div>
+          <div class="chart-container">
+            <canvas id="renewableCapacityChart"></canvas>
+          </div>
+        </div>
         <div class="bg-white p-6 rounded-lg shadow-md">
-          <h2 class="text-2xl font-bold mb-4">Topic 2</h2>
-          <p class="text-gray-700">This section will contain content related to Topic 2.</p>
+          <h2 class="text-2xl font-bold mb-4">Investment vs GDP Per Capita</h2>
+          <p class="text-gray-700 mb-6">
+            Analyze the relationship between renewable energy investment and economic development across countries.
+          </p>
+          <div class="chart-container">
+            <canvas id="investmentScatterChart"></canvas>
+          </div>
         </div>
       </section>
       <section id="topic3" class="tab-content">
@@ -332,7 +372,210 @@
         initTop30Chart();
         showTop30Chart('1995');
         initGDPShareChart();
+        
+        // Initialize Topic 2 charts using the charting module
+        initTopic2Charts();
       }, 100); // Delay to ensure canvas is present
+      
+      // Topic 2 Charts Implementation
+      function initTopic2Charts() {
+        // Chart 1: Renewable Energy Capacity by Region (Stacked Bar Chart)
+        window.charting.createChartFromCSV({
+          canvasId: 'renewableCapacityChart',
+          csvPath: 'Data/renewable_energy_data.csv',
+          chartType: 'bar',
+          requiredFields: ['Region', 'Solar_Capacity_MW', 'Wind_Capacity_MW', 'Hydro_Capacity_MW'],
+          dataProcessor: function(data) {
+            const regionData = {};
+            
+            data.forEach(row => {
+              const region = row.Region;
+              const solar = parseFloat(row.Solar_Capacity_MW) || 0;
+              const wind = parseFloat(row.Wind_Capacity_MW) || 0;
+              const hydro = parseFloat(row.Hydro_Capacity_MW) || 0;
+              
+              if (!regionData[region]) {
+                regionData[region] = { solar: 0, wind: 0, hydro: 0 };
+              }
+              
+              regionData[region].solar += solar;
+              regionData[region].wind += wind;
+              regionData[region].hydro += hydro;
+            });
+            
+            const regions = Object.keys(regionData);
+            
+            return {
+              labels: regions,
+              datasets: [
+                {
+                  label: 'Solar Capacity (MW)',
+                  data: regions.map(region => regionData[region].solar),
+                  backgroundColor: '#FDCB6E',
+                  borderColor: '#E17055',
+                  borderWidth: 1
+                },
+                {
+                  label: 'Wind Capacity (MW)',
+                  data: regions.map(region => regionData[region].wind),
+                  backgroundColor: '#74B9FF',
+                  borderColor: '#0984E3',
+                  borderWidth: 1
+                },
+                {
+                  label: 'Hydro Capacity (MW)',
+                  data: regions.map(region => regionData[region].hydro),
+                  backgroundColor: '#00B894',
+                  borderColor: '#00A085',
+                  borderWidth: 1
+                }
+              ]
+            };
+          },
+          chartOptions: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { 
+                position: 'top',
+                labels: { font: { size: 12 } }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return `${context.dataset.label}: ${context.parsed.y.toLocaleString()} MW`;
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                stacked: true,
+                ticks: { color: '#3d405b', font: { size: 11 } }
+              },
+              y: {
+                stacked: true,
+                beginAtZero: true,
+                title: { display: true, text: 'Capacity (MW)', color: '#3d405b' },
+                ticks: { 
+                  color: '#3d405b', 
+                  font: { size: 11 },
+                  callback: function(value) {
+                    return value.toLocaleString();
+                  }
+                }
+              }
+            }
+          }
+        });
+
+        // Chart 2: Investment vs GDP Per Capita (Scatter Chart)
+        window.charting.createChartFromCSV({
+          canvasId: 'investmentScatterChart',
+          csvPath: 'Data/renewable_energy_data.csv',
+          chartType: 'scatter',
+          requiredFields: ['Country', 'Investment_Million_USD', 'GDP_Per_Capita_USD', 'Region'],
+          dataProcessor: function(data) {
+            const regionColors = {
+              'Europe': '#74B9FF',
+              'Asia': '#FDCB6E',
+              'North America': '#00B894',
+              'South America': '#E17055',
+              'Africa': '#A29BFE',
+              'Oceania': '#FD79A8'
+            };
+            
+            const datasets = {};
+            
+            data.forEach(row => {
+              const region = row.Region;
+              const investment = parseFloat(row.Investment_Million_USD) || 0;
+              const gdpPerCapita = parseFloat(row.GDP_Per_Capita_USD) || 0;
+              const country = row.Country;
+              
+              if (investment > 0 && gdpPerCapita > 0) {
+                if (!datasets[region]) {
+                  datasets[region] = {
+                    label: region,
+                    data: [],
+                    backgroundColor: regionColors[region] || '#DDD',
+                    borderColor: regionColors[region] || '#999',
+                    borderWidth: 1,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                  };
+                }
+                
+                datasets[region].data.push({
+                  x: gdpPerCapita,
+                  y: investment,
+                  country: country
+                });
+              }
+            });
+            
+            return {
+              datasets: Object.values(datasets)
+            };
+          },
+          chartOptions: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { 
+                position: 'top',
+                labels: { font: { size: 12 } }
+              },
+              tooltip: {
+                callbacks: {
+                  title: function(context) {
+                    return context[0].raw.country;
+                  },
+                  label: function(context) {
+                    return [
+                      `GDP per Capita: $${context.parsed.x.toLocaleString()}`,
+                      `Investment: $${context.parsed.y.toLocaleString()}M`
+                    ];
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                type: 'linear',
+                position: 'bottom',
+                title: { 
+                  display: true, 
+                  text: 'GDP per Capita (USD)', 
+                  color: '#3d405b' 
+                },
+                ticks: { 
+                  color: '#3d405b', 
+                  font: { size: 11 },
+                  callback: function(value) {
+                    return '$' + value.toLocaleString();
+                  }
+                }
+              },
+              y: {
+                beginAtZero: true,
+                title: { 
+                  display: true, 
+                  text: 'Investment (Million USD)', 
+                  color: '#3d405b' 
+                },
+                ticks: { 
+                  color: '#3d405b', 
+                  font: { size: 11 },
+                  callback: function(value) {
+                    return '$' + value.toLocaleString() + 'M';
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
       // Chart toggle button handlers
       document.getElementById('btn-1995').addEventListener('click', function() {
         showTop30Chart('1995');
@@ -343,5 +586,6 @@
     });
   </script>
 
+  <script src="script.js"></script>
 </body>
 </html>

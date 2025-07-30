@@ -1,0 +1,41 @@
+Name of Plant,Type of Plant,Location,Capacity (MW),Actual Capacity at 40°C (MW),Year of Initial Operation,Retirement Year,Aggregate
+Sousse A #1,TV,Sousse,160,160,1990,2016,False
+Sousse A #2,TV,Sousse,160,160,1990,2016,False
+Rades A #1,TV,Tunis,170,145,1985,2021,False
+Bouchemma #2,TG,Bouchemma,30,27,,2022,False
+Bouchemma #3,TG,Bouchemma,30,27,,2022,False
+Kasserine #1,TG,Kasserine,30,27,,2022,False
+Kasserine #2,TG,Kasserine,30,27,,2022,False
+Sfax #1,TG,Sfax,20,17,,2022,False
+Sfax #2,TG,Sfax,20,17,,2022,False
+Tunis Sud #1,TG,Tunis Sud,20,18,,2022,False
+Tunis Sud #2,TG,Tunis Sud,20,18,,2022,False
+Tunis Sud #3,TG,Tunis Sud,20,18,,2022,False
+Korba #1,TG,Korba,20,18,,2022,False
+Korba #2,TG,Korba,30,27,,2022,False
+Menzel Bourguiba #1,TG,Menzel Bourguiba,20,18,,2022,False
+Menzel Bourguiba #2,TG,Menzel Bourguiba,20,18,,2022,False
+Zarzis #1,TG,Zarzis,30,27,,2022,False
+Robbana #1,TG,Robbana,30,27,,2022,False
+Rades A #2,TV,Tunis,170,145,1993,2023,False
+Sousse B ,TG,Sousse,364,310,1994,2025,False
+Rades D,CC,Rades,440,440,2002,2027,False
+Bir M'cherga #1,TG,Bir M'cherga,120,100,,2028,False
+Bir M'cherga #2,TG,Bir M'cherga,120,100,,2028,False
+Rades B #1,TV,Tunis,150,130,1996,2029,False
+Rades B #2,TV,Tunis,150,130,1998,2029,False
+Thyna #1,TG,Thyna,120,100,,2034,False
+Goulette,TG,Goulette,120,105,,2035,False
+Feriana #1,TG,Feriana,120,100,,2035,False
+Thyna #2,TG,Thyna,120,100,,2037,False
+Feriana #2,TG,Feriana,120,100,,2039,False
+Bouchemma #1,TG,Bouchemma,120,100,,2039,False
+Thyna #3,TG,Thyna,120,100,,2040,False
+Ghannouch,CC,Ghannouch,412,373,2011,2041,False
+Bir M'cherga #3,TG,Bir M'cherga,120,100,,2043,False
+Bir M'cherga #4,TG,Bir M'cherga,120,100,,2043,False
+El Bibane,TG,,27,,2003,,False
+Rades D,CC,Rades,450,407,2018,,False
+Total 2021,CC,Tunisia,"2,080",,,,True
+Total 2021,TG,Tunisia,"2,879",,,,True
+Total 2021,TV,Tunisia,660,,,,True

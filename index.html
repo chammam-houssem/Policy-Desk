@@ -62,7 +62,7 @@
                     <div class="profile-section">
                         <div class="profile-box">
                             <img src="Images/HoussemChammam.PNG" alt="Houssem Chammam" class="profile-img" style="margin-bottom: 25px;">
-                            <a href="mailto:chammam.houssem@gmail.com" class="profile-email" style="text-align: left; display: flex; align-items: center; gap: 6px;">
+                            <a href="mailto:chammam.houssem@gmail.com?subject=Contact from Policy Desk Website&body=Hello Houssem,%0D%0A%0D%0AI came across your website and would like to get in touch.%0D%0A%0D%0ABest regards," class="profile-email" style="text-align: left; display: flex; align-items: center; gap: 6px;">
                                 <i class="fas fa-envelope"></i> chammam.houssem@gmail.com
                             </a>
                             <a href="https://www.linkedin.com/in/houssem-chammam/" class="profile-email" target="_blank" style="text-align: left; display: flex; align-items: center; gap: 6px;">
@@ -188,7 +188,15 @@
                                     <div class="timeline-content">
                                         <h3>Authoritarianism & Repression</h3>
                                         <p class="timeline-meta">State Violence and Regime Durability</p>
-                                        <p>I have studied authoritarianism across two research collaborations. At Carleton College, under Dr. Kent Freeze, I investigated how different authoritarian regime types employ state repression and how these strategies affect regime survival. I built a dataset capturing all authoritarian regimes since 1992 and their repression patterns. Later, under Dr. Maria Josua at the GIGA Institute, I examined how repression was publicly justified in Ben Ali's Tunisia, analyzing rhetorical legitimation strategies and institutional narratives that normalized state violence.</p>
+                                        <div class="research-content">
+                                            <div class="research-preview">
+                                                <p>I have studied authoritarianism across two research collaborations. At Carleton College, under Dr. Kent Freeze, I investigated how different authoritarian regime types employ state repression and how these strategies affect regime survival.</p>
+                                            </div>
+                                            <div class="research-full hidden">
+                                                <p>I have studied authoritarianism across two research collaborations. At Carleton College, under Dr. Kent Freeze, I investigated how different authoritarian regime types employ state repression and how these strategies affect regime survival. I built a dataset capturing all authoritarian regimes since 1992 and their repression patterns. Later, under Dr. Maria Josua at the GIGA Institute, I examined how repression was publicly justified in Ben Ali's Tunisia, analyzing rhetorical legitimation strategies and institutional narratives that normalized state violence.</p>
+                                            </div>
+                                            <a href="#" class="read-more-link" onclick="toggleResearch(this)">Read more</a>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="timeline-item">
@@ -196,7 +204,15 @@
                                     <div class="timeline-content">
                                         <h3>Debt, Austerity & Fiscal Policy</h3>
                                         <p class="timeline-meta">Fiscal Reform and Social Resilience</p>
-                                        <p>At the Institute for Policy Studies, I contributed to the National Priorities Project, analyzing the U.S. federal budget with a focus on military spending and COVID-19 relief. In Tunisia, I led Al Bawsala's research on debt sustainability and fiscal reform, focusing on how austerity policies impacted public services. My work included a detailed analysis of the healthcare system's structural weaknesses and how long-term underinvestment left it vulnerable during the COVID-19 crisis.</p>
+                                        <div class="research-content">
+                                            <div class="research-preview">
+                                                <p>At the Institute for Policy Studies, I contributed to the National Priorities Project, analyzing the U.S. federal budget with a focus on military spending and COVID-19 relief. In Tunisia, I led Al Bawsala's research on debt sustainability and fiscal reform.</p>
+                                            </div>
+                                            <div class="research-full hidden">
+                                                <p>At the Institute for Policy Studies, I contributed to the National Priorities Project, analyzing the U.S. federal budget with a focus on military spending and COVID-19 relief. In Tunisia, I led Al Bawsala's research on debt sustainability and fiscal reform, focusing on how austerity policies impacted public services. My work included a detailed analysis of the healthcare system's structural weaknesses and how long-term underinvestment left it vulnerable during the COVID-19 crisis.</p>
+                                            </div>
+                                            <a href="#" class="read-more-link" onclick="toggleResearch(this)">Read more</a>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="timeline-item">
@@ -204,7 +220,15 @@
                                     <div class="timeline-content">
                                         <h3>Media Ownership & Electoral Coverage</h3>
                                         <p class="timeline-meta">Media Consolidation and Democratic Discourse</p>
-                                        <p>At Carleton College, I proposed and conducted a research project under Dr. Barbara Allen examining how corporate media acquisitions influenced electoral coverage. By comparing reporting patterns from the 2016 and 2020 U.S. elections, I analyzed shifts in tone, topic emphasis, and political framing in outlets that underwent ownership changes in the intervening years.</p>
+                                        <div class="research-content">
+                                            <div class="research-preview">
+                                                <p>At Carleton College, I proposed and conducted a research project under Dr. Barbara Allen examining how corporate media acquisitions influenced electoral coverage.</p>
+                                            </div>
+                                            <div class="research-full hidden">
+                                                <p>At Carleton College, I proposed and conducted a research project under Dr. Barbara Allen examining how corporate media acquisitions influenced electoral coverage. By comparing reporting patterns from the 2016 and 2020 U.S. elections, I analyzed shifts in tone, topic emphasis, and political framing in outlets that underwent ownership changes in the intervening years.</p>
+                                            </div>
+                                            <a href="#" class="read-more-link" onclick="toggleResearch(this)">Read more</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -326,7 +350,7 @@
                     <a href="https://www.linkedin.com/in/houssem-chammam/" class="social-link" target="_blank">
                         <i class="fab fa-linkedin"></i>
                     </a>
-                    <a href="mailto:chammam.houssem@gmail.com" class="social-link">
+                    <a href="mailto:chammam.houssem@gmail.com?subject=Contact from Policy Desk Website&body=Hello Houssem,%0D%0A%0D%0AI came across your website and would like to get in touch.%0D%0A%0D%0ABest regards," class="social-link">
                         <i class="fas fa-envelope"></i>
                     </a>
                 </div>
@@ -352,6 +376,24 @@
                 btn.querySelector('span').textContent = 'Show less';
                 btn.querySelector('i').classList.remove('fa-chevron-down');
                 btn.querySelector('i').classList.add('fa-chevron-up');
+            }
+        }
+
+        function toggleResearch(link) {
+            // Prevent the default link behavior
+            event.preventDefault();
+            
+            const researchContent = link.parentElement;
+            const preview = researchContent.querySelector('.research-preview');
+            const full = researchContent.querySelector('.research-full');
+            
+            const isHidden = full.classList.toggle('hidden');
+            preview.classList.toggle('hidden');
+            
+            if (isHidden) {
+                link.textContent = 'Read more';
+            } else {
+                link.textContent = 'Show less';
             }
         }
 
@@ -555,6 +597,29 @@
                 flex-direction: column;
                 gap: 0.5rem;
             }
+        }
+
+        /* Research read more styles */
+        .research-content {
+            position: relative;
+        }
+
+        .read-more-link {
+            color: #6b7280;
+            text-decoration: underline;
+            font-size: 0.875rem;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+
+        .read-more-link:hover {
+            color: #4b5563;
+        }
+
+        .research-preview.hidden,
+        .research-full.hidden {
+            display: none;
         }
     </style>
 </body>

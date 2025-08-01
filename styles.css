@@ -159,6 +159,14 @@ body {
     margin-bottom: 15px;
 }
 
+.profile-contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 25px;
+    align-items: flex-start;
+}
+
 .profile-email {
     display: block;
     color: #007bff;
@@ -167,8 +175,19 @@ body {
     margin-bottom: 15px;
 }
 
+.profile-contact-info .profile-email {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0;
+}
+
 .profile-email i {
     margin-right: 6px;
+}
+
+.profile-contact-info .profile-email i {
+    margin-right: 0;
 }
 
 .download-cv-btn {

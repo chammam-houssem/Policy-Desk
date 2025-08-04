@@ -254,7 +254,7 @@
         .featured-article,
         .publication-item {
             display: grid;
-            grid-template-columns: 150px 1fr;
+            grid-template-columns: 1fr 150px;
             gap: 1rem;
             background: #ffffff;
             border: 1px solid #e5e7eb;
@@ -262,6 +262,16 @@
             padding: 1.5rem;
             align-items: start;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .article-content,
+        .publication-content {
+            grid-column: 1;
+        }
+
+        .article-image,
+        .publication-image {
+            grid-column: 2;
         }
 
         .featured-article:hover,
@@ -325,6 +335,13 @@
             .featured-article,
             .publication-item {
                 grid-template-columns: 1fr;
+            }
+
+            .article-image,
+            .publication-image,
+            .article-content,
+            .publication-content {
+                grid-column: auto;
             }
 
             .publication-links {

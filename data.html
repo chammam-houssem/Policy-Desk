@@ -12,9 +12,6 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    .nav-btn, .main-nav-btn {
-      font-family: 'Roboto Serif', serif;
-    }
     .primary-btn {
       font-family: 'Inter', sans-serif;
     }
@@ -55,36 +52,18 @@
     }
   </style>
 </head>
-<body class="antialiased">
+<body>
     <!-- Top Main Navigation Bar -->
-    <nav class="tab-navigation">
-        <div class="container">
-            <div class="tab-nav">
-                <a class="main-nav-btn nav-btn tab-btn" href="index.html">Overview</a>
-                <a class="main-nav-btn nav-btn tab-btn" href="index.html#featured">Featured Work</a>
-                <a class="main-nav-btn nav-btn tab-btn" href="data.html">Data Projects</a>
-                <a class="main-nav-btn nav-btn tab-btn" href="blog.html">Blog</a>
-            </div>
-        </div>
-    </nav>
-    <!-- Dynamic highlight script for the nav bar -->
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const navLinks = document.querySelectorAll('.main-nav-btn');
-        const currentPath = window.location.pathname.split('/').pop();
-        navLinks.forEach(link => {
-          // Remove all 'active'
-          link.classList.remove('active');
-          // Only compare first part of href (ignore #hash)
-          if(link.getAttribute('href')) {
-            const linkHref = link.getAttribute('href').split('#')[0];
-            if(linkHref === currentPath || (linkHref === 'index.html' && (currentPath === '' || currentPath === '/'))) {
-              link.classList.add('active');
-            }
-          }
-        });
-      });
-    </script>
+  <nav class="tab-navigation">
+    <div class="container">
+      <div class="tab-nav">
+        <a href="index.html" class="tab-btn">Overview</a>
+        <a href="featured-work.html" class="tab-btn">Featured Work</a>
+        <button class="tab-btn active">Data Projects</button>
+        <a href="blog.html" class="tab-btn">Blog</a>
+      </div>
+    </div>
+  </nav>
 
   <div class="container mx-auto p-4 md:p-8">
     <header class="text-center mb-8">

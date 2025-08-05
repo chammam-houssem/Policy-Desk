@@ -21,6 +21,38 @@
     .secondary-btn {
       font-family: 'Inter', sans-serif;
     }
+    
+    /* Reduce topic 2 chart sizes by 50% (additional 25% reduction) */
+    #topic2 .chart-container {
+      margin: 24px 0; /* Further reduced by 25% */
+      padding: 18px 13.5px; /* Further reduced by 25% */
+    }
+    
+    #topic2 .chart-wrapper {
+      height: 225px; /* Further reduced by 25% */
+    }
+    
+    /* Mobile responsive adjustments for topic 2 */
+    @media (max-width: 768px) {
+      #topic2 .chart-container {
+        padding: 13.5px 9px; /* Further reduced by 25% */
+        margin: 18px 0; /* Further reduced by 25% */
+      }
+      
+      #topic2 .chart-wrapper {
+        height: 168.75px; /* Further reduced by 25% */
+      }
+    }
+    
+    @media (max-width: 480px) {
+      #topic2 .chart-wrapper {
+        height: 140.625px; /* Further reduced by 25% */
+      }
+      
+      #topic2 .chart-container {
+        padding: 9px 6.75px; /* Further reduced by 25% */
+      }
+    }
   </style>
 </head>
 <body class="antialiased">

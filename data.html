@@ -21,6 +21,38 @@
     .secondary-btn {
       font-family: 'Inter', sans-serif;
     }
+    
+    /* Reduce topic 2 chart sizes by 50% (additional 25% reduction) */
+    #topic2 .chart-container {
+      margin: 24px 0; /* Further reduced by 25% */
+      padding: 18px 13.5px; /* Further reduced by 25% */
+    }
+    
+    #topic2 .chart-wrapper {
+      height: 225px; /* Further reduced by 25% */
+    }
+    
+    /* Mobile responsive adjustments for topic 2 */
+    @media (max-width: 768px) {
+      #topic2 .chart-container {
+        padding: 13.5px 9px; /* Further reduced by 25% */
+        margin: 18px 0; /* Further reduced by 25% */
+      }
+      
+      #topic2 .chart-wrapper {
+        height: 168.75px; /* Further reduced by 25% */
+      }
+    }
+    
+    @media (max-width: 480px) {
+      #topic2 .chart-wrapper {
+        height: 140.625px; /* Further reduced by 25% */
+      }
+      
+      #topic2 .chart-container {
+        padding: 9px 6.75px; /* Further reduced by 25% */
+      }
+    }
   </style>
 </head>
 <body class="antialiased">
@@ -587,5 +619,78 @@
   </script>
 
   <script src="script.js"></script>
+
+  <!-- Footer -->
+  <footer class="footer">
+      <div class="container">
+          <div class="footer-content">
+              <div class="footer-text">
+                  <p>&copy; 2025 Houssem Chammam. All rights reserved.</p>
+              </div>
+              <div class="footer-social">
+                  <a href="https://www.linkedin.com/in/houssem-chammam/" class="social-link" target="_blank">
+                      <i class="fab fa-linkedin"></i>
+                  </a>
+                  <a href="#" class="social-link" onclick="openPopup()">
+                      <i class="fas fa-envelope"></i>
+                  </a>
+              </div>
+          </div>
+      </div>
+  </footer>
+
+  <!-- Modal for contact form -->
+  <div id="popup-bg" class="hidden">
+    <div class="modal">
+      <button onclick="closePopup()" class="close-btn">&times;</button>
+      <h3 style="text-align: center; font-weight: 600; margin-bottom: 0.8em;">Write to Me</h3>
+      <form id="write-box" onsubmit="sendEmail(event)">
+        <input type="email" name="reply_to" placeholder="Your email" required>
+        <textarea name="message" placeholder="Your message" required rows="4"></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    (function(){
+      emailjs.init("veuyszbHGp1Id17Za");
+    })();
+  </script>
+  <script>
+    function openPopup() {
+      document.getElementById('popup-bg').classList.remove('hidden');
+    }
+
+    function closePopup() {
+      document.getElementById('popup-bg').classList.add('hidden');
+    }
+
+    function sendEmail(e) {
+      e.preventDefault();
+
+      const form = document.getElementById('write-box');
+      const formData = new FormData(form);
+
+      // Fill in with your EmailJS Service ID and Template ID:
+      const SERVICE_ID = 'service_eutne59';
+      const TEMPLATE_ID = 'template_w6irekz';
+
+      const params = {
+          message: formData.get('message'),
+          reply_to: formData.get('reply_to')
+      };
+
+      emailjs.send(SERVICE_ID, TEMPLATE_ID, params)
+          .then(function() {
+              alert('Your message was sent!');
+              form.reset();
+              form.style.display = 'none';
+          }, function(error) {
+              alert('Failed to send message: ' + JSON.stringify(error));
+          });
+    }
+  </script>
 </body>
 </html>

@@ -16,15 +16,273 @@
       })();
     </script>
     <style>
-      .nav-btn {
-        font-family: 'Roboto Serif', serif;
+      .nav-btn, .tab-btn { font-family: 'Roboto Serif', serif; }
+      .primary-btn, .secondary-btn { font-family: 'Inter', sans-serif; }
+      /* Responsive Grid Layout */
+      .content-grid { display: flex; gap: 2rem; }
+      .sidebar { min-width: 230px; max-width: 250px; }
+      .main-content-area { flex: 1; }
+      @media (max-width: 900px) {
+        .content-grid { flex-direction: column; }
+        .sidebar { max-width: 100%; min-width: 0; }
       }
-      .primary-btn {
-        font-family: 'Inter', sans-serif;
+
+      /* Publication Cards */
+      .publications-section { 
+        margin-bottom: 4rem;
+        padding: 2rem 0;
       }
-      .secondary-btn {
-        font-family: 'Inter', sans-serif;
+      .featured-subtitle {
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+        color: #1f2937;
+        border-bottom: 3px solid #e5e7eb;
+        padding-bottom: 0.75rem;
+        position: relative;
       }
+      .featured-subtitle::after {
+        content: '';
+        position: absolute;
+        bottom: -3px;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background-color: #2563eb;
+      }
+      .publications-grid { 
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
+      }
+      .publication-item {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: stretch;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 2rem;
+        gap: 2.5rem;
+        max-width: 800px;
+        margin-bottom: 0;
+        box-shadow: 0 4px 12px rgba(30, 41, 59, 0.06);
+        transition: all 0.3s ease-in-out;
+        position: relative;
+        overflow: hidden;
+      }
+      .publication-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      }
+      .publication-image {
+        flex: 0 0 160px;
+        display: flex;
+        align-items: center;
+      }
+      .publication-image img {
+        width: 100%;
+        height: auto;
+        border-radius: 12px;
+        display: block;
+        box-shadow: 0 4px 12px rgba(30, 41, 59, 0.12);
+        transition: transform 0.3s ease;
+      }
+      .publication-item:hover .publication-image img {
+        transform: scale(1.05);
+      }
+      .publication-content {
+        flex: 1 1 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .publication-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: #1f2937;
+        line-height: 1.4;
+      }
+      .publication-meta {
+        color: #6b7280;
+        font-size: 0.925rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .publication-meta::before {
+        content: '';
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background-color: #2563eb;
+        border-radius: 50%;
+      }
+      .publication-description {
+        color: #4b5563;
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+        font-size: 1rem;
+      }
+      .pub-link {
+        color: #2563eb;
+        text-decoration: none;
+        font-size: 1rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        background: rgba(37, 99, 235, 0.1);
+        transition: all 0.2s ease;
+      }
+      .pub-link:hover {
+        color: #fff;
+        background: #2563eb;
+      }
+      .publication-links {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: auto;
+      }
+
+      /* Articles */
+      .featured-section {
+        margin-bottom: 4rem;
+        padding: 2rem 0;
+      }
+      .articles-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
+      }
+      .featured-article {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: stretch;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 2rem;
+        gap: 2.5rem;
+        max-width: 800px;
+        box-shadow: 0 4px 12px rgba(30, 41, 59, 0.06);
+        transition: all 0.3s ease-in-out;
+        position: relative;
+        overflow: hidden;
+      }
+      .featured-article:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      }
+      .article-image {
+        flex: 0 0 160px;
+        display: flex;
+        align-items: center;
+      }
+      .article-image img {
+        width: 100%;
+        height: auto;
+        border-radius: 12px;
+        display: block;
+        box-shadow: 0 4px 12px rgba(30, 41, 59, 0.12);
+        transition: transform 0.3s ease;
+      }
+      .featured-article:hover .article-image img {
+        transform: scale(1.05);
+      }
+      .article-content {
+        flex: 1 1 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .article-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: #1f2937;
+        line-height: 1.4;
+      }
+      .article-meta {
+        color: #6b7280;
+        font-size: 0.925rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .article-meta::before {
+        content: '';
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background-color: #2563eb;
+        border-radius: 50%;
+      }
+      .article-excerpt {
+        color: #4b5563;
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+        font-size: 1rem;
+      }
+      .article-link {
+        color: #2563eb;
+        text-decoration: none;
+        font-size: 0.95rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        background: rgba(37, 99, 235, 0.1);
+        transition: all 0.2s ease;
+      }
+      .article-link:hover {
+        color: #fff;
+        background: #2563eb;
+      }
+      .article-links {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: auto;
+      }
+      @media (max-width: 768px) {
+        .publication-item,
+        .featured-article {
+          flex-direction: column-reverse;
+          gap: 1.5rem;
+          align-items: flex-start;
+          padding: 1.5rem;
+        }
+        .publication-image,
+        .article-image {
+          flex: 0 0 auto;
+          width: 100%;
+        }
+        .publication-image img,
+        .article-image img {
+          width: 100%;
+          max-width: 300px;
+          margin: 0 auto;
+        }
+        .featured-subtitle {
+          font-size: 1.5rem;
+          margin-bottom: 1.5rem;
+        }
+        .publication-title,
+        .article-title {
+          font-size: 1.125rem;
+        }
+      }
+      /* Footer */
+      
     </style>
 </head>
 <body>
@@ -40,7 +298,6 @@
         </form>
       </div>
     </div>
-
     <!-- Tab Navigation -->
     <nav class="tab-navigation">
         <div class="container">
@@ -68,27 +325,27 @@
                             <a href="https://www.linkedin.com/in/houssem-chammam/" class="profile-email" target="_blank" style="text-align: left; display: flex; align-items: center; gap: 6px;">
                                 <i class="fab fa-linkedin"></i> LinkedIn Profile
                             </a>
-
                             <a href="Houssem Chammam CV.pdf" class="action-btn download-btn">
                               <span class="btn-content">
                                 <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                 </svg>
                                 Download CV
                               </span>
                             </a>
-
                             <!-- Write to Me Button -->
                             <button onclick="openPopup()" class="action-btn contact-btn">
                               <span class="btn-content">
                                 <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                                 </svg>
                                 Write to me
                               </span>
                             </button>
+                        </div>
+                    </div>
                 </aside>
 
                 <!-- Main Content Area -->
@@ -96,90 +353,68 @@
                     <!-- Featured Work Content -->
                     <div class="tab-content active" id="featured">
                         <h2 class="content-title">Featured Work</h2>
-                        
+
+                        <!-- Publications Section -->
+                        <div class="publications-section featured-section">
+                            <h3 class="featured-subtitle">Publications</h3>
+                            <div class="publications-grid">
+                                <div class="publication-item">
+                                    <div class="publication-image">
+                                        <img src="Images/aus_pub_health.PNG" alt="Austerity Public Health Publication">
+                                    </div>
+                                    <div class="publication-content">
+                                        <h4 class="publication-title">Austerity, A Chronic Condition of Public Health</h4>
+                                        <p class="publication-meta">Al Bawsala • 2022</p>
+                                        <p class="publication-description">
+                                            Using regional statistics, we show how chronic underfunding, inequality, and poor planning weakened Tunisia's healthcare. Our analysis shows how these failures led to its collapse during the COVID-19 crisis.
+                                        </p>
+                                        <div class="publication-links">
+                                            <a href="https://www.albawsala.com/en/publications/20225498" class="pub-link" target="_blank">View Publication</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Add more publication-item blocks here if needed -->
+                            </div>
+                        </div>
+
                         <!-- Articles Section -->
                         <div class="featured-section">
                             <h3 class="featured-subtitle">Articles</h3>
                             <div class="articles-grid">
                                 <div class="featured-article">
+                                    <div class="article-image">
+                                        <img src="Images/csm_24-05-17_Tunisia_f15719a401.webp" alt="Article Image">
+                                    </div>
                                     <div class="article-content">
                                         <h4 class="article-title">When Water Is an Energy Question: Energy Transition in Water-Scarce Tunisia</h4>
-                                        <p class="article-meta">Published in The Bulletin • 2024</p>
-                                        <p class="article-excerpt">This article highlights how Tunisia's energy transition intersects with its water crisis, emphasizing that desalination powered by renewable energy offers a viable path forward. It argues for urgent legal and policy reforms to reflect the true value of water, unlock investment in clean energy, and support integrated planning that ensures long-term sustainability in both sectors.</p>
-                                        <a href="https://thebulletin.brandtschool.de/when-water-is-an-energy-question-energy-transition-in-water-scarce-tunisia" class="article-link" target="_blank">Read full article <i class="fas fa-external-link-alt"></i></a>
-                                    </div>
-                                    <div class="article-image">
-                                        <img src="Images/csm_24-05-17_Tunisia_f15719a401.webp" alt="Article Image" style="width: 100%; height: auto; border-radius: 8px;">
+                                        <p class="article-meta">The Bulletin • 2024</p>
+                                        <p class="article-excerpt">
+                                            This article highlights how Tunisia's energy transition intersects with its water crisis, emphasizing that desalination powered by renewable energy offers a viable path forward. It argues for urgent legal and policy reforms to reflect the true value of water, unlock investment in clean energy, and support integrated planning that ensures long-term sustainability in both sectors.
+                                        </p>
+                                        <div class="article-links">
+                                            <a href="https://thebulletin.brandtschool.de/when-water-is-an-energy-question-energy-transition-in-water-scarce-tunisia" class="article-link" target="_blank">Read full article <i class="fas fa-external-link-alt"></i></a>
+                                        </div>
                                     </div>
                                 </div>
-
                                 <div class="featured-article">
+                                    <div class="article-image">
+                                        <img src="Images/Calculator.PNG" alt="Inflation Adjustment Calculator Interface">
+                                    </div>
                                     <div class="article-content">
                                         <h4 class="article-title">Adjusting the Dinar for Inflation</h4>
-                                        <p class="article-meta">Published in Marsad Budget • 2023</p>
-                                        <p class="article-excerpt">This article introduces an interactive inflation adjustment calculator to help Tunisians understand the real value of money over time. By contextualizing prices, wages, and budgets historically, the tool promotes financial literacy and transparency in public debates on inflation and spending.</p>
-                                        <a href="https://budget.marsad.tn/ar/blog/budget-news/2023/inflation" class="article-link" target="_blank">Read full article <i class="fas fa-external-link-alt"></i></a>
-                                    </div>
-                                    <div class="article-image">
-                                        <img src="Images/Calculator.PNG" alt="Inflation Adjustment Calculator Interface" style="width: 100%; height: auto; border-radius: 8px;">
-                                    </div>
-                                </div>
-
-
-                            </div>
-                        </div>
-
-                        <!-- Publications Section -->
-                        <div class="publications-section">
-                            <h3 class="featured-subtitle">Publications</h3>
-                            <div class="publications-grid">
-                                <div class="publication-item">
-                                    <div class="publication-content">
-                                        <h4 class="publication-title">Austerity, A Chronic Condition of Public Health</h4>
-                                        <p class="publication-meta">Al Bawsala • 2022</p>
-                                        <p class="publication-description">Using regional statistics, we show how chronic underfunding, inequality, and poor planning weakened Tunisia's healthcare. Our analysis shows how these failures led to its collapse during the COVID-19 crisis.</p>
-                                        <div class="publication-links">
-                                            <a href="https://www.albawsala.com/en/publications/20225498" class="pub-link" target="_blank">View Publication</a>
+                                        <p class="article-meta">Marsad Budget • 2023</p>
+                                        <p class="article-excerpt">
+                                            This article introduces an interactive inflation adjustment calculator to help Tunisians understand the real value of money over time. By contextualizing prices, wages, and budgets historically, the tool promotes financial literacy and transparency in public debates on inflation and spending.
+                                        </p>
+                                        <div class="article-links">
+                                            <a href="https://budget.marsad.tn/ar/blog/budget-news/2023/inflation" class="article-link" target="_blank">Read full article <i class="fas fa-external-link-alt"></i></a>
                                         </div>
-                                    </div>
-                                    <div class="publication-image">
-                                        <img src="Images/aus_pub_health.PNG" alt="Austerity Public Health Publication" style="width: 100%; height: auto; border-radius: 8px;">
-                                    </div>
-                                </div>
-
-                                <div class="publication-item">
-                                    <div class="publication-content">
-                                        <h4 class="publication-title">Publication Title Two</h4>
-                                        <p class="publication-meta">[Journal/Publisher Name] • [Year]</p>
-                                        <p class="publication-description">Brief description of the publication, its key findings, and contributions to the field. Replace with actual content.</p>
-                                        <div class="publication-links">
-                                            <a href="#" class="pub-link">View Publication</a>
-                                            <a href="#" class="pub-link">Download PDF</a>
-                                        </div>
-                                    </div>
-                                    <div class="publication-image">
-                                        <img src="Images/aus_pub_health.PNG" alt="Publication Two" style="width: 100%; height: auto; border-radius: 8px;">
-                                    </div>
-                                </div>
-
-                                <div class="publication-item">
-                                    <div class="publication-content">
-                                        <h4 class="publication-title">Publication Title Three</h4>
-                                        <p class="publication-meta">[Journal/Publisher Name] • [Year]</p>
-                                        <p class="publication-description">Brief description of the publication, its key findings, and contributions to the field. Replace with actual content.</p>
-                                        <div class="publication-links">
-                                            <a href="#" class="pub-link">View Publication</a>
-                                            <a href="#" class="pub-link">Download PDF</a>
-                                        </div>
-                                    </div>
-                                    <div class="publication-image">
-                                        <img src="Images/aus_pub_health.PNG" alt="Publication Three" style="width: 100%; height: auto; border-radius: 8px;">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div><!-- end main-content-area -->
             </div>
         </div>
     </main>
@@ -195,31 +430,37 @@
                     <a href="https://www.linkedin.com/in/houssem-chammam/" class="social-link" target="_blank">
                         <i class="fab fa-linkedin"></i>
                     </a>
-                    <a href="mailto:chammam.houssem@gmail.com?subject=Contact from Policy Desk Website&body=Hello Houssem,%0D%0A%0D%0AI came across your website and would like to get in touch.%0D%0A%0D%0ABest regards," class="social-link">
+                    <a href="#" class="social-link" onclick="openPopup()">
                         <i class="fas fa-envelope"></i>
                     </a>
                 </div>
             </div>
         </div>
     </footer>
-
     <script src="script.js"></script>
     <script>
+        function openPopup() {
+            const popup = document.getElementById('popup-bg');
+            popup.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePopup() {
+            const popup = document.getElementById('popup-bg');
+            popup.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
         function sendEmail(e) {
             e.preventDefault();
-
             const form = document.getElementById('write-box');
             const formData = new FormData(form);
-
-            // Fill in with your EmailJS Service ID and Template ID:
             const SERVICE_ID = 'service_eutne59';
             const TEMPLATE_ID = 'template_w6irekz';
-
             const params = {
                 message: formData.get('message'),
                 reply_to: formData.get('reply_to')
             };
-
             emailjs.send(SERVICE_ID, TEMPLATE_ID, params)
                 .then(function() {
                     alert('Your message was sent!');
@@ -230,167 +471,5 @@
                 });
         }
     </script>
-
-    <style>
-        /* Additional styles for the Featured Work section */
-        .featured-section {
-            margin-bottom: 3rem;
-        }
-
-        .featured-subtitle {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            color: #1f2937;
-            border-bottom: 2px solid #e5e7eb;
-            padding-bottom: 0.5rem;
-        }
-
-        .articles-grid {
-            display: grid;
-            gap: 2rem;
-        }
-
-        .featured-article {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-            background: #f9fafb;
-            border-radius: 12px;
-            padding: 2rem;
-            border: 1px solid #e5e7eb;
-            align-items: center;
-        }
-
-        .article-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: #1f2937;
-        }
-
-        .article-meta {
-            color: #6b7280;
-            font-size: 0.875rem;
-            margin-bottom: 1rem;
-        }
-
-        .article-excerpt {
-            color: #4b5563;
-            line-height: 1.6;
-            margin-bottom: 1rem;
-        }
-
-        .article-link {
-            color: #2563eb;
-            text-decoration: none;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .article-link:hover {
-            color: #1d4ed8;
-        }
-
-        .placeholder-image {
-            background: #e5e7eb;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 200px;
-            color: #6b7280;
-        }
-
-        .placeholder-image i {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .publications-section {
-            margin-top: 3rem;
-        }
-
-        .publications-grid {
-            display: grid;
-            gap: 1.5rem;
-        }
-
-        .publication-item {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 2rem;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            align-items: center;
-        }
-
-        .publication-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .publication-icon {
-            color: #2563eb;
-            font-size: 1.5rem;
-            padding-top: 0.25rem;
-        }
-
-        .publication-title {
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: #1f2937;
-        }
-
-        .publication-meta {
-            color: #6b7280;
-            font-size: 0.875rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .publication-description {
-            color: #4b5563;
-            line-height: 1.6;
-            margin-bottom: 1rem;
-        }
-
-        .publication-links {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .pub-link {
-            color: #2563eb;
-            text-decoration: none;
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-
-        .pub-link:hover {
-            color: #1d4ed8;
-        }
-
-        @media (max-width: 768px) {
-            .featured-article {
-                grid-template-columns: 1fr;
-            }
-            
-            .publication-item {
-                grid-template-columns: 1fr;
-            }
-            
-            .publication-links {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-        }
-    </style>
 </body>
-</html> 
+</html>

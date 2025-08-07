@@ -56,35 +56,17 @@
   </style>
 </head>
 <body class="antialiased">
-    <!-- Top Main Navigation Bar -->
+    <!-- Top Navigation -->
     <nav class="tab-navigation">
         <div class="container">
             <div class="tab-nav">
-                <a class="main-nav-btn nav-btn tab-btn" href="index.html">Overview</a>
-                <a class="main-nav-btn nav-btn tab-btn" href="index.html#featured">Featured Work</a>
-                <a class="main-nav-btn nav-btn tab-btn" href="data.html">Data Projects</a>
-                <a class="main-nav-btn nav-btn tab-btn" href="blog.html">Blog</a>
+                <a href="index.html" class="nav-btn tab-btn">Overview</a>
+                <a href="featured-work.html" class="nav-btn tab-btn">Featured Work</a>
+                <a href="data.html" class="nav-btn tab-btn active">Data Projects</a>
+                <a href="blog.html" class="nav-btn tab-btn">Blog</a>
             </div>
         </div>
     </nav>
-    <!-- Dynamic highlight script for the nav bar -->
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const navLinks = document.querySelectorAll('.main-nav-btn');
-        const currentPath = window.location.pathname.split('/').pop();
-        navLinks.forEach(link => {
-          // Remove all 'active'
-          link.classList.remove('active');
-          // Only compare first part of href (ignore #hash)
-          if(link.getAttribute('href')) {
-            const linkHref = link.getAttribute('href').split('#')[0];
-            if(linkHref === currentPath || (linkHref === 'index.html' && (currentPath === '' || currentPath === '/'))) {
-              link.classList.add('active');
-            }
-          }
-        });
-      });
-    </script>
 
   <div class="container mx-auto p-4 md:p-8">
     <header class="text-center mb-8">

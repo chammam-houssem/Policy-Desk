@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- Tab Functionality with Accessibility ---
-    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabButtons = document.querySelectorAll('.tab-btn[data-tab]');
     const tabContents = document.querySelectorAll('.tab-content');
 
     function switchTab(targetTab) {

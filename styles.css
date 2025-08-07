@@ -13,6 +13,9 @@ body {
     font-size: 16px;
 }
 
+/* Prevent layout shift when content loads by always reserving vertical scrollbar space */
+html { overflow-y: scroll; }
+
 .container {
     max-width: 1200px;
     margin: 0 auto;

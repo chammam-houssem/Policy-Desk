@@ -173,53 +173,14 @@
                     <a href="https://www.linkedin.com/in/houssem-chammam/" class="social-link" target="_blank">
                         <i class="fab fa-linkedin"></i>
                     </a>
-                    <a href="#" class="social-link" onclick="openPopup()">
-                        <i class="fas fa-envelope"></i>
-                    </a>
+                    
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- Modal for contact form (same as index) -->
-    <div id="popup-bg" class="hidden">
-        <div class="modal">
-            <button onclick="closePopup()" class="close-btn">&times;</button>
-            <h3 style="text-align: center; font-weight: 600; margin-bottom: 0.8em;">Write to Me</h3>
-            <form id="write-box" onsubmit="sendEmail(event)">
-                <input type="email" name="reply_to" placeholder="Your email" required>
-                <textarea name="message" placeholder="Your message" required rows="4"></textarea>
-                <button type="submit">Send</button>
-            </form>
-        </div>
-    </div>
-
     <script src="../script.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-    <script>
-        (function(){
-          emailjs.init("veuyszbHGp1Id17Za");
-        })();
-        function sendEmail(e) {
-          e.preventDefault();
-          const form = document.getElementById('write-box');
-          const formData = new FormData(form);
-          const SERVICE_ID = 'service_eutne59';
-          const TEMPLATE_ID = 'template_w6irekz';
-          const params = {
-              message: formData.get('message'),
-              reply_to: formData.get('reply_to')
-          };
-          emailjs.send(SERVICE_ID, TEMPLATE_ID, params)
-              .then(function() {
-                  alert('Your message was sent!');
-                  form.reset();
-                  form.style.display = 'none';
-              }, function(error) {
-                  alert('Failed to send message: ' + JSON.stringify(error));
-              });
-        }
-    </script>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             /**

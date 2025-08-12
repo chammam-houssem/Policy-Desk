@@ -9,12 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-    <script>
-      (function(){
-        emailjs.init("veuyszbHGp1Id17Za");
-      })();
-    </script>
+    
     <style>
       .nav-btn {
         font-family: 'Roboto Serif', serif;
@@ -28,18 +23,7 @@
     </style>
 </head>
 <body>
-    <!-- Modal -->
-    <div id="popup-bg" class="hidden">
-      <div class="modal">
-        <button onclick="closePopup()" class="close-btn">&times;</button>
-        <h3 style="text-align: center; font-weight: 600; margin-bottom: 0.8em;">Write to Me</h3>
-        <form id="write-box" onsubmit="sendEmail(event)">
-          <input type="email" name="reply_to" placeholder="Your email" required>
-          <textarea name="message" placeholder="Your message" required rows="4"></textarea>
-          <button type="submit">Send</button>
-        </form>
-      </div>
-    </div>
+    
 
     <!-- Tab Navigation -->
     <nav class="tab-navigation">
@@ -79,16 +63,7 @@
                               </span>
                             </a>
 
-                            <!-- Write to Me Button -->
-                            <button onclick="openPopup()" class="action-btn contact-btn">
-                              <span class="btn-content">
-                                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                                </svg>
-                                Write to me
-                              </span>
-                            </button>
+                            
                 </aside>
 
                 <!-- Main Content Area -->
@@ -285,9 +260,7 @@
                     <a href="https://www.linkedin.com/in/houssem-chammam/" class="social-link" target="_blank">
                         <i class="fab fa-linkedin"></i>
                     </a>
-                    <a href="#" class="social-link" onclick="openPopup()">
-                        <i class="fas fa-envelope"></i>
-                    </a>
+                    
                 </div>
             </div>
         </div>
@@ -332,30 +305,7 @@
             }
         }
 
-        function sendEmail(e) {
-            e.preventDefault();
-
-            const form = document.getElementById('write-box');
-            const formData = new FormData(form);
-
-            // Fill in with your EmailJS Service ID and Template ID:
-            const SERVICE_ID = 'service_eutne59';
-            const TEMPLATE_ID = 'template_w6irekz';
-
-            const params = {
-                message: formData.get('message'),
-                reply_to: formData.get('reply_to')
-            };
-
-            emailjs.send(SERVICE_ID, TEMPLATE_ID, params)
-                .then(function() {
-                    alert('Your message was sent!');
-                    form.reset();
-                    form.style.display = 'none';
-                }, function(error) {
-                    alert('Failed to send message: ' + JSON.stringify(error));
-                });
-        }
+        
 
         // Tab functionality
         document.addEventListener('DOMContentLoaded', function() {

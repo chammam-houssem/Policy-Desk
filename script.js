@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- Tab Functionality with Accessibility ---
-    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabButtons = document.querySelectorAll('.tab-btn[data-tab]');
     const tabContents = document.querySelectorAll('.tab-content');
 
     function switchTab(targetTab) {
@@ -355,22 +355,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// --- Popup Control Functions (globally available) ---
-function openPopup() {
-    const popup = document.getElementById('popup-bg');
-    if (popup) {
-        popup.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-    }
-}
-
-function closePopup() {
-    const popup = document.getElementById('popup-bg');
-    if (popup) {
-        popup.classList.add('hidden');
-        document.body.style.overflow = '';
-    }
-}
+// Popup control removed
 
 // --- Loading Animation & Scroll Animations ---
 window.addEventListener('load', function() {

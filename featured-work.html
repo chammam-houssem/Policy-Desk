@@ -9,22 +9,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-    <script>
-      (function(){
-        emailjs.init("veuyszbHGp1Id17Za");
-      })();
-    </script>
+    
     <style>
       .primary-btn, .secondary-btn { font-family: 'Inter', sans-serif; }
-      /* Responsive Grid Layout */
-      .content-grid { display: flex; gap: 2rem; }
-      .sidebar { min-width: 230px; max-width: 250px; }
-      .main-content-area { flex: 1; }
-      @media (max-width: 900px) {
-        .content-grid { flex-direction: column; }
-        .sidebar { max-width: 100%; min-width: 0; }
-      }
 
       /* Publication Cards */
       .publications-section { 
@@ -111,14 +98,6 @@
         align-items: center;
         gap: 0.5rem;
       }
-      .publication-meta::before {
-        content: '';
-        display: inline-block;
-        width: 6px;
-        height: 6px;
-        background-color: #2563eb;
-        border-radius: 50%;
-      }
       .publication-description {
         color: #4b5563;
         line-height: 1.7;
@@ -153,6 +132,16 @@
       .featured-section {
         margin-bottom: 4rem;
         padding: 2rem 0;
+      }
+      /* Reduce space between page title and Publications only */
+      .publications-section.featured-section {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
+      }
+      /* Reduce space between last publication and Articles title */
+      .publications-section + .featured-section {
+        padding-top: 0.75rem;
       }
       .articles-grid {
         display: flex;
@@ -214,14 +203,6 @@
         display: flex;
         align-items: center;
         gap: 0.5rem;
-      }
-      .article-meta::before {
-        content: '';
-        display: inline-block;
-        width: 6px;
-        height: 6px;
-        background-color: #2563eb;
-        border-radius: 50%;
       }
       .article-excerpt {
         color: #4b5563;
@@ -285,18 +266,7 @@
     </style>
 </head>
 <body>
-    <!-- Modal -->
-    <div id="popup-bg" class="hidden">
-      <div class="modal">
-        <button onclick="closePopup()" class="close-btn">&times;</button>
-        <h3 style="text-align: center; font-weight: 600; margin-bottom: 0.8em;">Write to Me</h3>
-        <form id="write-box" onsubmit="sendEmail(event)">
-          <input type="email" name="reply_to" placeholder="Your email" required>
-          <textarea name="message" placeholder="Your message" required rows="4"></textarea>
-          <button type="submit">Send</button>
-        </form>
-      </div>
-    </div>
+    
     <!-- Tab Navigation -->
     <nav class="tab-navigation">
         <div class="container">
@@ -318,7 +288,7 @@
                     <div class="profile-section">
                         <div class="profile-box">
                             <img src="Images/HoussemChammam.PNG" alt="Houssem Chammam" class="profile-img" style="margin-bottom: 25px;">
-                            <a href="mailto:chammam.houssem@gmail.com?subject=Contact from Policy Desk Website&body=Hello Houssem,%0D%0A%0D%0AI came across your website and would like to get in touch.%0D%0A%0D%0ABest regards," class="profile-email" style="text-align: left; display: flex; align-items: center; gap: 6px;">
+                            <a href="mailto:chammam.houssem@gmail.com" class="profile-email" style="text-align: left; display: flex; align-items: center; gap: 6px;">
                                 <i class="fas fa-envelope"></i> chammam.houssem@gmail.com
                             </a>
                             <a href="https://www.linkedin.com/in/houssem-chammam/" class="profile-email" target="_blank" style="text-align: left; display: flex; align-items: center; gap: 6px;">
@@ -333,16 +303,7 @@
                                 Download CV
                               </span>
                             </a>
-                            <!-- Write to Me Button -->
-                            <button onclick="openPopup()" class="action-btn contact-btn">
-                              <span class="btn-content">
-                                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                                </svg>
-                                Write to me
-                              </span>
-                            </button>
+                            
                         </div>
                     </div>
                 </aside>
@@ -429,46 +390,11 @@
                     <a href="https://www.linkedin.com/in/houssem-chammam/" class="social-link" target="_blank">
                         <i class="fab fa-linkedin"></i>
                     </a>
-                    <a href="#" class="social-link" onclick="openPopup()">
-                        <i class="fas fa-envelope"></i>
-                    </a>
+                    
                 </div>
             </div>
         </div>
     </footer>
     <script src="script.js"></script>
-    <script>
-        function openPopup() {
-            const popup = document.getElementById('popup-bg');
-            popup.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closePopup() {
-            const popup = document.getElementById('popup-bg');
-            popup.classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
-
-        function sendEmail(e) {
-            e.preventDefault();
-            const form = document.getElementById('write-box');
-            const formData = new FormData(form);
-            const SERVICE_ID = 'service_eutne59';
-            const TEMPLATE_ID = 'template_w6irekz';
-            const params = {
-                message: formData.get('message'),
-                reply_to: formData.get('reply_to')
-            };
-            emailjs.send(SERVICE_ID, TEMPLATE_ID, params)
-                .then(function() {
-                    alert('Your message was sent!');
-                    form.reset();
-                    form.style.display = 'none';
-                }, function(error) {
-                    alert('Failed to send message: ' + JSON.stringify(error));
-                });
-        }
-    </script>
 </body>
 </html>

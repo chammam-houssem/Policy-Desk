@@ -52,18 +52,18 @@
     }
   </style>
 </head>
-<body>
-    <!-- Top Main Navigation Bar -->
-  <nav class="tab-navigation">
-    <div class="container">
-      <div class="tab-nav">
-        <a href="index.html" class="tab-btn">Overview</a>
-        <a href="featured-work.html" class="tab-btn">Featured Work</a>
-        <button class="tab-btn active">Data Projects</button>
-        <a href="blog.html" class="tab-btn">Blog</a>
-      </div>
-    </div>
-  </nav>
+<body class="antialiased">
+    <!-- Top Navigation -->
+    <nav class="tab-navigation">
+        <div class="container">
+            <div class="tab-nav">
+                <a href="index.html" class="nav-btn tab-btn">Overview</a>
+                <a href="featured-work.html" class="nav-btn tab-btn">Featured Work</a>
+                <a href="data.html" class="nav-btn tab-btn active">Data Projects</a>
+                <a href="blog.html" class="nav-btn tab-btn">Blog</a>
+            </div>
+        </div>
+    </nav>
 
   <div class="container mx-auto p-4 md:p-8">
     <header class="text-center mb-8">
@@ -610,66 +610,12 @@
                   <a href="https://www.linkedin.com/in/houssem-chammam/" class="social-link" target="_blank">
                       <i class="fab fa-linkedin"></i>
                   </a>
-                  <a href="#" class="social-link" onclick="openPopup()">
-                      <i class="fas fa-envelope"></i>
-                  </a>
+                  
               </div>
           </div>
       </div>
   </footer>
 
-  <!-- Modal for contact form -->
-  <div id="popup-bg" class="hidden">
-    <div class="modal">
-      <button onclick="closePopup()" class="close-btn">&times;</button>
-      <h3 style="text-align: center; font-weight: 600; margin-bottom: 0.8em;">Write to Me</h3>
-      <form id="write-box" onsubmit="sendEmail(event)">
-        <input type="email" name="reply_to" placeholder="Your email" required>
-        <textarea name="message" placeholder="Your message" required rows="4"></textarea>
-        <button type="submit">Send</button>
-      </form>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-  <script>
-    (function(){
-      emailjs.init("veuyszbHGp1Id17Za");
-    })();
-  </script>
-  <script>
-    function openPopup() {
-      document.getElementById('popup-bg').classList.remove('hidden');
-    }
-
-    function closePopup() {
-      document.getElementById('popup-bg').classList.add('hidden');
-    }
-
-    function sendEmail(e) {
-      e.preventDefault();
-
-      const form = document.getElementById('write-box');
-      const formData = new FormData(form);
-
-      // Fill in with your EmailJS Service ID and Template ID:
-      const SERVICE_ID = 'service_eutne59';
-      const TEMPLATE_ID = 'template_w6irekz';
-
-      const params = {
-          message: formData.get('message'),
-          reply_to: formData.get('reply_to')
-      };
-
-      emailjs.send(SERVICE_ID, TEMPLATE_ID, params)
-          .then(function() {
-              alert('Your message was sent!');
-              form.reset();
-              form.style.display = 'none';
-          }, function(error) {
-              alert('Failed to send message: ' + JSON.stringify(error));
-          });
-    }
-  </script>
+  
 </body>
 </html>

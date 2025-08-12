@@ -87,7 +87,7 @@ html { overflow-y: scroll; }
     transition: all 0.2s ease;
     white-space: nowrap;
     position: relative;
-    font-family: 'Roboto Serif', Arial, serif;
+    font-family: 'Roboto Serif', serif;
     letter-spacing: 0.01em;
     text-decoration: none !important;
     border-bottom: none !important;

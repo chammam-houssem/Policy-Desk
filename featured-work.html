@@ -13,14 +13,6 @@
     <style>
       .nav-btn, .tab-btn { font-family: 'Roboto Serif', serif; }
       .primary-btn, .secondary-btn { font-family: 'Inter', sans-serif; }
-      /* Responsive Grid Layout */
-      .content-grid { display: flex; gap: 2rem; }
-      .sidebar { min-width: 230px; max-width: 250px; }
-      .main-content-area { flex: 1; }
-      @media (max-width: 900px) {
-        .content-grid { flex-direction: column; }
-        .sidebar { max-width: 100%; min-width: 0; }
-      }
 
       /* Publication Cards */
       .publications-section { 
@@ -107,14 +99,6 @@
         align-items: center;
         gap: 0.5rem;
       }
-      .publication-meta::before {
-        content: '';
-        display: inline-block;
-        width: 6px;
-        height: 6px;
-        background-color: #2563eb;
-        border-radius: 50%;
-      }
       .publication-description {
         color: #4b5563;
         line-height: 1.7;
@@ -149,6 +133,16 @@
       .featured-section {
         margin-bottom: 4rem;
         padding: 2rem 0;
+      }
+      /* Reduce space between page title and Publications only */
+      .publications-section.featured-section {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
+      }
+      /* Reduce space between last publication and Articles title */
+      .publications-section + .featured-section {
+        padding-top: 0.75rem;
       }
       .articles-grid {
         display: flex;
@@ -210,14 +204,6 @@
         display: flex;
         align-items: center;
         gap: 0.5rem;
-      }
-      .article-meta::before {
-        content: '';
-        display: inline-block;
-        width: 6px;
-        height: 6px;
-        background-color: #2563eb;
-        border-radius: 50%;
       }
       .article-excerpt {
         color: #4b5563;

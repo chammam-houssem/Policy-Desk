@@ -353,6 +353,71 @@ document.addEventListener('DOMContentLoaded', function() {
         window.addEventListener('scroll', updateProgress, { passive: true });
         updateProgress();
     }
+
+    // --- Copy email to clipboard with toast ---
+    function showToast(message, durationMs = 3000) {
+        let container = document.querySelector('.toast-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.className = 'toast-container';
+            document.body.appendChild(container);
+        }
+
+        // Remove any existing toasts before showing a new one
+        container.querySelectorAll('.toast-message').forEach(el => el.remove());
+
+        const toast = document.createElement('div');
+        toast.className = 'toast-message';
+        toast.textContent = message;
+        container.appendChild(toast);
+
+        // Trigger show animation
+        requestAnimationFrame(() => {
+            toast.classList.add('show');
+        });
+
+        // Start fade after duration
+        setTimeout(() => {
+            toast.classList.add('hide');
+            setTimeout(() => toast.remove(), 400);
+        }, durationMs);
+    }
+
+    document.addEventListener('click', function(e) {
+        const mailtoLink = e.target.closest('a[href^="mailto:"]');
+        if (!mailtoLink) return;
+
+        e.preventDefault();
+        const href = mailtoLink.getAttribute('href') || '';
+        const match = href.match(/^mailto:([^?]+)/i);
+        const email = match ? decodeURIComponent(match[1]) : (mailtoLink.textContent || '').trim();
+
+        const copyWithFallback = () => {
+            const textarea = document.createElement('textarea');
+            textarea.value = email;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast('Email copied');
+            } catch (err) {
+                showToast('Unable to copy email');
+            } finally {
+                textarea.remove();
+            }
+        };
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(email)
+                .then(() => showToast('Email copied'))
+                .catch(() => copyWithFallback());
+        } else {
+            copyWithFallback();
+        }
+    });
 });
 
 // Popup control removed

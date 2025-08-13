@@ -13,6 +13,39 @@ body {
     font-size: 16px;
 }
 
+/* Toast notifications */
+.toast-container {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.toast-message {
+    background: rgba(28, 28, 30, 0.95);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 8px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+    font-size: 14px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: auto;
+}
+
+.toast-message.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast-message.hide {
+    opacity: 0;
+    transform: translateY(10px);
+}
+
 /* Prevent layout shift when content loads by always reserving vertical scrollbar space */
 html { overflow-y: scroll; }
 

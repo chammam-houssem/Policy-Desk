@@ -144,6 +144,13 @@ html { overflow-y: scroll; }
     display: none !important;
 }
 
+/* Hide Blog tab across the site */
+.tab-nav a[href$="blog.html"],
+.tab-nav a[href$="../blog.html"],
+.tab-nav [data-tab="blog"] {
+    display: none !important;
+}
+
 /* Main Content */
 .main-content {
     padding: 40px 0;

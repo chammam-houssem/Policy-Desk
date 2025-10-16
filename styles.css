@@ -144,12 +144,7 @@ html { overflow-y: scroll; }
     display: none !important;
 }
 
-/* Hide Blog tab across the site */
-.tab-nav a[href$="blog.html"],
-.tab-nav a[href$="../blog.html"],
-.tab-nav [data-tab="blog"] {
-    display: none !important;
-}
+/* Blog tab should be visible across the site (previous hide removed) */
 
 /* Main Content */
 .main-content {

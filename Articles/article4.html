@@ -84,18 +84,18 @@
                 </figure>
 
                 <div class="article-body">
-                    <p class="article-lead">How can AI agents act lawfully if laws are different in every country and change all the time? Moreover, acting lawfully also requires dynamic access to state registries, such as who holds copyright. In this blog, I argue that legality is not a static dataset and that to unlock the future of lawful AI, governments must invest in legality as machine-readable infrastructure.</p>
+                    <p class="article-lead">Tldr; how can AI agents act lawfully if laws are different in every country and change all the time? Moreover, acting lawfully also requires dynamic access to state registries, such as who holds copyright. In this blog, I argue that legality is not a static dataset and that to unlock the future of lawful AI, governments must invest in legality as machine-readable infrastructure.</p>
 
                     <h2>The Problem: Lawfulness Beyond Training Data</h2>
                     <p>The future of autonomous AI hinges on a critical question: will these systems be powerful but lawless, or will they be debuffed in order to be lawful? The answer cannot be trained into models alone because legality is not a static dataset; it is an evolving system of permissions, prohibitions, and state-recognized facts.</p>
                     <p>Even if an AI agent could ingest every statute, regulation, and court decision, we still could not guarantee lawful action. Legality is a dynamic state anchored in changing codes and the facts that public institutions recognize. Because of that, lawfulness is not a property that can be inferred from a dataset of legal texts; it must be verified against live registries and authoritative signals.</p>
                     <p>Without those external signals, autonomous systems will optimize for convenience, not compliance. The most significant challenge posed by agentic AI is therefore neither purely legal nor purely technical—it is infrastructural.</p>
 
-                    <h2>A Mundane Case: Streaming the Champions League</h2>
+                    <h2>Problem Statement: The Mundane Case of Agentic Browsers & Copyright</h2>
                     <p>Consider a seemingly simple request to an agentic browser: “Find the best link to watch tonight’s Champions League match.” Streaming rights are strictly governed by copyright and broadcasting regulations that change by country, by season, and sometimes by match. UEFA publishes a country-specific list of licensed broadcasters every year, but nothing on that page makes it uniquely machine-recognizable as the authoritative distributor. To an AI crawler, it looks identical to a polished illegal streaming site.</p>
                     <p>Because AI cannot intrinsically understand legality, the agent will pursue the fastest path to the goal, regardless of whether the source is authorized. In this setup, the user and the developer alike are pushed into legal risk by default, not by intent.</p>
 
-                    <h2>What Engineers Say About the Streaming Dilemma</h2>
+                    <h2>What Engineers Say About my Streaming Dilemma</h2>
                     <p>Engineers confronted with this scenario offered a candid assessment: “Unless we get something solid to work with, something like a government-issued cryptographic stamp that we train the AI agent to recognize through tools, we can't solve it at scale.” In the absence of such authoritative signals, current architectures rely on disengagement as a safety fallback.</p>
                     <p>System prompts and RLHF-based safety training instruct agents to halt execution when a task risks copyright infringement, fraud, or hacking. In the streaming case, the agent stops before completing the task, handing over a list of possible options instead of a verified lawful stream. That guardrail keeps liability low but also reduces autonomous software to a glorified search engine.</p>
 

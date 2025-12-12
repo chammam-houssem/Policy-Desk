@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QMG7PT3J0Z"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);} 
+      gtag('js', new Date());
+
+      gtag('config', 'G-QMG7PT3J0Z');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legality is Not a Dataset: AI Lawfulness as an Infrastructure Problem | Houssem Chammam</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,400;0,8..144,500;0,8..144,600;1,8..144,400&display=swap" rel="stylesheet">
+    <link rel="icon" href="../icon.svg" type="image/svg+xml">
+    <!-- Chart.js and PapaParse are required for the charting module -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="tab-navigation">
+        <div class="container">
+            <div class="tab-nav">
+                <a href="../index.html" class="tab-btn">Overview</a>
+                <a href="../index.html#featured" class="tab-btn">Featured Work</a>
+                <a href="../data.html" class="tab-btn">Data Projects</a>
+                <a href="../blog.html" class="tab-btn active">Blog<span id="blog-colon">:</span>
+                    <span id="policy-desk-tab-text" class="gradient-text">The Policy Desk</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Article Header -->
+    <header class="article-header">
+        <div class="container">
+            <div class="article-breadcrumb">
+                <a href="../blog.html" class="breadcrumb-link">
+                    <i class="fas fa-arrow-left"></i> Back to Blog
+                </a>
+            </div>
+
+            <div class="article-meta">
+                <div class="article-tags">
+                    <span class="article-tag">AI Governance</span>
+                    <span class="article-tag">Digital Infrastructure</span>
+                </div>
+                <div class="article-date">
+                    <i class="far fa-calendar"></i>
+                    <time datetime="2025-12-11">December 11, 2025</time>
+                    <span class="article-read-time">
+                        <i class="far fa-clock"></i>
+                        10 min read
+                    </span>
+                </div>
+            </div>
+
+            <h1 class="article-title">Legality is Not a Dataset: AI Lawfulness as an Infrastructure Problem</h1>
+            <p class="article-subtitle">Why lawful AI requires machine-readable rules, registries, and polycentric verification.</p>
+
+            <div class="article-author">
+                <img src="../Images/HoussemChammam.PNG" alt="Houssem Chammam" class="author-avatar">
+                <div class="author-info">
+                    <span class="author-name">Houssem Chammam</span>
+                    <span class="author-title">Policy Researcher</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Article Content -->
+    <main class="article-main">
+        <div class="container">
+            <article class="article-content">
+                <figure class="article-featured-image">
+                    <img src="../Images/simpleagent.png" alt="Agentic browser evaluating legal signals" class="featured-img">
+                    <figcaption>Agentic browsers need authoritative, machine-readable signals to act lawfully.</figcaption>
+                </figure>
+
+                <div class="article-body">
+                    <p class="article-lead">The future of autonomous AI hinges on a critical question: will these systems be powerful but lawless, or will they be debuffed in order to be lawful? The answer cannot be trained into models alone because legality is not a static dataset; it is an evolving system of permissions, prohibitions, and state-recognized facts.</p>
+
+                    <h2>The Problem: Lawfulness Beyond Training Data</h2>
+                    <p>Even if an AI agent could ingest every statute, regulation, and court decision, we still could not guarantee lawful action. Legality is a dynamic state anchored in changing codes and the facts that public institutions recognize. Because of that, lawfulness is not a property that can be inferred from a dataset of legal texts; it must be verified against live registries and authoritative signals.</p>
+                    <p>Without those external signals, autonomous systems will optimize for convenience, not compliance. The most significant challenge posed by agentic AI is therefore neither purely legal nor purely technical—it is infrastructural.</p>
+
+                    <h2>A Mundane Case: Streaming the Champions League</h2>
+                    <p>Consider a seemingly simple request to an agentic browser: “Find the best link to watch tonight’s Champions League match.” Streaming rights are strictly governed by copyright and broadcasting regulations that change by country, by season, and sometimes by match. UEFA publishes a country-specific list of licensed broadcasters every year, but nothing on that page makes it uniquely machine-recognizable as the authoritative distributor. To an AI crawler, it looks identical to a polished illegal streaming site.</p>
+                    <p>Because AI cannot intrinsically understand legality, the agent will pursue the fastest path to the goal, regardless of whether the source is authorized. In this setup, the user and the developer alike are pushed into legal risk by default, not by intent.</p>
+
+                    <h2>What Engineers Say About the Streaming Dilemma</h2>
+                    <p>Engineers confronted with this scenario offered a candid assessment: “Unless we get something solid to work with, something like a government-issued cryptographic stamp that we train the AI agent to recognize through tools, we can't solve it at scale.” In the absence of such authoritative signals, current architectures rely on disengagement as a safety fallback.</p>
+                    <p>System prompts and RLHF-based safety training instruct agents to halt execution when a task risks copyright infringement, fraud, or hacking. In the streaming case, the agent stops before completing the task, handing over a list of possible options instead of a verified lawful stream. That guardrail keeps liability low but also reduces autonomous software to a glorified search engine.</p>
+
+                    <h2>Why Legality Is an Infrastructure Challenge</h2>
+                    <p>Innovation is constrained as much by under-governance as by over-regulation. Lawful action requires two things at once: knowledge of applicable rules and access to authoritative, up-to-date registries that recognize who owns what, who is licensed to do what, and which facts are valid when. These pillars evolve constantly and cannot be fully internalized in model weights.</p>
+                    <p>From an institutional perspective, legality is polycentric. Parliaments pass laws, courts interpret them, and regulators translate them into sectoral norms. Registries certify facts—ownership, licensing, sanctions, benefits, taxes—that make those norms actionable. To stay lawful, AI systems need synchronized, machine-readable access to both layers.</p>
+
+                    <div class="article-highlight">
+                        <h3><i class="fas fa-lightbulb"></i> Key Insight</h3>
+                        <p>Legality is not a dataset to memorize but a state to verify against authoritative rules and registries. Without machine-readable governance infrastructure, agents will default to convenience over compliance.</p>
+                    </div>
+
+                    <h2>The Path Forward: Law as Infrastructure</h2>
+                    <p>Building lawful AI requires a public–private effort to digitize legal authority. Computational law initiatives, such as France’s Catala language for social benefits, demonstrate how code can serve as an authoritative representation of rules. Similar approaches, coupled with cryptographically authenticated registries, would let engineers design agents that can check permissions in real time.</p>
+                    <p>Because legal truth is contested and distributed, this infrastructure must be polycentric, mirroring the diversity of legitimate authorities while avoiding single points of failure. By embracing legality as machine-readable infrastructure, we can build AI agents that are not only powerful but predictably and verifiably lawful.</p>
+                </div>
+
+                <!-- Article Footer -->
+                <footer class="article-footer">
+                    <div class="article-share">
+                        <h3>Share this article</h3>
+                        <div class="share-buttons">
+                            <a href="#" class="share-btn linkedin" title="Share on LinkedIn">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="share-btn twitter" title="Share on Twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="share-btn facebook" title="Share on Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="article-navigation">
+                        <a href="article1.html" class="nav-link nav-prev">
+                            <i class="fas fa-chevron-left"></i>
+                            <div>
+                                <span class="nav-label">Previous Article</span>
+                                <span class="nav-title">The End of Apps and the Future of the Digital Economy</span>
+                            </div>
+                        </a>
+                        <a href="article2.html" class="nav-link nav-next">
+                            <div>
+                                <span class="nav-label">Next Article</span>
+                                <span class="nav-title">Rades Power Station: Tunisia's Energy Bottlenecks</span>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+                </footer>
+            </article>
+        </div>
+    </main>
+
+    <!-- Footer (matched to index.html) -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-text">
+                    <p>&copy; 2025 Houssem Chammam. All rights reserved.</p>
+                </div>
+                <div class="footer-social">
+                    <a href="https://www.linkedin.com/in/houssem-chammam/" class="social-link" target="_blank">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

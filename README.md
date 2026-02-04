@@ -47,6 +47,7 @@ The data projects section features:
 - GDP Share Analysis
 - Interactive time period toggles
 - Color-coded economic trend indicators
+- Global Energy data for Coal
 
 ## Design Elements
 

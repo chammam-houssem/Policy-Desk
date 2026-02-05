@@ -751,6 +751,19 @@
               <div id="singleControls">
                 <label for="energySelect">Energy source</label>
                 <select id="energySelect"></select>
+                <div id="contextToggleWrap" class="hidden" style="margin-top: 8px;">
+                  <div class="checkbox-row">
+                    <input type="checkbox" id="contextToggle" checked />
+                    <label for="contextToggle">Show total generation context</label>
+                  </div>
+                </div>
+                <div id="trendToggleWrap" class="hidden" style="margin-top: 8px;">
+                  <div class="checkbox-row">
+                    <input type="checkbox" id="trendToggle" />
+                    <label for="trendToggle">Show trend line / projection</label>
+                  </div>
+                </div>
+                <div id="trendStatus" class="inline-msg hidden"></div>
               </div>
 
               <div id="singleMeasureControls">
@@ -797,27 +810,6 @@
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-
-          <div class="control-section">
-            <div class="advanced-details">
-              <div class="section-title">Advanced</div>
-              <div class="control-grid advanced-grid">
-                <div id="contextToggleWrap" class="hidden">
-                  <div class="checkbox-row">
-                    <input type="checkbox" id="contextToggle" checked />
-                    <label for="contextToggle">Show total generation context</label>
-                  </div>
-                </div>
-                <div id="trendToggleWrap" class="hidden">
-                  <div class="checkbox-row">
-                    <input type="checkbox" id="trendToggle" />
-                    <label for="trendToggle">Show trend line / projection</label>
-                  </div>
-                </div>
-              </div>
-              <div id="trendStatus" class="inline-msg hidden"></div>
             </div>
           </div>
         </div>
@@ -2718,5 +2710,21 @@
       init();
     });
   </script>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-text">
+          <p>&copy; 2025 Houssem Chammam. All rights reserved.</p>
+        </div>
+        <div class="footer-social">
+          <a href="https://www.linkedin.com/in/houssem-chammam/" class="social-link" target="_blank">
+            <i class="fab fa-linkedin"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>

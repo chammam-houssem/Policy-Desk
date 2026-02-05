@@ -52,6 +52,13 @@
       max-width: 820px;
     }
 
+    .page-subtitle a {
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
     .method-note {
       background: var(--accent-soft);
       border-left: 4px solid var(--accent);
@@ -90,7 +97,7 @@
       font-weight: 600;
       color: #1f2937;
       display: block;
-      margin-bottom: 6px;
+      margin: 0 0 6px;
     }
 
     select,
@@ -176,6 +183,7 @@
       flex-wrap: wrap;
       gap: 6px;
       min-height: 28px;
+      margin-top: 0;
     }
 
     .chip {
@@ -312,6 +320,8 @@
     }
 
     .reset-btn {
+      width: 100%;
+      text-align: center;
       border: none;
       background: #102a43;
       color: #ffffff;
@@ -328,6 +338,243 @@
 
     .controls-card {
       position: static;
+    }
+
+    .controls-card .control-section:first-of-type .control-grid {
+      grid-template-columns: minmax(360px, 2fr) minmax(180px, 1fr) auto;
+    }
+
+    .controls-card .control-section:first-of-type .grid-span-2 {
+      grid-column: span 2;
+    }
+
+    @media (max-width: 900px) {
+      .controls-card .control-section:first-of-type .control-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .controls-card .control-section:first-of-type .grid-span-2 {
+        grid-column: span 1;
+      }
+    }
+
+    .controls-card .view-sticky + .control-section {
+      padding-top: 14px;
+    }
+
+    .controls-card .control-section:first-of-type .control-grid {
+      align-items: end;
+    }
+
+    .controls-card .toolbar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 24px;
+      row-gap: 10px;
+      align-items: start;
+      width: 100%;
+    }
+
+    .controls-card .countries-col {
+      grid-column: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .controls-card .countries-col .input-row {
+      width: 100%;
+    }
+
+    .controls-card .right-col {
+      grid-column: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .controls-card .year-col {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .controls-card .year-col .input-row {
+      width: 100%;
+      justify-content: flex-end;
+    }
+
+    .controls-card .year-col select {
+      width: 160px;
+      max-width: 180px;
+    }
+
+    .controls-card .actions-col {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+      justify-content: flex-end;
+    }
+
+    .controls-card .actions-col .reset-btn,
+    .controls-card .actions-col .download-btn {
+      width: 160px;
+      height: 40px;
+    }
+
+    @media (max-width: 900px) {
+      .controls-card .toolbar {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+      }
+
+      .controls-card .right-col {
+        grid-column: 1;
+        align-items: stretch;
+      }
+
+      .controls-card .year-col .input-row,
+      .controls-card .actions-col {
+        justify-content: space-between;
+      }
+    }
+
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      border: 1px solid #166534;
+      background: #16a34a;
+      color: #ffffff;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: none;
+      min-height: 38px;
+    }
+
+    .download-btn:hover {
+      background: #d4a017;
+      border-color: #b8860b;
+      color: #ffffff;
+    }
+
+    .download-btn:focus-visible {
+      outline: 2px solid #86efac;
+      outline-offset: 2px;
+    }
+
+    .controls-card .input-clear {
+      position: relative;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+    }
+
+    .controls-card .input-clear input[type="text"] {
+      border: none;
+      padding: 10px 52px 10px 0;
+      background: transparent;
+    }
+
+    .controls-card .input-clear input[type="text"]:focus {
+      outline: none;
+    }
+
+    .controls-card .input-clear:focus-within {
+      border-color: #94a3b8;
+      box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.25);
+    }
+
+    .controls-card .clear-btn.clear-text {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      padding: 2px 4px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .controls-card .clear-btn.clear-text:hover {
+      color: #475569;
+    }
+
+    .controls-card .clear-btn.clear-text:focus-visible {
+      outline: 2px solid #94a3b8;
+      outline-offset: 2px;
+    }
+
+    .controls-card .range-sep {
+      color: #6b7280;
+      font-size: 13px;
+      margin: 0;
+    }
+
+    .controls-card .advanced-details {
+      margin-top: 0;
+    }
+
+    .controls-card .advanced-details > summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .controls-card .advanced-details > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .controls-card .advanced-details > summary:focus-visible {
+      outline: 2px solid #94a3b8;
+      outline-offset: 2px;
+    }
+
+    .controls-card .advanced-details > summary::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-right: 2px solid #64748b;
+      border-bottom: 2px solid #64748b;
+      transform: rotate(45deg);
+      transition: transform 0.2s ease;
+    }
+
+    .controls-card .advanced-details[open] > summary::after {
+      transform: rotate(-135deg);
+    }
+
+    .controls-card .advanced-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .controls-card .advanced-grid > div {
+      flex: 1 1 260px;
+    }
+
+    @media (max-width: 720px) {
+      .controls-card .advanced-grid {
+        flex-direction: column;
+      }
     }
 
     .view-sticky {
@@ -353,13 +600,18 @@
     }
 
     .control-section {
-      padding-top: 12px;
+      padding-top: 14px;
       border-top: 1px solid #e2e8f0;
+    }
+
+    .view-sticky + .control-section {
+      border-top: none;
+      padding-top: 14px;
     }
 
     .control-section:first-of-type {
       border-top: none;
-      padding-top: 0;
+      padding-top: 14px;
     }
 
     .section-title {
@@ -452,7 +704,7 @@
     <div class="container">
       <header class="mb-8">
         <h1 class="text-3xl md:text-4xl page-title">Energy Data Explorer</h1>
-        <p class="mt-3 page-subtitle">Explore electricity generation, energy mix, and carbon metrics across countries using a shared CSV engine. Gaps in the lines indicate missing data.</p>
+        <p class="mt-3 page-subtitle">Explore electricity generation, energy mix, and carbon metrics across countries from <a href="https://github.com/owid/energy-data" target="_blank" rel="noopener noreferrer">Our World in Data and Ember</a>.</p>
         <div class="method-note mt-4">Latest available years vary by country. Trend lines are optional and shown as dashed projections when enabled.</div>
       </header>
 
@@ -462,49 +714,48 @@
         <h2 class="text-lg font-semibold mb-4">Explorer Controls</h2>
         <div class="control-stack">
           <div class="control-section view-sticky">
-            <div class="section-title">View</div>
             <div class="segmented" role="tablist" aria-label="View">
-              <button type="button" class="segmented-btn active" data-view="mix">Energy mix</button>
-              <button type="button" class="segmented-btn" data-view="single">Energy source</button>
+              <button type="button" class="segmented-btn" data-view="mix">Energy mix</button>
+              <button type="button" class="segmented-btn active" data-view="single">Energy source</button>
               <button type="button" class="segmented-btn" data-view="carbon">Carbon intensity</button>
             </div>
           </div>
 
           <div class="control-section">
-            <div class="section-title">A. Compare</div>
-            <div class="control-grid">
-              <div class="grid-span-2">
+            <div class="toolbar">
+              <div class="countries-col">
+                <label for="countrySearch">Countries (select up to 6)</label>
                 <div class="multiselect">
-                  <label for="countrySearch">Countries (select up to 6)</label>
                   <div class="chip-list" id="countryChips"></div>
-                  <div class="input-row">
-                    <input id="countrySearch" type="text" placeholder="Search countries..." autocomplete="off" />
-                    <button id="clearCountriesBtn" class="clear-btn" type="button">Clear</button>
-                  </div>
+                <div class="input-row input-clear countries-search">
+                  <input id="countrySearch" type="text" placeholder="Search countries..." autocomplete="off" />
+                  <button id="clearCountriesBtn" class="clear-btn clear-text hidden" type="button" aria-label="Clear selected countries">Clear</button>
+                </div>
                   <ul id="countryResults" class="results-list hidden" role="listbox"></ul>
                   <div id="countryLimitMsg" class="inline-msg hidden">Maximum of 6 countries selected.</div>
                 </div>
               </div>
 
-              <div>
-                <label for="yearStartSelect">Year range</label>
-                <div class="input-row">
-                  <select id="yearStartSelect"></select>
-                  <span class="chart-subtitle">to</span>
-                  <select id="yearEndSelect"></select>
+              <div class="right-col">
+                <div class="year-col">
+                  <label for="yearStartSelect">Year range</label>
+                  <div class="input-row">
+                    <select id="yearStartSelect"></select>
+                    <span class="range-sep">to</span>
+                    <select id="yearEndSelect"></select>
+                  </div>
+                  <div id="yearRangeMsg" class="inline-msg hidden"></div>
                 </div>
-                <div id="yearRangeMsg" class="inline-msg hidden"></div>
-              </div>
 
-              <div>
-                <label>&nbsp;</label>
-                <button id="resetBtn" class="reset-btn" type="button">Reset</button>
+                <div class="actions-col">
+                  <button id="resetBtn" class="reset-btn" type="button">Reset</button>
+                  <a class="download-btn" href="Data/electricity-data.csv" download>Download CSV</a>
+                </div>
               </div>
             </div>
           </div>
 
           <div class="control-section">
-            <div class="section-title">B. What to plot</div>
             <div class="control-grid">
               <div id="singleControls">
                 <label for="energySelect">Energy source</label>
@@ -559,22 +810,24 @@
           </div>
 
           <div class="control-section">
-            <div class="section-title">Advanced</div>
-            <div class="control-grid">
-              <div id="contextToggleWrap" class="hidden">
-                <div class="checkbox-row">
-                  <input type="checkbox" id="contextToggle" checked />
-                  <label for="contextToggle">Show total generation context</label>
+            <details class="advanced-details" open>
+              <summary class="section-title">Advanced</summary>
+              <div class="control-grid advanced-grid">
+                <div id="contextToggleWrap" class="hidden">
+                  <div class="checkbox-row">
+                    <input type="checkbox" id="contextToggle" checked />
+                    <label for="contextToggle">Show total generation context</label>
+                  </div>
+                </div>
+                <div id="trendToggleWrap" class="hidden">
+                  <div class="checkbox-row">
+                    <input type="checkbox" id="trendToggle" />
+                    <label for="trendToggle">Show trend line / projection</label>
+                  </div>
                 </div>
               </div>
-              <div id="trendToggleWrap" class="hidden">
-                <div class="checkbox-row">
-                  <input type="checkbox" id="trendToggle" />
-                  <label for="trendToggle">Show trend line / projection</label>
-                </div>
-              </div>
-            </div>
-            <div id="trendStatus" class="inline-msg hidden"></div>
+              <div id="trendStatus" class="inline-msg hidden"></div>
+            </details>
           </div>
         </div>
       </section>
@@ -648,8 +901,12 @@
         <div class="card mb-8" id="singleRankSection">
           <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-2">
             <div>
-              <h3 class="chart-title">Latest-Year Ranking</h3>
-              <p class="chart-subtitle" id="singleRankSubtitle">Compare selected countries by the most recent year available.</p>
+              <h3 class="chart-title">Year-by-Year Ranking</h3>
+              <p class="chart-subtitle" id="singleRankSubtitle">Compare selected countries for a selected year.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <label for="singleRankYearSelect" class="chart-subtitle">Year</label>
+              <select id="singleRankYearSelect"></select>
             </div>
           </div>
           <div class="chart-wrapper">
@@ -833,9 +1090,9 @@
       const CACHE_TTL = 1800000;
 
       const state = {
-        view: 'mix',
+        view: 'single',
         selectedCountries: [],
-        energyKey: null,
+        energyKey: 'coal',
         showContext: true,
         showTrend: false,
         sourceMeasure: 'twh',
@@ -843,9 +1100,10 @@
         mixMeasure: 'share',
         carbonMetric: null,
         emissionsPerCapita: false,
-        compareMode: 'overlay',
-        compareModeLocked: false,
+        compareMode: 'multiples',
+        compareModeLocked: true,
         mixSnapshotYear: null,
+        singleRankYear: null,
         yearRange: { start: null, end: null }
       };
 
@@ -890,7 +1148,8 @@
         carbonMainSubtitle: document.getElementById('carbonMainSubtitle'),
         mixSingleSection: document.getElementById('mixSingleSection'),
         mixMultiSection: document.getElementById('mixMultiSection'),
-        mixYearSelect: document.getElementById('mixYearSelect')
+        mixYearSelect: document.getElementById('mixYearSelect'),
+        singleRankYearSelect: document.getElementById('singleRankYearSelect')
       };
 
       const energyOptions = [
@@ -1362,6 +1621,11 @@
 
       function buildCountryChips() {
         elements.countryChips.innerHTML = '';
+        if (elements.clearCountriesBtn) {
+          const hasSelection = state.selectedCountries.length > 0;
+          elements.clearCountriesBtn.classList.toggle('hidden', !hasSelection);
+          elements.clearCountriesBtn.disabled = !hasSelection;
+        }
         if (!state.selectedCountries.length) {
           return;
         }
@@ -1471,9 +1735,9 @@
       }
 
       function resetState() {
-        state.view = 'mix';
+        state.view = 'single';
         state.selectedCountries = getDefaultCountries();
-        state.energyKey = availableEnergyOptions()[0]?.key || null;
+        state.energyKey = 'coal';
         state.showContext = true;
         state.showTrend = false;
         state.sourceMeasure = 'twh';
@@ -1481,9 +1745,10 @@
         state.mixMeasure = 'share';
         state.carbonMetric = availableCarbonOptions()[0]?.key || null;
         state.emissionsPerCapita = false;
-        state.compareMode = 'overlay';
-        state.compareModeLocked = false;
+        state.compareMode = 'multiples';
+        state.compareModeLocked = true;
         state.mixSnapshotYear = null;
+        state.singleRankYear = null;
         state.yearRange = getDefaultYearRange();
 
         elements.energySelect.value = state.energyKey || '';
@@ -1611,6 +1876,46 @@
         syncYearRangeInputs();
       }
 
+      function buildSingleRankYearOptions(metricCol) {
+        if (!elements.singleRankYearSelect) return;
+        let minYear = globalMinYear;
+        let maxYear = globalMaxYear;
+        if (metricCol && state.selectedCountries.length) {
+          minYear = null;
+          maxYear = null;
+          state.selectedCountries.forEach(country => {
+            const years = filterYearsByRange(getMetricYears(country, metricCol));
+            if (!years.length) return;
+            if (minYear === null || years[0] < minYear) minYear = years[0];
+            if (maxYear === null || years[years.length - 1] > maxYear) maxYear = years[years.length - 1];
+          });
+        }
+        if (minYear === null || maxYear === null) {
+          minYear = globalMinYear;
+          maxYear = globalMaxYear;
+        }
+        if (minYear === null || maxYear === null) return;
+
+        const currentMin = Number(elements.singleRankYearSelect.dataset.min);
+        const currentMax = Number(elements.singleRankYearSelect.dataset.max);
+        if (!Number.isFinite(currentMin) || !Number.isFinite(currentMax) || currentMin !== minYear || currentMax !== maxYear) {
+          elements.singleRankYearSelect.innerHTML = '';
+          for (let year = minYear; year <= maxYear; year += 1) {
+            const opt = document.createElement('option');
+            opt.value = String(year);
+            opt.textContent = String(year);
+            elements.singleRankYearSelect.appendChild(opt);
+          }
+          elements.singleRankYearSelect.dataset.min = String(minYear);
+          elements.singleRankYearSelect.dataset.max = String(maxYear);
+        }
+
+        if (!state.singleRankYear || state.singleRankYear < minYear || state.singleRankYear > maxYear) {
+          state.singleRankYear = maxYear;
+        }
+        elements.singleRankYearSelect.value = String(state.singleRankYear);
+      }
+
       function normalizeYearRange() {
         const start = Number(elements.yearStartSelect.value);
         const end = Number(elements.yearEndSelect.value);
@@ -1701,8 +2006,9 @@
         const countries = state.selectedCountries;
         const compact = options.compactLabels || false;
         const valueTransform = options.valueTransform || null;
-        const includeYear = !getLatestCommonYear(countries, metricCol);
-        const latestCommonYear = getLatestCommonYear(countries, metricCol);
+        const selectedYear = Number.isFinite(options.year) ? options.year : null;
+        const includeYear = selectedYear === null && !getLatestCommonYear(countries, metricCol);
+        const latestCommonYear = selectedYear !== null ? selectedYear : getLatestCommonYear(countries, metricCol);
         const values = [];
         const labels = [];
         const years = [];
@@ -1711,7 +2017,12 @@
           countries.forEach(country => {
             let value = null;
             let yearUsed = latestCommonYear;
-            if (latestCommonYear !== null) {
+            if (selectedYear !== null) {
+              value = getValueFor(country, selectedYear, metricCol);
+              if (valueTransform) {
+                value = valueTransform(value, { country, year: selectedYear });
+              }
+            } else if (latestCommonYear !== null) {
               value = getValueFor(country, latestCommonYear, metricCol);
               if (valueTransform) {
                 value = valueTransform(value, { country, year: latestCommonYear });
@@ -1729,7 +2040,7 @@
             if (value !== null && value !== undefined) {
               labels.push(getCountryLabel(country, compact));
               values.push(value);
-              years.push(yearUsed);
+              years.push(selectedYear ?? yearUsed);
             }
           });
         }
@@ -1744,7 +2055,7 @@
           data: {
             labels: sortedLabels,
             datasets: [{
-              label: 'Latest year',
+              label: selectedYear !== null ? `Year ${selectedYear}` : 'Latest year',
               data: sortedValues,
               backgroundColor: sortedLabels.map((_, idx) => getColor(idx, 0.7)),
               metaYears: sortedYears
@@ -1872,7 +2183,9 @@
 
         elements.singleMainTitle.textContent = `${energy.label} – ${config.label}`;
         elements.singleMainSubtitle.textContent = 'Selected energy source across countries.';
-        elements.singleRankSubtitle.textContent = `Latest-year ranking based on ${config.label.toLowerCase()}.`;
+        buildSingleRankYearOptions(config.metricCol);
+        const selectedYear = state.singleRankYear ?? globalMaxYear;
+        elements.singleRankSubtitle.textContent = `Ranking for ${selectedYear} based on ${config.label.toLowerCase()}.`;
 
         applyCompareModeAuto();
         const showMultiples = state.compareMode === 'multiples' && countries.length > 1;
@@ -1937,14 +2250,13 @@
           elements.trendStatus.classList.remove('hidden');
         }
 
-        const rankingData = buildRankingData(config.metricCol, { valueTransform, compactLabels });
+        const rankingData = buildRankingData(config.metricCol, { valueTransform, compactLabels, year: selectedYear });
         updateChartSafely('compareRankChart', rankingData.data, { chartOptions: buildBarOptions(config.unit, rankingData.includeYear) });
         setEmptyState('compareRankChartEmpty', rankingData.hasData ? '' : 'No data available for this metric in the selected years/countries.');
-        if (rankingData.latestCommonYear !== null) {
-          setNote('compareRankNote', `Latest common year across selections: ${rankingData.latestCommonYear}.`);
-        } else {
-          setNote('compareRankNote', 'No single common year across selections; using each country’s latest available year.');
-        }
+        const missingNote = rankingData.hasData && rankingData.data.labels.length < countries.length
+          ? 'Countries without data for the selected year are omitted.'
+          : '';
+        setNote('compareRankNote', missingNote);
       }
 
       function updateMixCharts() {
@@ -2375,6 +2687,13 @@
           state.mixSnapshotYear = Number(elements.mixYearSelect.value);
           updateCharts();
         });
+
+        if (elements.singleRankYearSelect) {
+          elements.singleRankYearSelect.addEventListener('change', () => {
+            state.singleRankYear = Number(elements.singleRankYearSelect.value);
+            updateCharts();
+          });
+        }
       }
 
       function showParseError(message) {
@@ -2393,10 +2712,12 @@
             columnSet = new Set(Object.keys(cachedRows[0] || {}));
             buildIndex();
             buildControlOptions();
+            resetState();
             createCharts();
             attachListeners();
             buildYearRangeControls();
-            resetState();
+            updateCharts();
+            requestAnimationFrame(() => updateCharts());
           })
           .catch(err => {
             showParseError(`CSV parse failed for ${CSV_PATH}: ${err.message || 'Unknown error'}`);

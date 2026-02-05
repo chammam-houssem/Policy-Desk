@@ -31,13 +31,9 @@
       --warning: #92400e;
     }
 
-    body {
-      background-color: #f7f8fb;
-      color: var(--ink);
-    }
-
     .page-wrap {
-      padding: 32px 0 60px;
+      padding: 40px 0;
+      min-height: 60vh;
     }
 
     .page-title {
@@ -526,54 +522,31 @@
     }
 
     .controls-card .advanced-details {
-      margin-top: 0;
+      margin: 0;
     }
 
-    .controls-card .advanced-details > summary {
-      list-style: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .controls-card .advanced-details > summary::-webkit-details-marker {
-      display: none;
-    }
-
-    .controls-card .advanced-details > summary:focus-visible {
-      outline: 2px solid #94a3b8;
-      outline-offset: 2px;
-    }
-
-    .controls-card .advanced-details > summary::after {
-      content: '';
-      width: 8px;
-      height: 8px;
-      border-right: 2px solid #64748b;
-      border-bottom: 2px solid #64748b;
-      transform: rotate(45deg);
-      transition: transform 0.2s ease;
-    }
-
-    .controls-card .advanced-details[open] > summary::after {
-      transform: rotate(-135deg);
+    .controls-card .advanced-details .section-title {
+      margin-bottom: 6px;
     }
 
     .controls-card .advanced-grid {
       display: flex;
       flex-wrap: wrap;
-      gap: 16px;
+      gap: 12px;
     }
 
     .controls-card .advanced-grid > div {
       flex: 1 1 260px;
     }
 
+    .controls-card .advanced-grid .checkbox-row {
+      margin-top: 4px;
+    }
+
     @media (max-width: 720px) {
       .controls-card .advanced-grid {
         flex-direction: column;
+        gap: 8px;
       }
     }
 
@@ -590,6 +563,24 @@
     @media (max-width: 900px) {
       .view-sticky {
         position: static;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .controls-card .advanced-details {
+        margin: 0;
+      }
+
+      .controls-card .advanced-details > summary.section-title {
+        margin-bottom: 6px;
+      }
+
+      .controls-card .advanced-grid {
+        gap: 8px;
+      }
+
+      .controls-card .advanced-grid .checkbox-row {
+        margin-top: 4px;
       }
     }
 
@@ -689,16 +680,16 @@
   </style>
 </head>
 <body class="antialiased">
-  <nav class="tab-navigation">
-    <div class="container">
-      <div class="tab-nav">
-        <a href="index.html" class="nav-btn tab-btn">Overview</a>
-        <a href="data.html" class="nav-btn tab-btn">Data Projects</a>
-        <a href="blog.html" class="nav-btn tab-btn">Blog</a>
-        <a href="energy-explorer.html" class="nav-btn tab-btn active">Energy Explorer</a>
-      </div>
-    </div>
-  </nav>
+    <nav class="tab-navigation">
+        <div class="container">
+            <div class="tab-nav">
+                <a class="tab-btn" href="index.html">Overview</a>
+                <a class="tab-btn" href="featured-work.html">Featured Work</a>
+                <button class="tab-btn active">Energy Explorer</button>
+                <a class="tab-btn" href="blog.html">Blog</a>
+            </div>
+        </div>
+    </nav>
 
   <main class="page-wrap">
     <div class="container">
@@ -810,8 +801,8 @@
           </div>
 
           <div class="control-section">
-            <details class="advanced-details" open>
-              <summary class="section-title">Advanced</summary>
+            <div class="advanced-details">
+              <div class="section-title">Advanced</div>
               <div class="control-grid advanced-grid">
                 <div id="contextToggleWrap" class="hidden">
                   <div class="checkbox-row">
@@ -827,7 +818,7 @@
                 </div>
               </div>
               <div id="trendStatus" class="inline-msg hidden"></div>
-            </details>
+            </div>
           </div>
         </div>
       </section>

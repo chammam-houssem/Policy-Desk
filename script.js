@@ -26,6 +26,147 @@ const ChartColorPalette = {
 // Expose the charting functions to the global window object
 window.charting = {
     chartInstances: {},
+    csvCache: {},
+    cacheDefaults: {
+        enabled: true,
+        ttlMs: 30 * 60 * 1000 // 30 minutes
+    },
+
+    // Normalize cache options
+    getCacheOptions: function(cacheConfig) {
+        const config = cacheConfig && typeof cacheConfig === 'object' ? cacheConfig : {};
+        const enabled = config.enabled !== false;
+        let ttlMs = this.cacheDefaults.ttlMs;
+        if (typeof config.ttlMs === 'number' && !Number.isNaN(config.ttlMs)) {
+            ttlMs = config.ttlMs;
+        }
+        return { enabled, ttlMs };
+    },
+
+    // Check if cached rows are still fresh
+    isCacheEntryFresh: function(entry, ttlMs) {
+        if (!entry || !entry.rows) return false;
+        if (ttlMs === null || ttlMs === undefined || !isFinite(ttlMs)) return true;
+        return (Date.now() - entry.timestamp) <= ttlMs;
+    },
+
+    // Fetch and parse CSV via PapaParse
+    fetchAndParseCSV: function(csvPath) {
+        return new Promise((resolve, reject) => {
+            Papa.parse(csvPath, {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                dynamicTyping: true,
+                complete: (results) => {
+                    if (results.errors && results.errors.length > 0) {
+                        const parseError = new Error(results.errors[0].message || 'Unknown CSV parse error');
+                        parseError.type = 'parse';
+                        parseError.details = results.errors;
+                        reject(parseError);
+                        return;
+                    }
+                    resolve(results.data);
+                },
+                error: (error) => {
+                    const fetchError = error instanceof Error ? error : new Error('CSV fetch failed');
+                    fetchError.type = 'fetch';
+                    reject(fetchError);
+                }
+            });
+        });
+    },
+
+    // Load CSV with caching and concurrent request sharing
+    loadCSV: function(csvPath, cacheConfig) {
+        const { enabled, ttlMs } = this.getCacheOptions(cacheConfig);
+        const cacheEntry = this.csvCache[csvPath];
+
+        if (enabled && cacheEntry) {
+            if (cacheEntry.promise) {
+                return cacheEntry.promise;
+            }
+            if (this.isCacheEntryFresh(cacheEntry, ttlMs)) {
+                return Promise.resolve(cacheEntry.rows);
+            }
+        }
+
+        const fetchPromise = this.fetchAndParseCSV(csvPath)
+            .then(rows => {
+                if (enabled) {
+                    this.csvCache[csvPath] = {
+                        rows,
+                        timestamp: Date.now()
+                    };
+                }
+                return rows;
+            })
+            .catch(error => {
+                if (enabled && this.csvCache[csvPath] && this.csvCache[csvPath].promise === fetchPromise) {
+                    delete this.csvCache[csvPath];
+                }
+                throw error;
+            });
+
+        if (enabled) {
+            this.csvCache[csvPath] = {
+                promise: fetchPromise,
+                timestamp: Date.now()
+            };
+        }
+
+        return fetchPromise;
+    },
+
+    // Optional: preload CSV to warm the cache
+    preloadCSV: function(csvPath, options = {}) {
+        return this.loadCSV(csvPath, options);
+    },
+
+    // Optional: update an existing chart instance in-place
+    updateChart: function(chartInstance, { labels, datasets } = {}, options = {}) {
+        if (!chartInstance || typeof chartInstance.update !== 'function') {
+            console.warn('Chart update skipped: invalid chart instance.');
+            return;
+        }
+
+        if (Array.isArray(labels)) {
+            chartInstance.data.labels = labels;
+        }
+        if (Array.isArray(datasets)) {
+            chartInstance.data.datasets = datasets;
+        }
+
+        if (options.chartOptions && typeof options.chartOptions === 'object') {
+            chartInstance.options = { ...chartInstance.options, ...options.chartOptions };
+        }
+
+        if (options.updateMode) {
+            chartInstance.update(options.updateMode);
+            return;
+        }
+        chartInstance.update();
+    },
+
+    // Resolve a chart label for logging
+    getChartLabel: function(chartOptions, canvasId) {
+        const title = chartOptions?.plugins?.title?.text;
+        if (Array.isArray(title)) {
+            const joined = title.join(' ').trim();
+            if (joined) return joined;
+        } else if (typeof title === 'string' && title.trim()) {
+            return title.trim();
+        }
+        return canvasId || 'Unknown chart';
+    },
+
+    // Validate Chart.js data structure
+    validateChartData: function(chartData) {
+        if (!chartData || typeof chartData !== 'object') return false;
+        if (!Array.isArray(chartData.datasets)) return false;
+        if ('labels' in chartData && !Array.isArray(chartData.labels)) return false;
+        return true;
+    },
     
     /**
      * Creates and renders a Chart.js chart from a CSV file.
@@ -45,7 +186,8 @@ window.charting = {
         dataProcessor, 
         chartOptions = {},
         enablePerformanceMode = false,
-        requiredFields = []
+        requiredFields = [],
+        cache = {}
     }) {
         const canvas = document.getElementById(canvasId);
         if (!canvas) {
@@ -61,31 +203,30 @@ window.charting = {
         // Destroy any existing chart instance
         this.destroyChart(canvasId);
 
-        // Fetch and parse CSV data
-        Papa.parse(csvPath, {
-            download: true,
-            header: true,
-            skipEmptyLines: true,
-            dynamicTyping: true,
-            complete: (results) => {
+        const chartLabel = this.getChartLabel(chartOptions, canvasId);
+
+        // Fetch and parse CSV data (with caching)
+        this.loadCSV(csvPath, cache)
+            .then((rows) => {
                 this.removeLoader(chartWrapper);
-                
-                if (results.errors.length > 0) {
-                    this.handleChartError(chartWrapper, canvas, `CSV parsing failed: ${results.errors[0].message}`);
-                    return;
-                }
 
                 try {
                     // Validate data if required fields specified
                     if (requiredFields.length > 0) {
-                        this.validateData(results.data, requiredFields);
+                        this.validateData(rows, requiredFields);
                     }
 
                     // Process data
-                    const chartData = dataProcessor(results.data);
+                    const chartData = dataProcessor(rows);
+
+                    if (!this.validateChartData(chartData)) {
+                        console.warn(`Chart Warning: dataProcessor returned invalid data for "${chartLabel}".`, chartData);
+                        this.handleChartError(chartWrapper, canvas, `Invalid chart data returned by dataProcessor for "${chartLabel}".`);
+                        return;
+                    }
                     
                     // Apply performance optimizations if enabled
-                    const finalOptions = this.applyOptimizations(chartOptions, enablePerformanceMode, results.data.length);
+                    const finalOptions = this.applyOptimizations(chartOptions, enablePerformanceMode, rows.length);
                     
                     // Create chart
                     const ctx = canvas.getContext('2d');
@@ -96,14 +237,16 @@ window.charting = {
                     });
                     
                 } catch (error) {
-                    this.handleChartError(chartWrapper, canvas, `Chart creation failed: ${error.message}`);
+                    this.handleChartError(chartWrapper, canvas, `Chart creation failed for "${chartLabel}": ${error.message}`);
                 }
-            },
-            error: (error) => {
+            })
+            .catch((error) => {
                 this.removeLoader(chartWrapper);
-                this.handleChartError(chartWrapper, canvas, `Could not load CSV file: ${csvPath}`);
-            }
-        });
+                const baseMessage = error && error.type === 'parse'
+                    ? `CSV parsing failed for "${csvPath}" (Chart: ${chartLabel}).`
+                    : `Could not load CSV file: ${csvPath} (Chart: ${chartLabel}).`;
+                this.handleChartError(chartWrapper, canvas, error && error.message ? `${baseMessage} ${error.message}` : baseMessage);
+            });
     },
 
     // Validate CSV data structure

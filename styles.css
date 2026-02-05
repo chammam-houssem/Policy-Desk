@@ -101,6 +101,13 @@ html { overflow-y: scroll; }
     top: 0;
     z-index: 100;
 }
+.tab-navigation > .container {
+    width: 100%;
+    max-width: 1200px;     /* match your intended site container width */
+    margin: 0 auto;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 
 .tab-nav {
     display: flex;
@@ -331,6 +338,9 @@ html { overflow-y: scroll; }
 .profile-header {
     margin-bottom: 30px;
 }
+
+
+
 
 .profile-name {
     font-size: 48px;
@@ -834,6 +844,33 @@ html { overflow-y: scroll; }
         top: 20px;
     }
 }
+
+.control-grid.advanced-grid{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  /* Optional: go back to 2 columns on desktop */
+  @media (min-width: 700px){
+    .control-grid.advanced-grid{
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .checkbox-row{
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    max-width: 100%;
+  }
+  
+  .checkbox-row label{
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.2;
+  }
+
 
 /* Responsive Design */
 @media (max-width: 768px) {

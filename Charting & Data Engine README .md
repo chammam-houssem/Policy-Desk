@@ -52,6 +52,62 @@ window.charting.createChartFromCSV({
     chartOptions: { responsive: true }
 });
 
+## Performance for interactive explorer pages
+
+Migration note: No changes required for existing pages.
+
+What is new:
+- CSVs are cached in memory by `csvPath`, so multiple charts using the same file only fetch/parse once per session (default cache TTL is 30 minutes).
+- You can override cache behavior per chart with `cache: { enabled: false }` or `cache: { enabled: true, ttlMs: 600000 }`.
+- Optional utilities are available for explorer pages: `preloadCSV(...)` and `updateChart(...)`.
+
+Example cache override:
+
+<script>
+window.charting.createChartFromCSV({
+    canvasId: 'exampleChart',
+    csvPath: './data.csv',
+    chartType: 'bar',
+    dataProcessor: function(data) { return { labels: [], datasets: [] }; },
+    chartOptions: { responsive: true },
+    cache: { enabled: true, ttlMs: 600000 }
+});
+</script>
+
+### Preload CSV (optional)
+
+<script>
+window.charting.preloadCSV('../Data/energy.csv', { ttlMs: 1800000 })
+    .then(rows => {
+        // rows are cached and ready to reuse
+        window.cachedRows = rows;
+    });
+</script>
+
+### Update chart data in-place (optional)
+
+<script>
+// Create the chart once (will use cache if preloaded)
+window.charting.createChartFromCSV({
+    canvasId: 'explorerChart',
+    csvPath: '../Data/energy.csv',
+    chartType: 'line',
+    dataProcessor: function(data) {
+        return buildChartData(data, 'USA');
+    },
+    chartOptions: { responsive: true }
+});
+
+// Later, update without recreating the chart or reloading CSV
+const chart = window.charting.getChart('explorerChart');
+// Uses rows loaded by preloadCSV
+const nextData = buildChartData(window.cachedRows, 'Canada');
+window.charting.updateChart(chart, nextData);
+</script>
+
+Recommended pattern for explorers:
+Load once → preprocess/filter in memory → update charts on dropdown changes.
+
 ## 2. How Articles Use the Engine
 Every time you want a chart in an article (e.g., article3.html), you:
 

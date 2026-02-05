@@ -1,0 +1,2730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QMG7PT3J0Z"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QMG7PT3J0Z');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Energy Data Explorer - Electricity Mix and Carbon</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <style>
+    :root {
+      --card-bg: #ffffff;
+      --card-border: #e9ecef;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --accent: #0f4c81;
+      --accent-soft: #edf2f7;
+      --warning: #92400e;
+    }
+
+    .page-wrap {
+      padding: 40px 0;
+      min-height: 60vh;
+    }
+
+    .page-title {
+      font-family: 'Roboto Serif', serif;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      color: #102a43;
+    }
+
+    .page-subtitle {
+      color: var(--muted);
+      max-width: 820px;
+    }
+
+    .page-subtitle a {
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .method-note {
+      background: var(--accent-soft);
+      border-left: 4px solid var(--accent);
+      padding: 10px 14px;
+      color: #1f3a5f;
+      font-size: 14px;
+      border-radius: 6px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+    }
+
+    .control-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .grid-span-2 {
+      grid-column: span 2;
+    }
+
+    @media (max-width: 900px) {
+      .grid-span-2 {
+        grid-column: span 1;
+      }
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1f2937;
+      display: block;
+      margin: 0 0 6px;
+    }
+
+    select,
+    input[type="text"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 14px;
+      color: #111827;
+    }
+
+    .toggle-group {
+      display: flex;
+      gap: 8px;
+      background: #f1f5f9;
+      border-radius: 10px;
+      padding: 4px;
+    }
+
+    .toggle-btn {
+      flex: 1;
+      border: none;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #475569;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .toggle-btn.active {
+      background: #102a43;
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(16, 42, 67, 0.2);
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #334155;
+      margin-top: 8px;
+    }
+
+    .checkbox-row input {
+      width: 16px;
+      height: 16px;
+    }
+
+    .inline-msg {
+      font-size: 12px;
+      color: var(--warning);
+      margin-top: 6px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .error-panel {
+      background: #fee2e2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      padding: 12px 14px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+
+    .multiselect {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .chip-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      min-height: 28px;
+      margin-top: 0;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #e2e8f0;
+      color: #0f172a;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .chip button {
+      border: none;
+      background: transparent;
+      color: #475569;
+      cursor: pointer;
+      font-size: 12px;
+      padding: 0;
+    }
+
+    .results-list {
+      list-style: none;
+      margin: 0;
+      padding: 4px;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      background: #ffffff;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .results-list.hidden {
+      display: none;
+    }
+
+    .results-list li button {
+      width: 100%;
+      border: none;
+      background: transparent;
+      text-align: left;
+      padding: 8px 10px;
+      font-size: 13px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #1f2937;
+    }
+
+    .results-list li button:hover,
+    .results-list li button:focus {
+      background: #f1f5f9;
+      outline: none;
+    }
+
+    .results-empty {
+      padding: 8px 10px;
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 18px;
+    }
+
+    .chart-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #1f2937;
+    }
+
+    .chart-subtitle {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 12px;
+    }
+
+    .chart-wrapper {
+      height: 320px;
+      position: relative;
+    }
+
+    .chart-wrapper.compact {
+      height: 240px;
+    }
+
+    .chart-note {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 8px;
+    }
+
+    .chart-empty {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 18px;
+      font-size: 13px;
+      color: #6b7280;
+      background: #f8fafc;
+      border-radius: 10px;
+      z-index: 5;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .mini-card {
+      border: 1px dashed #dbe0e6;
+      border-radius: 12px;
+      padding: 12px 14px;
+      background: #ffffff;
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .slider-row input[type="range"] {
+      flex: 1;
+    }
+
+    .reset-btn {
+      width: 100%;
+      text-align: center;
+      border: none;
+      background: #102a43;
+      color: #ffffff;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .reset-btn:hover {
+      background: #0f4c81;
+    }
+
+    .controls-card {
+      position: static;
+    }
+
+    .controls-card .control-section:first-of-type .control-grid {
+      grid-template-columns: minmax(360px, 2fr) minmax(180px, 1fr) auto;
+    }
+
+    .controls-card .control-section:first-of-type .grid-span-2 {
+      grid-column: span 2;
+    }
+
+    @media (max-width: 900px) {
+      .controls-card .control-section:first-of-type .control-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .controls-card .control-section:first-of-type .grid-span-2 {
+        grid-column: span 1;
+      }
+    }
+
+    .controls-card .view-sticky + .control-section {
+      padding-top: 14px;
+    }
+
+    .controls-card .control-section:first-of-type .control-grid {
+      align-items: end;
+    }
+
+    .controls-card .toolbar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 24px;
+      row-gap: 10px;
+      align-items: start;
+      width: 100%;
+    }
+
+    .controls-card .countries-col {
+      grid-column: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .controls-card .countries-col .input-row {
+      width: 100%;
+    }
+
+    .controls-card .right-col {
+      grid-column: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .controls-card .year-col {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .controls-card .year-col .input-row {
+      width: 100%;
+      justify-content: flex-end;
+    }
+
+    .controls-card .year-col select {
+      width: 160px;
+      max-width: 180px;
+    }
+
+    .controls-card .actions-col {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+      justify-content: flex-end;
+    }
+
+    .controls-card .actions-col .reset-btn,
+    .controls-card .actions-col .download-btn {
+      width: 160px;
+      height: 40px;
+    }
+
+    @media (max-width: 900px) {
+      .controls-card .toolbar {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+      }
+
+      .controls-card .right-col {
+        grid-column: 1;
+        align-items: stretch;
+      }
+
+      .controls-card .year-col .input-row,
+      .controls-card .actions-col {
+        justify-content: space-between;
+      }
+    }
+
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      border: 1px solid #166534;
+      background: #16a34a;
+      color: #ffffff;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: none;
+      min-height: 38px;
+    }
+
+    .download-btn:hover {
+      background: #d4a017;
+      border-color: #b8860b;
+      color: #ffffff;
+    }
+
+    .download-btn:focus-visible {
+      outline: 2px solid #86efac;
+      outline-offset: 2px;
+    }
+
+    .controls-card .input-clear {
+      position: relative;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+    }
+
+    .controls-card .input-clear input[type="text"] {
+      border: none;
+      padding: 10px 52px 10px 0;
+      background: transparent;
+    }
+
+    .controls-card .input-clear input[type="text"]:focus {
+      outline: none;
+    }
+
+    .controls-card .input-clear:focus-within {
+      border-color: #94a3b8;
+      box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.25);
+    }
+
+    .controls-card .clear-btn.clear-text {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      padding: 2px 4px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .controls-card .clear-btn.clear-text:hover {
+      color: #475569;
+    }
+
+    .controls-card .clear-btn.clear-text:focus-visible {
+      outline: 2px solid #94a3b8;
+      outline-offset: 2px;
+    }
+
+    .controls-card .range-sep {
+      color: #6b7280;
+      font-size: 13px;
+      margin: 0;
+    }
+
+    .controls-card .advanced-details {
+      margin: 0;
+    }
+
+    .controls-card .advanced-details .section-title {
+      margin-bottom: 6px;
+    }
+
+    .controls-card .advanced-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .controls-card .advanced-grid > div {
+      flex: 1 1 260px;
+    }
+
+    .controls-card .advanced-grid .checkbox-row {
+      margin-top: 4px;
+    }
+
+    @media (max-width: 720px) {
+      .controls-card .advanced-grid {
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+
+    .view-sticky {
+      position: sticky;
+      top: 12px;
+      z-index: 30;
+      background: var(--card-bg);
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    @media (max-width: 900px) {
+      .view-sticky {
+        position: static;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .controls-card .advanced-details {
+        margin: 0;
+      }
+
+      .controls-card .advanced-details > summary.section-title {
+        margin-bottom: 6px;
+      }
+
+      .controls-card .advanced-grid {
+        gap: 8px;
+      }
+
+      .controls-card .advanced-grid .checkbox-row {
+        margin-top: 4px;
+      }
+    }
+
+    .control-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .control-section {
+      padding-top: 14px;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .view-sticky + .control-section {
+      border-top: none;
+      padding-top: 14px;
+    }
+
+    .control-section:first-of-type {
+      border-top: none;
+      padding-top: 14px;
+    }
+
+    .section-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #64748b;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .segmented {
+      display: flex;
+      gap: 6px;
+      background: #e2e8f0;
+      border-radius: 12px;
+      padding: 4px;
+    }
+
+    .segmented-btn {
+      flex: 1;
+      border: none;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #475569;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .segmented-btn.active {
+      background: #102a43;
+      color: #ffffff;
+      box-shadow: 0 6px 16px rgba(16, 42, 67, 0.2);
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .clear-btn {
+      border: 1px solid #d1d5db;
+      background: #ffffff;
+      color: #475569;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .clear-btn:hover {
+      border-color: #94a3b8;
+      color: #102a43;
+    }
+
+    .mini-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @media (max-width: 900px) {
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .mini-card {
+      min-height: 280px;
+    }
+  </style>
+</head>
+<body class="antialiased">
+    <nav class="tab-navigation">
+        <div class="container">
+            <div class="tab-nav">
+                <a class="tab-btn" href="index.html">Overview</a>
+                <a class="tab-btn" href="featured-work.html">Featured Work</a>
+                <button class="tab-btn active">Energy Explorer</button>
+                <a class="tab-btn" href="blog.html">Blog</a>
+            </div>
+        </div>
+    </nav>
+
+  <main class="page-wrap">
+    <div class="container">
+      <header class="mb-8">
+        <h1 class="text-3xl md:text-4xl page-title">Energy Data Explorer</h1>
+        <p class="mt-3 page-subtitle">Explore electricity generation, energy mix, and carbon metrics across countries from <a href="https://github.com/owid/energy-data" target="_blank" rel="noopener noreferrer">Our World in Data and Ember</a>.</p>
+        <div class="method-note mt-4">Latest available years vary by country. Trend lines are optional and shown as dashed projections when enabled.</div>
+      </header>
+
+      <div id="parseError" class="error-panel hidden"></div>
+
+      <section class="card mb-8 controls-card" id="controlsCard">
+        <h2 class="text-lg font-semibold mb-4">Explorer Controls</h2>
+        <div class="control-stack">
+          <div class="control-section view-sticky">
+            <div class="segmented" role="tablist" aria-label="View">
+              <button type="button" class="segmented-btn" data-view="mix">Energy mix</button>
+              <button type="button" class="segmented-btn active" data-view="single">Energy source</button>
+              <button type="button" class="segmented-btn" data-view="carbon">Carbon intensity</button>
+            </div>
+          </div>
+
+          <div class="control-section">
+            <div class="toolbar">
+              <div class="countries-col">
+                <label for="countrySearch">Countries (select up to 6)</label>
+                <div class="multiselect">
+                  <div class="chip-list" id="countryChips"></div>
+                <div class="input-row input-clear countries-search">
+                  <input id="countrySearch" type="text" placeholder="Search countries..." autocomplete="off" />
+                  <button id="clearCountriesBtn" class="clear-btn clear-text hidden" type="button" aria-label="Clear selected countries">Clear</button>
+                </div>
+                  <ul id="countryResults" class="results-list hidden" role="listbox"></ul>
+                  <div id="countryLimitMsg" class="inline-msg hidden">Maximum of 6 countries selected.</div>
+                </div>
+              </div>
+
+              <div class="right-col">
+                <div class="year-col">
+                  <label for="yearStartSelect">Year range</label>
+                  <div class="input-row">
+                    <select id="yearStartSelect"></select>
+                    <span class="range-sep">to</span>
+                    <select id="yearEndSelect"></select>
+                  </div>
+                  <div id="yearRangeMsg" class="inline-msg hidden"></div>
+                </div>
+
+                <div class="actions-col">
+                  <button id="resetBtn" class="reset-btn" type="button">Reset</button>
+                  <a class="download-btn" href="Data/electricity-data.csv" download>Download CSV</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="control-section">
+            <div class="control-grid">
+              <div id="singleControls">
+                <label for="energySelect">Energy source</label>
+                <select id="energySelect"></select>
+                <div id="contextToggleWrap" class="hidden" style="margin-top: 8px;">
+                  <div class="checkbox-row">
+                    <input type="checkbox" id="contextToggle" checked />
+                    <label for="contextToggle">Show total generation context</label>
+                  </div>
+                </div>
+                <div id="trendToggleWrap" class="hidden" style="margin-top: 8px;">
+                  <div class="checkbox-row">
+                    <input type="checkbox" id="trendToggle" />
+                    <label for="trendToggle">Show trend line / projection</label>
+                  </div>
+                </div>
+                <div id="trendStatus" class="inline-msg hidden"></div>
+              </div>
+
+              <div id="singleMeasureControls">
+                <label>Measure</label>
+                <div class="toggle-group" role="group" aria-label="Energy source measure">
+                  <button type="button" class="toggle-btn active" data-measure="twh">TWh</button>
+                  <button type="button" class="toggle-btn" data-measure="share">Share %</button>
+                  <button type="button" class="toggle-btn" data-measure="percapita">Per capita</button>
+                </div>
+              </div>
+
+              <div id="compareModeControls" class="hidden">
+                <label>Comparison</label>
+                <div class="toggle-group" role="group" aria-label="Comparison mode">
+                  <button type="button" class="toggle-btn active" data-compare="overlay">Overlay</button>
+                  <button type="button" class="toggle-btn" data-compare="multiples">Small multiples</button>
+                </div>
+              </div>
+
+              <div id="mixControls" class="hidden">
+                <label>Mix measure</label>
+                <div class="toggle-group" role="group" aria-label="Mix measure">
+                  <button type="button" class="toggle-btn active" data-mix-measure="share">Share %</button>
+                  <button type="button" class="toggle-btn" data-mix-measure="twh">TWh</button>
+                </div>
+              </div>
+
+              <div id="mixDetailControls" class="hidden">
+                <label>Mix detail</label>
+                <div class="toggle-group" role="group" aria-label="Energy mix detail">
+                  <button type="button" class="toggle-btn active" data-mix="compact">Compact</button>
+                  <button type="button" class="toggle-btn" data-mix="detailed">Detailed</button>
+                </div>
+              </div>
+
+              <div id="carbonControls" class="hidden">
+                <label for="carbonSelect">Carbon metric</label>
+                <select id="carbonSelect"></select>
+                <div id="perCapitaToggleWrap" class="hidden" style="margin-top: 8px;">
+                  <label>Emissions scale</label>
+                  <div class="toggle-group" role="group" aria-label="Emissions scale">
+                    <button type="button" class="toggle-btn active" data-emissions="absolute">Absolute</button>
+                    <button type="button" class="toggle-btn" data-emissions="percapita">Per capita</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="singleCharts" class="hidden">
+        <div id="singleOverlaySection" class="card mb-8">
+          <h3 class="chart-title" id="singleMainTitle">Energy Source Over Time</h3>
+          <p class="chart-subtitle" id="singleMainSubtitle">Selected energy source across countries.</p>
+          <div class="chart-wrapper">
+            <canvas id="singleMainChart"></canvas>
+            <div id="singleMainChartEmpty" class="chart-empty hidden">Select at least one country.</div>
+          </div>
+          <div id="singleMainNote" class="chart-note"></div>
+        </div>
+
+        <div id="singleMultiSection" class="card mb-8 hidden">
+          <h3 class="chart-title">Energy Source Small Multiples</h3>
+          <p class="chart-subtitle">Up to six countries shown side by side.</p>
+          <div class="mini-grid">
+            <div class="mini-card" id="singleMultiCard1">
+              <div class="chart-subtitle" id="singleMultiTitle1">Country 1</div>
+              <div class="chart-wrapper compact">
+                <canvas id="singleMultiChart1"></canvas>
+                <div id="singleMultiChart1Empty" class="chart-empty hidden">Select at least one country.</div>
+              </div>
+              <div id="singleMultiNote1" class="chart-note"></div>
+            </div>
+            <div class="mini-card" id="singleMultiCard2">
+              <div class="chart-subtitle" id="singleMultiTitle2">Country 2</div>
+              <div class="chart-wrapper compact">
+                <canvas id="singleMultiChart2"></canvas>
+                <div id="singleMultiChart2Empty" class="chart-empty hidden">Select at least one country.</div>
+              </div>
+              <div id="singleMultiNote2" class="chart-note"></div>
+            </div>
+            <div class="mini-card" id="singleMultiCard3">
+              <div class="chart-subtitle" id="singleMultiTitle3">Country 3</div>
+              <div class="chart-wrapper compact">
+                <canvas id="singleMultiChart3"></canvas>
+                <div id="singleMultiChart3Empty" class="chart-empty hidden">Select at least one country.</div>
+              </div>
+              <div id="singleMultiNote3" class="chart-note"></div>
+            </div>
+            <div class="mini-card" id="singleMultiCard4">
+              <div class="chart-subtitle" id="singleMultiTitle4">Country 4</div>
+              <div class="chart-wrapper compact">
+                <canvas id="singleMultiChart4"></canvas>
+                <div id="singleMultiChart4Empty" class="chart-empty hidden">Select at least one country.</div>
+              </div>
+              <div id="singleMultiNote4" class="chart-note"></div>
+            </div>
+            <div class="mini-card" id="singleMultiCard5">
+              <div class="chart-subtitle" id="singleMultiTitle5">Country 5</div>
+              <div class="chart-wrapper compact">
+                <canvas id="singleMultiChart5"></canvas>
+                <div id="singleMultiChart5Empty" class="chart-empty hidden">Select at least one country.</div>
+              </div>
+              <div id="singleMultiNote5" class="chart-note"></div>
+            </div>
+            <div class="mini-card" id="singleMultiCard6">
+              <div class="chart-subtitle" id="singleMultiTitle6">Country 6</div>
+              <div class="chart-wrapper compact">
+                <canvas id="singleMultiChart6"></canvas>
+                <div id="singleMultiChart6Empty" class="chart-empty hidden">Select at least one country.</div>
+              </div>
+              <div id="singleMultiNote6" class="chart-note"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mb-8" id="singleRankSection">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-2">
+            <div>
+              <h3 class="chart-title">Year-by-Year Ranking</h3>
+              <p class="chart-subtitle" id="singleRankSubtitle">Compare selected countries for a selected year.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <label for="singleRankYearSelect" class="chart-subtitle">Year</label>
+              <select id="singleRankYearSelect"></select>
+            </div>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="compareRankChart"></canvas>
+            <div id="compareRankChartEmpty" class="chart-empty hidden">Select at least one country.</div>
+          </div>
+          <div id="compareRankNote" class="chart-note"></div>
+        </div>
+      </section>
+
+      <section id="mixCharts" class="hidden">
+        <div class="card mb-8">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-2">
+            <div>
+              <h3 class="chart-title">Year Snapshot by Country</h3>
+              <p class="chart-subtitle">Stacked 100% bars for a selected year.</p>
+            </div>
+            <div class="slider-row">
+              <label for="mixYearSelect" class="chart-subtitle">Year</label>
+              <select id="mixYearSelect"></select>
+            </div>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="mixCompareSnapshot"></canvas>
+            <div id="mixCompareSnapshotEmpty" class="chart-empty hidden">Select at least one country.</div>
+          </div>
+          <div id="mixCompareSnapshotNote" class="chart-note"></div>
+        </div>
+
+        <div id="mixSingleSection" class="chart-grid mb-8">
+          <div class="card">
+            <h3 class="chart-title">Energy Mix Over Time</h3>
+            <p class="chart-subtitle">Stacked 100% area for a single country.</p>
+            <div class="chart-wrapper">
+              <canvas id="mixSingleChart"></canvas>
+              <div id="mixSingleChartEmpty" class="chart-empty hidden">Select at least one country.</div>
+            </div>
+            <div id="mixSingleNote" class="chart-note"></div>
+          </div>
+
+          <div class="card">
+            <h3 class="chart-title">Latest-Year Mix Snapshot</h3>
+            <p class="chart-subtitle">Stacked 100% bar for the most recent year.</p>
+            <div class="chart-wrapper compact">
+              <canvas id="mixSingleSnapshot"></canvas>
+              <div id="mixSingleSnapshotEmpty" class="chart-empty hidden">Select at least one country.</div>
+            </div>
+            <div id="mixSingleSnapshotNote" class="chart-note"></div>
+          </div>
+        </div>
+
+        <div id="mixMultiSection" class="card mb-8 hidden">
+          <h3 class="chart-title">Energy Mix Small Multiples</h3>
+          <p class="chart-subtitle">Up to six countries shown side by side.</p>
+          <div class="mini-grid">
+            <div class="mini-card" id="mixMultiCard1">
+              <div class="chart-subtitle" id="mixMultiTitle1">Country 1</div>
+              <div class="chart-wrapper compact">
+                <canvas id="mixMultiChart1"></canvas>
+                <div id="mixMultiChart1Empty" class="chart-empty hidden">Select at least one country.</div>
+              </div>
+              <div id="mixMultiNote1" class="chart-note"></div>
+            </div>
+            <div class="mini-card" id="mixMultiCard2">
+              <div class="chart-subtitle" id="mixMultiTitle2">Country 2</div>
+              <div class="chart-wrapper compact">
+                <canvas id="mixMultiChart2"></canvas>
+                <div id="mixMultiChart2Empty" class="chart-empty hidden">Select at least one country.</div>
+              </div>
+              <div id="mixMultiNote2" class="chart-note"></div>
+            </div>
+            <div class="mini-card" id="mixMultiCard3">
+              <div class="chart-subtitle" id="mixMultiTitle3">Country 3</div>
+              <div class="chart-wrapper compact">
+                <canvas id="mixMultiChart3"></canvas>
+                <div id="mixMultiChart3Empty" class="chart-empty hidden">Select at least one country.</div>
+              </div>
+              <div id="mixMultiNote3" class="chart-note"></div>
+            </div>
+            <div class="mini-card" id="mixMultiCard4">
+              <div class="chart-subtitle" id="mixMultiTitle4">Country 4</div>
+              <div class="chart-wrapper compact">
+                <canvas id="mixMultiChart4"></canvas>
+                <div id="mixMultiChart4Empty" class="chart-empty hidden">Select at least one country.</div>
+              </div>
+              <div id="mixMultiNote4" class="chart-note"></div>
+            </div>
+            <div class="mini-card" id="mixMultiCard5">
+              <div class="chart-subtitle" id="mixMultiTitle5">Country 5</div>
+              <div class="chart-wrapper compact">
+                <canvas id="mixMultiChart5"></canvas>
+                <div id="mixMultiChart5Empty" class="chart-empty hidden">Select at least one country.</div>
+              </div>
+              <div id="mixMultiNote5" class="chart-note"></div>
+            </div>
+            <div class="mini-card" id="mixMultiCard6">
+              <div class="chart-subtitle" id="mixMultiTitle6">Country 6</div>
+              <div class="chart-wrapper compact">
+                <canvas id="mixMultiChart6"></canvas>
+                <div id="mixMultiChart6Empty" class="chart-empty hidden">Select at least one country.</div>
+              </div>
+              <div id="mixMultiNote6" class="chart-note"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="carbonCharts" class="hidden">
+        <div id="carbonOverlaySection" class="card mb-8">
+          <h3 class="chart-title" id="carbonMainTitle">Carbon Indicator</h3>
+          <p class="chart-subtitle" id="carbonMainSubtitle">Carbon intensity or power-sector emissions over time.</p>
+          <div class="chart-wrapper">
+            <canvas id="carbonChart"></canvas>
+            <div id="carbonChartEmpty" class="chart-empty hidden">Select at least one country.</div>
+          </div>
+          <div id="carbonNote" class="chart-note"></div>
+        </div>
+
+        <div id="carbonMultiSection" class="card mb-8 hidden">
+          <h3 class="chart-title">Carbon Small Multiples</h3>
+          <p class="chart-subtitle">Up to six countries shown side by side.</p>
+          <div class="mini-grid">
+            <div class="mini-card" id="carbonMultiCard1">
+              <div class="chart-subtitle" id="carbonMultiTitle1">Country 1</div>
+              <div class="chart-wrapper compact">
+                <canvas id="carbonMultiChart1"></canvas>
+                <div id="carbonMultiChart1Empty" class="chart-empty hidden">Select at least one country.</div>
+              </div>
+              <div id="carbonMultiNote1" class="chart-note"></div>
+            </div>
+            <div class="mini-card" id="carbonMultiCard2">
+              <div class="chart-subtitle" id="carbonMultiTitle2">Country 2</div>
+              <div class="chart-wrapper compact">
+                <canvas id="carbonMultiChart2"></canvas>
+                <div id="carbonMultiChart2Empty" class="chart-empty hidden">Select at least one country.</div>
+              </div>
+              <div id="carbonMultiNote2" class="chart-note"></div>
+            </div>
+            <div class="mini-card" id="carbonMultiCard3">
+              <div class="chart-subtitle" id="carbonMultiTitle3">Country 3</div>
+              <div class="chart-wrapper compact">
+                <canvas id="carbonMultiChart3"></canvas>
+                <div id="carbonMultiChart3Empty" class="chart-empty hidden">Select at least one country.</div>
+              </div>
+              <div id="carbonMultiNote3" class="chart-note"></div>
+            </div>
+            <div class="mini-card" id="carbonMultiCard4">
+              <div class="chart-subtitle" id="carbonMultiTitle4">Country 4</div>
+              <div class="chart-wrapper compact">
+                <canvas id="carbonMultiChart4"></canvas>
+                <div id="carbonMultiChart4Empty" class="chart-empty hidden">Select at least one country.</div>
+              </div>
+              <div id="carbonMultiNote4" class="chart-note"></div>
+            </div>
+            <div class="mini-card" id="carbonMultiCard5">
+              <div class="chart-subtitle" id="carbonMultiTitle5">Country 5</div>
+              <div class="chart-wrapper compact">
+                <canvas id="carbonMultiChart5"></canvas>
+                <div id="carbonMultiChart5Empty" class="chart-empty hidden">Select at least one country.</div>
+              </div>
+              <div id="carbonMultiNote5" class="chart-note"></div>
+            </div>
+            <div class="mini-card" id="carbonMultiCard6">
+              <div class="chart-subtitle" id="carbonMultiTitle6">Country 6</div>
+              <div class="chart-wrapper compact">
+                <canvas id="carbonMultiChart6"></canvas>
+                <div id="carbonMultiChart6Empty" class="chart-empty hidden">Select at least one country.</div>
+              </div>
+              <div id="carbonMultiNote6" class="chart-note"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const CSV_PATH = 'Data/electricity-data.csv';
+      const CACHE_TTL = 1800000;
+
+      const state = {
+        view: 'single',
+        selectedCountries: [],
+        energyKey: 'coal',
+        showContext: true,
+        showTrend: false,
+        sourceMeasure: 'twh',
+        mixDetail: 'compact',
+        mixMeasure: 'share',
+        carbonMetric: null,
+        emissionsPerCapita: false,
+        compareMode: 'multiples',
+        compareModeLocked: true,
+        mixSnapshotYear: null,
+        singleRankYear: null,
+        yearRange: { start: null, end: null }
+      };
+
+      const elements = {
+        parseError: document.getElementById('parseError'),
+        viewTabs: document.querySelectorAll('[data-view]'),
+        countrySearch: document.getElementById('countrySearch'),
+        clearCountriesBtn: document.getElementById('clearCountriesBtn'),
+        countryResults: document.getElementById('countryResults'),
+        countryChips: document.getElementById('countryChips'),
+        countryLimitMsg: document.getElementById('countryLimitMsg'),
+        yearStartSelect: document.getElementById('yearStartSelect'),
+        yearEndSelect: document.getElementById('yearEndSelect'),
+        yearRangeMsg: document.getElementById('yearRangeMsg'),
+        energySelect: document.getElementById('energySelect'),
+        contextToggle: document.getElementById('contextToggle'),
+        contextToggleWrap: document.getElementById('contextToggleWrap'),
+        trendToggle: document.getElementById('trendToggle'),
+        trendToggleWrap: document.getElementById('trendToggleWrap'),
+        mixControls: document.getElementById('mixControls'),
+        mixDetailControls: document.getElementById('mixDetailControls'),
+        singleControls: document.getElementById('singleControls'),
+        singleMeasureControls: document.getElementById('singleMeasureControls'),
+        compareModeControls: document.getElementById('compareModeControls'),
+        carbonControls: document.getElementById('carbonControls'),
+        carbonSelect: document.getElementById('carbonSelect'),
+        perCapitaToggleWrap: document.getElementById('perCapitaToggleWrap'),
+        resetBtn: document.getElementById('resetBtn'),
+        trendStatus: document.getElementById('trendStatus'),
+        singleCharts: document.getElementById('singleCharts'),
+        mixCharts: document.getElementById('mixCharts'),
+        carbonCharts: document.getElementById('carbonCharts'),
+        singleOverlaySection: document.getElementById('singleOverlaySection'),
+        singleMultiSection: document.getElementById('singleMultiSection'),
+        singleMainTitle: document.getElementById('singleMainTitle'),
+        singleMainSubtitle: document.getElementById('singleMainSubtitle'),
+        singleMainNote: document.getElementById('singleMainNote'),
+        singleRankSubtitle: document.getElementById('singleRankSubtitle'),
+        carbonOverlaySection: document.getElementById('carbonOverlaySection'),
+        carbonMultiSection: document.getElementById('carbonMultiSection'),
+        carbonMainTitle: document.getElementById('carbonMainTitle'),
+        carbonMainSubtitle: document.getElementById('carbonMainSubtitle'),
+        mixSingleSection: document.getElementById('mixSingleSection'),
+        mixMultiSection: document.getElementById('mixMultiSection'),
+        mixYearSelect: document.getElementById('mixYearSelect'),
+        singleRankYearSelect: document.getElementById('singleRankYearSelect')
+      };
+
+      const energyOptions = [
+        { key: 'coal', label: 'Coal', twhCol: 'coal_electricity', shareCol: 'coal_share_elec', contextCol: 'electricity_generation' },
+        { key: 'gas', label: 'Gas', twhCol: 'gas_electricity', shareCol: 'gas_share_elec', contextCol: 'electricity_generation' },
+        { key: 'oil', label: 'Oil', twhCol: 'oil_electricity', shareCol: 'oil_share_elec', contextCol: 'electricity_generation' },
+        { key: 'renewables', label: 'Renewables', twhCol: 'renewables_electricity', shareCol: 'renewables_share_elec', contextCol: 'electricity_generation' },
+        { key: 'fossil', label: 'Fossil', twhCol: 'fossil_electricity', shareCol: 'fossil_share_elec', contextCol: 'electricity_generation' },
+        { key: 'low_carbon', label: 'Low carbon', twhCol: 'low_carbon_electricity', shareCol: 'low_carbon_share_elec', contextCol: 'electricity_generation' },
+        { key: 'nuclear', label: 'Nuclear', twhCol: 'nuclear_electricity', shareCol: 'nuclear_share_elec', contextCol: 'electricity_generation' },
+        { key: 'hydro', label: 'Hydro', twhCol: 'hydro_electricity', shareCol: 'hydro_share_elec', contextCol: 'electricity_generation' },
+        { key: 'wind', label: 'Wind', twhCol: 'wind_electricity', shareCol: 'wind_share_elec', contextCol: 'electricity_generation' },
+        { key: 'solar', label: 'Solar', twhCol: 'solar_electricity', shareCol: 'solar_share_elec', contextCol: 'electricity_generation' },
+        { key: 'other_renewables', label: 'Other renewables', twhCol: 'other_renewable_electricity', shareCol: 'other_renewables_share_elec', contextCol: 'electricity_generation' }
+      ];
+
+      const carbonOptions = [
+        { key: 'intensity', label: 'Carbon intensity (gCO2e/kWh)', col: 'carbon_intensity_elec', unit: 'gCO2e/kWh' },
+        { key: 'emissions', label: 'Power-sector emissions (MtCO2e)', col: 'greenhouse_gas_emissions', unit: 'MtCO2e' }
+      ];
+
+      const mixCompact = [
+        { key: 'fossil', label: 'Fossil', shareCol: 'fossil_share_elec', twhCol: 'fossil_electricity' },
+        { key: 'renewables', label: 'Renewables', shareCol: 'renewables_share_elec', twhCol: 'renewables_electricity' },
+        { key: 'nuclear', label: 'Nuclear', shareCol: 'nuclear_share_elec', twhCol: 'nuclear_electricity' }
+      ];
+
+      const mixDetailed = [
+        { key: 'coal', label: 'Coal', shareCol: 'coal_share_elec', twhCol: 'coal_electricity' },
+        { key: 'gas', label: 'Gas', shareCol: 'gas_share_elec', twhCol: 'gas_electricity' },
+        { key: 'oil', label: 'Oil', shareCol: 'oil_share_elec', twhCol: 'oil_electricity' },
+        { key: 'nuclear', label: 'Nuclear', shareCol: 'nuclear_share_elec', twhCol: 'nuclear_electricity' },
+        { key: 'hydro', label: 'Hydro', shareCol: 'hydro_share_elec', twhCol: 'hydro_electricity' },
+        { key: 'wind', label: 'Wind', shareCol: 'wind_share_elec', twhCol: 'wind_electricity' },
+        { key: 'solar', label: 'Solar', shareCol: 'solar_share_elec', twhCol: 'solar_electricity' },
+        { key: 'biofuel', label: 'Biofuel', shareCol: 'biofuel_share_elec', twhCol: 'biofuel_electricity' },
+        { key: 'other_renewables', label: 'Other renewables', shareCol: 'other_renewables_share_elec', twhCol: 'other_renewable_electricity' }
+      ];
+
+      let cachedRows = [];
+      let columnSet = new Set();
+      let countryOptions = [];
+      let countryIndex = new Map();
+      let countryMeta = new Map();
+      let globalYears = [];
+      let globalMinYear = null;
+      let globalMaxYear = null;
+      const metricYearCache = new Map();
+
+      const palette = typeof ChartColorPalette !== 'undefined' ? ChartColorPalette : null;
+
+      function getColor(index, alpha = 1) {
+        if (palette && typeof palette.get === 'function') {
+          return palette.get(index, alpha);
+        }
+        const hue = (index * 57) % 360;
+        return `hsla(${hue}, 60%, 45%, ${alpha})`;
+      }
+
+      function cleanValue(value) {
+        if (value === null || value === undefined) return null;
+        if (typeof value === 'string') {
+          const trimmed = value.trim();
+          return trimmed.length ? trimmed : null;
+        }
+        return value;
+      }
+
+      function coerceYear(value) {
+        const year = Number.parseInt(value, 10);
+        return Number.isFinite(year) ? year : null;
+      }
+
+      function coerceNumber(value) {
+        if (value === null || value === undefined || value === '') return null;
+        const num = Number(value);
+        return Number.isFinite(num) ? num : null;
+      }
+
+      function hasColumn(col) {
+        return columnSet.has(col);
+      }
+
+      function getEnergyOption(key) {
+        return energyOptions.find(opt => opt.key === key);
+      }
+
+      function getCarbonOption(key) {
+        return carbonOptions.find(opt => opt.key === key);
+      }
+
+      function getCountryLabel(country, compact = false) {
+        if (!compact) return country;
+        const meta = countryMeta.get(country);
+        return meta && meta.iso ? meta.iso : country;
+      }
+
+      function availableEnergyOptions() {
+        return energyOptions.filter(opt => hasColumn(opt.twhCol) && hasColumn(opt.shareCol));
+      }
+
+      function availableCarbonOptions() {
+        return carbonOptions.filter(opt => hasColumn(opt.col));
+      }
+
+      function availableMixComponents(detail, measure = state.mixMeasure) {
+        const list = detail === 'compact' ? mixCompact : mixDetailed;
+        const colKey = measure === 'twh' ? 'twhCol' : 'shareCol';
+        return list.filter(opt => opt[colKey] && hasColumn(opt[colKey]));
+      }
+
+      function buildIndex() {
+        const yearSet = new Set();
+        const countryMap = new Map();
+        cachedRows.forEach(row => {
+          const country = cleanValue(row.country);
+          const year = coerceYear(row.year);
+          if (country) {
+            const iso = cleanValue(row.iso_code);
+            if (!countryMap.has(country)) {
+              countryMap.set(country, { country, iso });
+            }
+          }
+          if (country && year !== null) {
+            yearSet.add(year);
+            if (!countryIndex.has(country)) {
+              countryIndex.set(country, new Map());
+            }
+            countryIndex.get(country).set(year, row);
+          }
+        });
+
+        globalYears = Array.from(yearSet).sort((a, b) => a - b);
+        globalMinYear = globalYears[0] ?? null;
+        globalMaxYear = globalYears.length ? globalYears[globalYears.length - 1] : null;
+
+        countryMeta = new Map();
+        countryOptions = Array.from(countryMap.values())
+          .map(item => {
+            const display = item.iso ? `${item.country} (${item.iso})` : item.country;
+            if (item.country) {
+              countryMeta.set(item.country, { iso: item.iso || null, display });
+            }
+            return {
+              country: item.country,
+              iso: item.iso,
+              display,
+              search: `${item.country} ${item.iso || ''}`.toLowerCase()
+            };
+          })
+          .sort((a, b) => a.country.localeCompare(b.country));
+      }
+
+      function getMetricYears(country, metricCol) {
+        if (!metricCol) return [];
+        if (!metricYearCache.has(metricCol)) {
+          metricYearCache.set(metricCol, new Map());
+        }
+        const metricCache = metricYearCache.get(metricCol);
+        if (metricCache.has(country)) {
+          return metricCache.get(country);
+        }
+        const yearMap = countryIndex.get(country);
+        if (!yearMap) {
+          metricCache.set(country, []);
+          return [];
+        }
+        const years = [];
+        yearMap.forEach((row, year) => {
+          const value = coerceNumber(row[metricCol]);
+          if (value !== null) years.push(year);
+        });
+        years.sort((a, b) => a - b);
+        metricCache.set(country, years);
+        return years;
+      }
+
+      function filterYearsByRange(years) {
+        const start = state.yearRange.start;
+        const end = state.yearRange.end;
+        return years.filter(year => (start === null || year >= start) && (end === null || year <= end));
+      }
+
+      function getValueFor(country, year, metricCol) {
+        const yearMap = countryIndex.get(country);
+        if (!yearMap) return null;
+        const row = yearMap.get(year);
+        if (!row) return null;
+        return coerceNumber(row[metricCol]);
+      }
+
+      function getYearAxis(countries, metricCol, options = {}) {
+        const latestByCountry = new Map();
+        if (!countries.length || !metricCol) {
+          return { years: [], minYear: null, maxYear: null, latestByCountry };
+        }
+
+        let minYear = null;
+        let maxYear = null;
+
+        countries.forEach(country => {
+          const years = getMetricYears(country, metricCol);
+          if (years.length) {
+            latestByCountry.set(country, years[years.length - 1]);
+            if (minYear === null || years[0] < minYear) minYear = years[0];
+            if (maxYear === null || years[years.length - 1] > maxYear) maxYear = years[years.length - 1];
+          } else {
+            latestByCountry.set(country, null);
+          }
+        });
+
+        if (countries.length === 1) {
+          const only = countries[0];
+          const years = getMetricYears(only, metricCol);
+          if (years.length) {
+            minYear = years[0];
+            maxYear = years[years.length - 1];
+          } else {
+            minYear = globalMinYear;
+            maxYear = globalMaxYear;
+          }
+        } else {
+          if (minYear === null || maxYear === null) {
+            minYear = globalMinYear;
+            maxYear = globalMaxYear;
+          }
+        }
+
+        if (options.extendToYear && maxYear !== null && options.extendToYear > maxYear) {
+          maxYear = options.extendToYear;
+        }
+
+        if (state.yearRange.start !== null && minYear !== null) {
+          minYear = Math.max(minYear, state.yearRange.start);
+        }
+        if (state.yearRange.end !== null && maxYear !== null) {
+          maxYear = Math.min(maxYear, state.yearRange.end);
+        }
+
+        if (minYear === null || maxYear === null) {
+          return { years: [], minYear: null, maxYear: null, latestByCountry };
+        }
+
+        if (minYear > maxYear) {
+          return { years: [], minYear: null, maxYear: null, latestByCountry };
+        }
+
+        const years = [];
+        for (let year = minYear; year <= maxYear; year += 1) {
+          years.push(year);
+        }
+        return { years, minYear, maxYear, latestByCountry };
+      }
+
+      function getLatestCommonYear(countries, metricCol) {
+        if (!countries.length || !metricCol) return null;
+        let common = null;
+        countries.forEach((country, index) => {
+          const years = new Set(filterYearsByRange(getMetricYears(country, metricCol)));
+          if (index === 0) {
+            common = years;
+          } else if (common) {
+            common = new Set([...common].filter(year => years.has(year)));
+          }
+        });
+        if (!common || !common.size) return null;
+        return Math.max(...common);
+      }
+
+      function formatValue(value, unit) {
+        if (value === null || value === undefined || Number.isNaN(value)) return 'No data';
+        const abs = Math.abs(value);
+        const decimals = abs >= 100 ? 0 : abs >= 10 ? 1 : 2;
+        const formatted = value.toFixed(decimals);
+        return unit ? `${formatted} ${unit}` : formatted;
+      }
+
+      function formatAxisTick(value, unit) {
+        if (unit === '%') return `${value}%`;
+        return value;
+      }
+
+      function buildLineOptions(unit) {
+        return {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { position: 'bottom', labels: { boxWidth: 10, usePointStyle: true } },
+            tooltip: {
+              callbacks: {
+                label: (context) => {
+                  const label = context.dataset.label || '';
+                  const value = context.parsed.y;
+                  if (value === null || value === undefined) return `${label}: No data`;
+                  return `${label}: ${formatValue(value, unit)}`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: { grid: { color: 'rgba(148,163,184,0.2)' } },
+            y: {
+              grid: { color: 'rgba(148,163,184,0.2)' },
+              ticks: { callback: (value) => formatAxisTick(value, unit) }
+            }
+          }
+        };
+      }
+
+      function buildStackedAreaOptions(unit, options = {}) {
+        const base = buildLineOptions(unit);
+        base.scales.y.stacked = true;
+        if (options.percent) {
+          base.scales.y.min = 0;
+          base.scales.y.max = 100;
+        } else {
+          base.scales.y.min = 0;
+        }
+        return base;
+      }
+
+      function buildStackedBarOptions(unit, options = {}) {
+        return {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { boxWidth: 10, usePointStyle: true } },
+            tooltip: {
+              callbacks: {
+                label: (context) => {
+                  const label = context.dataset.label || '';
+                  const value = context.parsed.y;
+                  if (value === null || value === undefined) return `${label}: No data`;
+                  return `${label}: ${formatValue(value, unit)}`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: { stacked: true, grid: { color: 'rgba(148,163,184,0.2)' } },
+            y: {
+              stacked: true,
+              min: 0,
+              max: options.percent ? 100 : undefined,
+              grid: { color: 'rgba(148,163,184,0.2)' },
+              ticks: { callback: (value) => formatAxisTick(value, unit) }
+            }
+          }
+        };
+      }
+
+      function buildSmallLineOptions(unit) {
+        const base = buildLineOptions(unit);
+        base.plugins.legend.display = false;
+        return base;
+      }
+
+      function buildBarOptions(unit, includeYear) {
+        return {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (context) => {
+                  const label = context.label || '';
+                  const value = context.parsed.y;
+                  if (value === null || value === undefined) return `${label}: No data`;
+                  const base = `${label}: ${formatValue(value, unit)}`;
+                  if (includeYear && context.dataset && Array.isArray(context.dataset.metaYears)) {
+                    const year = context.dataset.metaYears[context.dataIndex];
+                    return year ? `${base} (year: ${year})` : base;
+                  }
+                  return base;
+                }
+              }
+            }
+          },
+          scales: {
+            x: { grid: { display: false } },
+            y: { grid: { color: 'rgba(148,163,184,0.2)' }, ticks: { callback: (value) => formatAxisTick(value, unit) } }
+          }
+        };
+      }
+
+      function computeLinearTrend(years, values) {
+        const points = years.map((year, idx) => {
+          const value = values[idx];
+          if (value === null || value === undefined || Number.isNaN(value)) return null;
+          return { year, value };
+        }).filter(Boolean);
+
+        if (points.length < 3) return null;
+
+        let sumX = 0;
+        let sumY = 0;
+        let sumXY = 0;
+        let sumXX = 0;
+        points.forEach(point => {
+          sumX += point.year;
+          sumY += point.value;
+          sumXY += point.year * point.value;
+          sumXX += point.year * point.year;
+        });
+        const n = points.length;
+        const denominator = (n * sumXX) - (sumX * sumX);
+        if (denominator === 0) return null;
+        const slope = ((n * sumXY) - (sumX * sumY)) / denominator;
+        const intercept = (sumY - (slope * sumX)) / n;
+        return {
+          slope,
+          intercept,
+          firstYear: points[0].year,
+          lastYear: points[points.length - 1].year
+        };
+      }
+
+      function buildTrendDatasets(years, values, label, projectionLabel, color) {
+        const trend = computeLinearTrend(years, values);
+        if (!trend) return { fitDataset: null, projectionDataset: null };
+        const fitData = years.map(year => (year >= trend.firstYear && year <= trend.lastYear ? (trend.slope * year + trend.intercept) : null));
+        const projectionData = years.map(year => (year > trend.lastYear ? (trend.slope * year + trend.intercept) : null));
+        const fitDataset = {
+          label,
+          data: fitData,
+          borderColor: color,
+          borderDash: [6, 4],
+          borderWidth: 2,
+          pointRadius: 0,
+          fill: false
+        };
+        const projectionDataset = projectionData.some(value => value !== null) ? {
+          label: projectionLabel,
+          data: projectionData,
+          borderColor: color,
+          borderDash: [2, 4],
+          borderWidth: 2,
+          pointRadius: 0,
+          fill: false
+        } : null;
+        return { fitDataset, projectionDataset };
+      }
+
+      function setEmptyState(id, message) {
+        const element = document.getElementById(id);
+        if (!element) return;
+        if (message) {
+          element.textContent = message;
+          element.classList.remove('hidden');
+        } else {
+          element.classList.add('hidden');
+        }
+      }
+
+      function setNote(id, message) {
+        const element = document.getElementById(id);
+        if (element) {
+          element.textContent = message || '';
+        }
+      }
+
+      function updateChartSafely(canvasId, nextData, options) {
+        const chart = window.charting.getChart(canvasId);
+        if (!chart) return;
+        window.charting.updateChart(chart, nextData, options);
+      }
+
+      function buildCountryChips() {
+        elements.countryChips.innerHTML = '';
+        if (elements.clearCountriesBtn) {
+          const hasSelection = state.selectedCountries.length > 0;
+          elements.clearCountriesBtn.classList.toggle('hidden', !hasSelection);
+          elements.clearCountriesBtn.disabled = !hasSelection;
+        }
+        if (!state.selectedCountries.length) {
+          return;
+        }
+        state.selectedCountries.forEach(country => {
+          const chip = document.createElement('span');
+          chip.className = 'chip';
+          chip.textContent = country;
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.setAttribute('aria-label', `Remove ${country}`);
+          btn.textContent = 'x';
+          btn.addEventListener('click', () => removeCountry(country));
+          chip.appendChild(btn);
+          elements.countryChips.appendChild(chip);
+        });
+      }
+
+      function updateCountryResults(query) {
+        const trimmed = query.trim().toLowerCase();
+        elements.countryResults.innerHTML = '';
+        if (!trimmed) {
+          elements.countryResults.classList.add('hidden');
+          return;
+        }
+        const results = countryOptions.filter(option => {
+          if (state.selectedCountries.includes(option.country)) return false;
+          return option.search.includes(trimmed);
+        }).slice(0, 12);
+
+        if (!results.length) {
+          const empty = document.createElement('li');
+          empty.className = 'results-empty';
+          empty.textContent = 'No matches.';
+          elements.countryResults.appendChild(empty);
+        } else {
+          results.forEach(option => {
+            const li = document.createElement('li');
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.textContent = option.display;
+            button.addEventListener('click', () => addCountry(option.country));
+            li.appendChild(button);
+            elements.countryResults.appendChild(li);
+          });
+        }
+        elements.countryResults.classList.remove('hidden');
+      }
+
+      function addCountry(country) {
+        if (state.selectedCountries.includes(country)) return;
+        if (state.selectedCountries.length >= 6) {
+          elements.countryLimitMsg.classList.remove('hidden');
+          return;
+        }
+        elements.countryLimitMsg.classList.add('hidden');
+        state.selectedCountries.push(country);
+        elements.countrySearch.value = '';
+        elements.countryResults.classList.add('hidden');
+        buildCountryChips();
+        applyCompareModeAuto();
+        updateToggleButtons();
+        updateViewVisibility();
+        updateCharts();
+      }
+
+      function removeCountry(country) {
+        state.selectedCountries = state.selectedCountries.filter(item => item !== country);
+        elements.countryLimitMsg.classList.add('hidden');
+        buildCountryChips();
+        applyCompareModeAuto();
+        updateToggleButtons();
+        updateViewVisibility();
+        updateCharts();
+      }
+
+      function getDefaultCountries() {
+        const defaults = ['China', 'India', 'United States'];
+        const available = defaults.filter(country => countryIndex.has(country));
+        if (available.length) return available;
+        return countryOptions.slice(0, 3).map(option => option.country);
+      }
+
+      function getDefaultYearRange() {
+        if (globalMinYear === null || globalMaxYear === null) {
+          return { start: null, end: null };
+        }
+        let start = Math.max(globalMinYear, 2010);
+        let end = Math.min(globalMaxYear, 2025);
+        if (start > end) {
+          start = globalMinYear;
+          end = globalMaxYear;
+        }
+        return { start, end };
+      }
+
+      function syncYearRangeInputs() {
+        if (!elements.yearStartSelect || !elements.yearEndSelect) return;
+        elements.yearStartSelect.value = state.yearRange.start ?? '';
+        elements.yearEndSelect.value = state.yearRange.end ?? '';
+      }
+
+      function applyCompareModeAuto() {
+        if (state.compareModeLocked) return;
+        const next = state.selectedCountries.length >= 4 ? 'multiples' : 'overlay';
+        state.compareMode = next;
+        updateToggleButtons();
+      }
+
+      function resetState() {
+        state.view = 'single';
+        state.selectedCountries = getDefaultCountries();
+        state.energyKey = 'coal';
+        state.showContext = true;
+        state.showTrend = false;
+        state.sourceMeasure = 'twh';
+        state.mixDetail = 'compact';
+        state.mixMeasure = 'share';
+        state.carbonMetric = availableCarbonOptions()[0]?.key || null;
+        state.emissionsPerCapita = false;
+        state.compareMode = 'multiples';
+        state.compareModeLocked = true;
+        state.mixSnapshotYear = null;
+        state.singleRankYear = null;
+        state.yearRange = getDefaultYearRange();
+
+        elements.energySelect.value = state.energyKey || '';
+        elements.contextToggle.checked = state.showContext;
+        elements.trendToggle.checked = state.showTrend;
+        elements.carbonSelect.value = state.carbonMetric || '';
+        elements.countrySearch.value = '';
+        elements.countryResults.classList.add('hidden');
+        elements.countryLimitMsg.classList.add('hidden');
+        syncYearRangeInputs();
+        updateSourceMeasureAvailability();
+        applyCompareModeAuto();
+        updateToggleButtons();
+        updateViewVisibility();
+        buildCountryChips();
+        updateCharts();
+      }
+
+      function updateToggleButtons() {
+        elements.viewTabs.forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.view === state.view);
+        });
+        document.querySelectorAll('[data-mix]').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.mix === state.mixDetail);
+        });
+        document.querySelectorAll('[data-measure]').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.measure === state.sourceMeasure);
+        });
+        document.querySelectorAll('[data-mix-measure]').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.mixMeasure === state.mixMeasure);
+        });
+        document.querySelectorAll('[data-compare]').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.compare === state.compareMode);
+        });
+        document.querySelectorAll('[data-emissions]').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.emissions === (state.emissionsPerCapita ? 'percapita' : 'absolute'));
+        });
+      }
+
+      function updateViewVisibility() {
+        const isSingle = state.view === 'single';
+        const isMix = state.view === 'mix';
+        const isCarbon = state.view === 'carbon';
+
+        elements.singleControls.classList.toggle('hidden', !isSingle);
+        elements.singleMeasureControls.classList.toggle('hidden', !isSingle);
+        elements.mixControls.classList.toggle('hidden', !isMix);
+        elements.mixDetailControls.classList.toggle('hidden', !isMix);
+        elements.carbonControls.classList.toggle('hidden', !isCarbon);
+
+        const showCompareMode = (isSingle || isCarbon) && state.selectedCountries.length > 1;
+        elements.compareModeControls.classList.toggle('hidden', !showCompareMode);
+
+        elements.contextToggleWrap.classList.toggle('hidden', !isSingle);
+        elements.trendToggleWrap.classList.toggle('hidden', !isSingle);
+
+        elements.singleCharts.classList.toggle('hidden', !isSingle);
+        elements.mixCharts.classList.toggle('hidden', !isMix);
+        elements.carbonCharts.classList.toggle('hidden', !isCarbon);
+      }
+
+      function updatePerCapitaToggleVisibility() {
+        const carbonOption = getCarbonOption(state.carbonMetric);
+        const show = carbonOption && carbonOption.key === 'emissions' && hasColumn('population');
+        elements.perCapitaToggleWrap.classList.toggle('hidden', !show);
+        if (!show && state.emissionsPerCapita) {
+          state.emissionsPerCapita = false;
+          updateToggleButtons();
+        }
+      }
+
+      function updateSourceMeasureAvailability() {
+        const perCapitaBtn = document.querySelector('[data-measure="percapita"]');
+        const canUse = hasColumn('population');
+        if (perCapitaBtn) {
+          perCapitaBtn.classList.toggle('hidden', !canUse);
+        }
+        if (!canUse && state.sourceMeasure === 'percapita') {
+          state.sourceMeasure = 'twh';
+        }
+      }
+
+      function buildControlOptions() {
+        const energyAvail = availableEnergyOptions();
+        elements.energySelect.innerHTML = '';
+        energyAvail.forEach(option => {
+          const opt = document.createElement('option');
+          opt.value = option.key;
+          opt.textContent = option.label;
+          elements.energySelect.appendChild(opt);
+        });
+        state.energyKey = energyAvail.find(opt => opt.key === state.energyKey)?.key || energyAvail[0]?.key || null;
+        elements.energySelect.value = state.energyKey || '';
+
+        const carbonAvail = availableCarbonOptions();
+        elements.carbonSelect.innerHTML = '';
+        carbonAvail.forEach(option => {
+          const opt = document.createElement('option');
+          opt.value = option.key;
+          opt.textContent = option.label;
+          elements.carbonSelect.appendChild(opt);
+        });
+        state.carbonMetric = carbonAvail.find(opt => opt.key === state.carbonMetric)?.key || carbonAvail[0]?.key || null;
+        elements.carbonSelect.value = state.carbonMetric || '';
+        updatePerCapitaToggleVisibility();
+        updateSourceMeasureAvailability();
+      }
+
+      function buildYearRangeControls() {
+        elements.yearStartSelect.innerHTML = '';
+        elements.yearEndSelect.innerHTML = '';
+        globalYears.forEach(year => {
+          const startOpt = document.createElement('option');
+          startOpt.value = year;
+          startOpt.textContent = year;
+          elements.yearStartSelect.appendChild(startOpt);
+          const endOpt = document.createElement('option');
+          endOpt.value = year;
+          endOpt.textContent = year;
+          elements.yearEndSelect.appendChild(endOpt);
+        });
+        if (state.yearRange.start === null || state.yearRange.end === null) {
+          state.yearRange = getDefaultYearRange();
+        }
+        syncYearRangeInputs();
+      }
+
+      function buildSingleRankYearOptions(metricCol) {
+        if (!elements.singleRankYearSelect) return;
+        let minYear = globalMinYear;
+        let maxYear = globalMaxYear;
+        if (metricCol && state.selectedCountries.length) {
+          minYear = null;
+          maxYear = null;
+          state.selectedCountries.forEach(country => {
+            const years = filterYearsByRange(getMetricYears(country, metricCol));
+            if (!years.length) return;
+            if (minYear === null || years[0] < minYear) minYear = years[0];
+            if (maxYear === null || years[years.length - 1] > maxYear) maxYear = years[years.length - 1];
+          });
+        }
+        if (minYear === null || maxYear === null) {
+          minYear = globalMinYear;
+          maxYear = globalMaxYear;
+        }
+        if (minYear === null || maxYear === null) return;
+
+        const currentMin = Number(elements.singleRankYearSelect.dataset.min);
+        const currentMax = Number(elements.singleRankYearSelect.dataset.max);
+        if (!Number.isFinite(currentMin) || !Number.isFinite(currentMax) || currentMin !== minYear || currentMax !== maxYear) {
+          elements.singleRankYearSelect.innerHTML = '';
+          for (let year = minYear; year <= maxYear; year += 1) {
+            const opt = document.createElement('option');
+            opt.value = String(year);
+            opt.textContent = String(year);
+            elements.singleRankYearSelect.appendChild(opt);
+          }
+          elements.singleRankYearSelect.dataset.min = String(minYear);
+          elements.singleRankYearSelect.dataset.max = String(maxYear);
+        }
+
+        if (!state.singleRankYear || state.singleRankYear < minYear || state.singleRankYear > maxYear) {
+          state.singleRankYear = maxYear;
+        }
+        elements.singleRankYearSelect.value = String(state.singleRankYear);
+      }
+
+      function normalizeYearRange() {
+        const start = Number(elements.yearStartSelect.value);
+        const end = Number(elements.yearEndSelect.value);
+        if (!Number.isFinite(start) || !Number.isFinite(end)) return;
+        if (start > end) {
+          elements.yearRangeMsg.textContent = 'Start year is after end year. Adjusted automatically.';
+          elements.yearRangeMsg.classList.remove('hidden');
+          if (elements.yearStartSelect === document.activeElement) {
+            elements.yearEndSelect.value = start;
+          } else {
+            elements.yearStartSelect.value = end;
+          }
+        } else {
+          elements.yearRangeMsg.classList.add('hidden');
+        }
+        state.yearRange.start = Number(elements.yearStartSelect.value);
+        state.yearRange.end = Number(elements.yearEndSelect.value);
+      }
+
+      function buildSeriesData(metricCol, options = {}) {
+        const countries = options.countries || state.selectedCountries;
+        const extendAxis = options.extendAxis ? options.extendAxis : null;
+        const axis = getYearAxis(countries, metricCol, extendAxis ? { extendToYear: extendAxis } : {});
+        const years = axis.years;
+        const datasets = [];
+        const trendIssues = [];
+        const labelFormatter = options.labelFormatter || ((country) => country);
+        const valueTransform = options.valueTransform || null;
+
+        if (metricCol && years.length && countries.length) {
+          countries.forEach((country, idx) => {
+            const values = years.map(year => {
+              let value = getValueFor(country, year, metricCol);
+              if (valueTransform) {
+                value = valueTransform(value, { country, year });
+              }
+              return value;
+            });
+            const color = getColor(idx);
+            datasets.push({
+              label: labelFormatter(country),
+              data: values,
+              borderColor: color,
+              backgroundColor: getColor(idx, 0.2),
+              fill: false,
+              tension: 0.2,
+              spanGaps: false,
+              pointRadius: 2
+            });
+
+            if (options.includeTrend && state.showTrend) {
+              const trendLabel = countries.length === 1 ? 'Trend (linear fit)' : `Trend: ${country}`;
+              const projectionLabel = countries.length === 1 ? 'Trend projection (not observed data)' : `Trend projection: ${country} (not observed data)`;
+              const trendData = buildTrendDatasets(years, values, trendLabel, projectionLabel, color);
+              if (trendData.fitDataset) {
+                datasets.push(trendData.fitDataset);
+              } else {
+                trendIssues.push(country);
+              }
+              if (trendData.projectionDataset) {
+                datasets.push(trendData.projectionDataset);
+              }
+            }
+          });
+        }
+
+        if (options.includeContext && countries.length === 1 && options.contextCol && hasColumn(options.contextCol)) {
+          const country = countries[0];
+          const values = years.map(year => getValueFor(country, year, options.contextCol));
+          datasets.push({
+            label: 'Total generation',
+            data: values,
+            borderColor: 'rgba(148, 163, 184, 0.9)',
+            backgroundColor: 'rgba(148, 163, 184, 0.2)',
+            borderDash: [4, 4],
+            fill: false,
+            tension: 0.2,
+            spanGaps: false,
+            pointRadius: 0
+          });
+        }
+
+        const hasData = datasets.some(dataset => dataset.data && dataset.data.some(value => value !== null));
+        return { data: { labels: years, datasets }, axis, hasData, trendIssues };
+      }
+
+      function buildRankingData(metricCol, options = {}) {
+        const countries = state.selectedCountries;
+        const compact = options.compactLabels || false;
+        const valueTransform = options.valueTransform || null;
+        const selectedYear = Number.isFinite(options.year) ? options.year : null;
+        const includeYear = selectedYear === null && !getLatestCommonYear(countries, metricCol);
+        const latestCommonYear = selectedYear !== null ? selectedYear : getLatestCommonYear(countries, metricCol);
+        const values = [];
+        const labels = [];
+        const years = [];
+
+        if (countries.length && metricCol) {
+          countries.forEach(country => {
+            let value = null;
+            let yearUsed = latestCommonYear;
+            if (selectedYear !== null) {
+              value = getValueFor(country, selectedYear, metricCol);
+              if (valueTransform) {
+                value = valueTransform(value, { country, year: selectedYear });
+              }
+            } else if (latestCommonYear !== null) {
+              value = getValueFor(country, latestCommonYear, metricCol);
+              if (valueTransform) {
+                value = valueTransform(value, { country, year: latestCommonYear });
+              }
+            } else {
+              const availableYears = filterYearsByRange(getMetricYears(country, metricCol));
+              if (availableYears.length) {
+                yearUsed = availableYears[availableYears.length - 1];
+                value = getValueFor(country, yearUsed, metricCol);
+                if (valueTransform) {
+                  value = valueTransform(value, { country, year: yearUsed });
+                }
+              }
+            }
+            if (value !== null && value !== undefined) {
+              labels.push(getCountryLabel(country, compact));
+              values.push(value);
+              years.push(selectedYear ?? yearUsed);
+            }
+          });
+        }
+
+        const paired = labels.map((label, idx) => ({ label, value: values[idx], year: years[idx] }));
+        paired.sort((a, b) => b.value - a.value);
+        const sortedLabels = paired.map(item => item.label);
+        const sortedValues = paired.map(item => item.value);
+        const sortedYears = paired.map(item => item.year);
+
+        return {
+          data: {
+            labels: sortedLabels,
+            datasets: [{
+              label: selectedYear !== null ? `Year ${selectedYear}` : 'Latest year',
+              data: sortedValues,
+              backgroundColor: sortedLabels.map((_, idx) => getColor(idx, 0.7)),
+              metaYears: sortedYears
+            }]
+          },
+          latestCommonYear,
+          hasData: sortedValues.length > 0,
+          includeYear
+        };
+      }
+
+      function buildMixTimeSeries(country, components, measure = state.mixMeasure) {
+        const colKey = measure === 'twh' ? 'twhCol' : 'shareCol';
+        let minYear = null;
+        let maxYear = null;
+        components.forEach(component => {
+          const years = filterYearsByRange(getMetricYears(country, component[colKey]));
+          if (years.length) {
+            if (minYear === null || years[0] < minYear) minYear = years[0];
+            if (maxYear === null || years[years.length - 1] > maxYear) maxYear = years[years.length - 1];
+          }
+        });
+
+        if (minYear === null || maxYear === null) {
+          minYear = state.yearRange.start ?? globalMinYear;
+          maxYear = state.yearRange.end ?? globalMaxYear;
+        }
+
+        const years = [];
+        if (minYear !== null && maxYear !== null) {
+          for (let year = minYear; year <= maxYear; year += 1) {
+            years.push(year);
+          }
+        }
+
+        const datasets = components.map((component, idx) => ({
+          label: component.label,
+          data: years.map(year => getValueFor(country, year, component[colKey])),
+          borderColor: getColor(idx, 1),
+          backgroundColor: getColor(idx, 0.6),
+          fill: true,
+          stack: 'mix',
+          tension: 0.2,
+          spanGaps: false,
+          pointRadius: 0
+        }));
+
+        const hasData = datasets.some(dataset => dataset.data.some(value => value !== null));
+        return { data: { labels: years, datasets }, minYear, maxYear, hasData };
+      }
+
+      function buildMixSnapshot(country, components, year, measure = 'share') {
+        const colKey = measure === 'twh' ? 'twhCol' : 'shareCol';
+        const datasets = components.map((component, idx) => ({
+          label: component.label,
+          data: [getValueFor(country, year, component[colKey])],
+          backgroundColor: getColor(idx, 0.75)
+        }));
+        const hasData = datasets.some(dataset => dataset.data.some(value => value !== null));
+        return {
+          data: {
+            labels: [country],
+            datasets
+          },
+          hasData
+        };
+      }
+
+      function buildMixCompareSnapshot(countries, components, year, measure = 'share') {
+        const colKey = measure === 'twh' ? 'twhCol' : 'shareCol';
+        const compactLabels = countries.length > 2;
+        const datasets = components.map((component, idx) => ({
+          label: component.label,
+          data: countries.map(country => getValueFor(country, year, component[colKey])),
+          backgroundColor: getColor(idx, 0.75)
+        }));
+        const hasData = datasets.some(dataset => dataset.data.some(value => value !== null));
+        return {
+          data: {
+            labels: countries.map(country => getCountryLabel(country, compactLabels)),
+            datasets
+          },
+          hasData
+        };
+      }
+
+      function getSourceMeasureConfig(energy) {
+        if (!energy) return null;
+        if (state.sourceMeasure === 'share') {
+          return { metricCol: energy.shareCol, unit: '%', label: 'Share of electricity' };
+        }
+        if (state.sourceMeasure === 'percapita') {
+          return { metricCol: energy.twhCol, unit: 'kWh/person', label: 'Per-capita generation', perCapita: true };
+        }
+        return { metricCol: energy.twhCol, unit: 'TWh', label: 'Generation (TWh)' };
+      }
+
+      function updateSingleCharts() {
+        const energy = getEnergyOption(state.energyKey);
+        const countries = state.selectedCountries;
+
+        elements.trendStatus.classList.add('hidden');
+        elements.trendStatus.textContent = '';
+
+        const config = getSourceMeasureConfig(energy);
+        const compactLabels = countries.length > 2;
+
+        if (!energy || !countries.length || !config) {
+          setEmptyState('singleMainChartEmpty', 'Select at least one country.');
+          setEmptyState('compareRankChartEmpty', 'Select at least one country.');
+          for (let i = 1; i <= 6; i += 1) {
+            setEmptyState(`singleMultiChart${i}Empty`, 'Select at least one country.');
+            document.getElementById(`singleMultiCard${i}`).classList.add('hidden');
+          }
+          setNote('singleMainNote', '');
+          setNote('compareRankNote', '');
+          return;
+        }
+
+        const valueTransform = config.perCapita ? (value, meta) => {
+          const population = getValueFor(meta.country, meta.year, 'population');
+          if (!population) return null;
+          return value !== null && value !== undefined ? (value * 1000000000 / population) : null;
+        } : null;
+
+        elements.singleMainTitle.textContent = `${energy.label} – ${config.label}`;
+        elements.singleMainSubtitle.textContent = 'Selected energy source across countries.';
+        buildSingleRankYearOptions(config.metricCol);
+        const selectedYear = state.singleRankYear ?? globalMaxYear;
+        elements.singleRankSubtitle.textContent = `Ranking for ${selectedYear} based on ${config.label.toLowerCase()}.`;
+
+        applyCompareModeAuto();
+        const showMultiples = state.compareMode === 'multiples' && countries.length > 1;
+        elements.singleOverlaySection.classList.toggle('hidden', showMultiples);
+        elements.singleMultiSection.classList.toggle('hidden', !showMultiples);
+
+        const latestYear = countries.length === 1 ? filterYearsByRange(getMetricYears(countries[0], config.metricCol)).slice(-1)[0] : null;
+        const extendAxis = state.showTrend && countries.length === 1 && latestYear && globalMaxYear && latestYear < globalMaxYear ? globalMaxYear : null;
+
+        let trendIssues = [];
+
+        if (!showMultiples) {
+          const seriesData = buildSeriesData(config.metricCol, {
+            includeTrend: true,
+            includeContext: state.showContext && state.sourceMeasure === 'twh',
+            contextCol: energy.contextCol,
+            extendAxis,
+            labelFormatter: (country) => getCountryLabel(country, compactLabels),
+            valueTransform
+          });
+          updateChartSafely('singleMainChart', seriesData.data, { chartOptions: buildLineOptions(config.unit) });
+          setEmptyState('singleMainChartEmpty', seriesData.hasData ? '' : 'No data available for this metric in the selected years/countries.');
+          if (countries.length === 1) {
+            const latest = seriesData.axis.latestByCountry.get(countries[0]);
+            const note = latest ? `Latest available year for ${countries[0]}: ${latest}. Data available through ${latest}.` : 'Latest available year not available.';
+            setNote('singleMainNote', note);
+          } else {
+            setNote('singleMainNote', 'Latest available years vary by country.');
+          }
+          trendIssues = seriesData.trendIssues;
+        } else {
+          for (let i = 1; i <= 6; i += 1) {
+            const card = document.getElementById(`singleMultiCard${i}`);
+            if (i <= countries.length) {
+              const country = countries[i - 1];
+              card.classList.remove('hidden');
+              document.getElementById(`singleMultiTitle${i}`).textContent = country;
+              const latestPerCountry = filterYearsByRange(getMetricYears(country, config.metricCol)).slice(-1)[0] || null;
+              const extendAxisLocal = state.showTrend && latestPerCountry && globalMaxYear && latestPerCountry < globalMaxYear ? globalMaxYear : null;
+              const seriesData = buildSeriesData(config.metricCol, {
+                countries: [country],
+                includeTrend: true,
+                includeContext: state.showContext && state.sourceMeasure === 'twh',
+                contextCol: energy.contextCol,
+                extendAxis: extendAxisLocal,
+                valueTransform
+              });
+              updateChartSafely(`singleMultiChart${i}`, seriesData.data, { chartOptions: buildSmallLineOptions(config.unit) });
+              setEmptyState(`singleMultiChart${i}Empty`, seriesData.hasData ? '' : 'No data available for this metric in the selected years/countries.');
+              const latest = seriesData.axis.latestByCountry.get(country);
+              setNote(`singleMultiNote${i}`, latest ? `Latest year: ${latest}.` : 'Latest available year not available.');
+              trendIssues = trendIssues.concat(seriesData.trendIssues);
+            } else {
+              card.classList.add('hidden');
+            }
+          }
+        }
+
+        if (state.showTrend && trendIssues.length) {
+          const missing = Array.from(new Set(trendIssues));
+          elements.trendStatus.textContent = `Not enough data for trend: ${missing.join(', ')}.`;
+          elements.trendStatus.classList.remove('hidden');
+        }
+
+        const rankingData = buildRankingData(config.metricCol, { valueTransform, compactLabels, year: selectedYear });
+        updateChartSafely('compareRankChart', rankingData.data, { chartOptions: buildBarOptions(config.unit, rankingData.includeYear) });
+        setEmptyState('compareRankChartEmpty', rankingData.hasData ? '' : 'No data available for this metric in the selected years/countries.');
+        const missingNote = rankingData.hasData && rankingData.data.labels.length < countries.length
+          ? 'Countries without data for the selected year are omitted.'
+          : '';
+        setNote('compareRankNote', missingNote);
+      }
+
+      function updateMixCharts() {
+        const countries = state.selectedCountries;
+        const components = availableMixComponents(state.mixDetail, state.mixMeasure);
+        const shareComponents = availableMixComponents(state.mixDetail, 'share');
+        const mixUnit = state.mixMeasure === 'twh' ? 'TWh' : '%';
+        const mixIsPercent = state.mixMeasure === 'share';
+
+        if (!countries.length) {
+          setEmptyState('mixSingleChartEmpty', 'Select at least one country.');
+          setEmptyState('mixSingleSnapshotEmpty', 'Select at least one country.');
+          setEmptyState('mixCompareSnapshotEmpty', 'Select at least one country.');
+          for (let i = 1; i <= 6; i += 1) {
+            document.getElementById(`mixMultiCard${i}`).classList.add('hidden');
+          }
+          return;
+        }
+
+        if (!components.length) {
+          setEmptyState('mixSingleChartEmpty', 'No data available for this metric in the selected years/countries.');
+          for (let i = 1; i <= 6; i += 1) {
+            setEmptyState(`mixMultiChart${i}Empty`, 'No data available for this metric in the selected years/countries.');
+          }
+        }
+
+        if (countries.length === 1) {
+          elements.mixSingleSection.classList.remove('hidden');
+          elements.mixMultiSection.classList.add('hidden');
+          const country = countries[0];
+          if (components.length) {
+            const mixSeries = buildMixTimeSeries(country, components, state.mixMeasure);
+            updateChartSafely('mixSingleChart', mixSeries.data, { chartOptions: buildStackedAreaOptions(mixUnit, { percent: mixIsPercent }) });
+            setEmptyState('mixSingleChartEmpty', mixSeries.hasData ? '' : 'No data available for this metric in the selected years/countries.');
+            const latest = mixSeries.maxYear;
+            setNote('mixSingleNote', latest ? `Latest available year for ${country}: ${latest}.` : 'Latest available year not available.');
+          }
+
+          const latestShare = shareComponents.length ? buildMixTimeSeries(country, shareComponents, 'share').maxYear : null;
+          const snapshotYear = latestShare || globalMaxYear;
+          const snapshot = buildMixSnapshot(country, shareComponents, snapshotYear, 'share');
+          updateChartSafely('mixSingleSnapshot', snapshot.data, { chartOptions: buildStackedBarOptions('%', { percent: true }) });
+          setEmptyState('mixSingleSnapshotEmpty', snapshot.hasData ? '' : 'No data available for this metric in the selected years/countries.');
+          setNote('mixSingleSnapshotNote', snapshotYear ? `Snapshot year: ${snapshotYear}.` : '');
+        } else {
+          elements.mixSingleSection.classList.add('hidden');
+          elements.mixMultiSection.classList.remove('hidden');
+          for (let i = 1; i <= 6; i += 1) {
+            const card = document.getElementById(`mixMultiCard${i}`);
+            if (i <= countries.length) {
+              card.classList.remove('hidden');
+              const country = countries[i - 1];
+              document.getElementById(`mixMultiTitle${i}`).textContent = country;
+              if (components.length) {
+                const mixSeries = buildMixTimeSeries(country, components, state.mixMeasure);
+                updateChartSafely(`mixMultiChart${i}`, mixSeries.data, { chartOptions: buildStackedAreaOptions(mixUnit, { percent: mixIsPercent }) });
+                setEmptyState(`mixMultiChart${i}Empty`, mixSeries.hasData ? '' : 'No data available for this metric in the selected years/countries.');
+                const latest = mixSeries.maxYear;
+                setNote(`mixMultiNote${i}`, latest ? `Latest available year: ${latest}.` : 'Latest available year not available.');
+              }
+            } else {
+              card.classList.add('hidden');
+            }
+          }
+        }
+
+        let minYear = null;
+        let maxYear = null;
+        countries.forEach(country => {
+          const mixSeries = buildMixTimeSeries(country, shareComponents, 'share');
+          if (mixSeries.minYear !== null) {
+            if (minYear === null || mixSeries.minYear < minYear) minYear = mixSeries.minYear;
+            if (maxYear === null || mixSeries.maxYear > maxYear) maxYear = mixSeries.maxYear;
+          }
+        });
+        minYear = minYear ?? state.yearRange.start ?? globalMinYear;
+        maxYear = maxYear ?? state.yearRange.end ?? globalMaxYear;
+        if (minYear !== null && maxYear !== null) {
+          const currentMin = Number(elements.mixYearSelect.dataset.min);
+          const currentMax = Number(elements.mixYearSelect.dataset.max);
+          if (!Number.isFinite(currentMin) || !Number.isFinite(currentMax) || currentMin !== minYear || currentMax !== maxYear) {
+            elements.mixYearSelect.innerHTML = '';
+            for (let year = minYear; year <= maxYear; year += 1) {
+              const opt = document.createElement('option');
+              opt.value = String(year);
+              opt.textContent = String(year);
+              elements.mixYearSelect.appendChild(opt);
+            }
+            elements.mixYearSelect.dataset.min = String(minYear);
+            elements.mixYearSelect.dataset.max = String(maxYear);
+          }
+          if (!state.mixSnapshotYear || state.mixSnapshotYear < minYear || state.mixSnapshotYear > maxYear) {
+            state.mixSnapshotYear = maxYear;
+          }
+          elements.mixYearSelect.value = String(state.mixSnapshotYear);
+        }
+
+        const snapshot = buildMixCompareSnapshot(countries, shareComponents, state.mixSnapshotYear ?? globalMaxYear, 'share');
+        updateChartSafely('mixCompareSnapshot', snapshot.data, { chartOptions: buildStackedBarOptions('%', { percent: true }) });
+        setEmptyState('mixCompareSnapshotEmpty', snapshot.hasData ? '' : 'No data available for this metric in the selected years/countries.');
+        setNote('mixCompareSnapshotNote', state.mixMeasure === 'twh' ? 'Snapshots are shown as % share for clarity.' : 'Latest available years vary by country.');
+      }
+
+      function updateCarbonCharts() {
+        const countries = state.selectedCountries;
+        const carbonOption = getCarbonOption(state.carbonMetric);
+        updatePerCapitaToggleVisibility();
+
+        if (!countries.length || !carbonOption) {
+          setEmptyState('carbonChartEmpty', 'Select at least one country.');
+          for (let i = 1; i <= 6; i += 1) {
+            setEmptyState(`carbonMultiChart${i}Empty`, 'Select at least one country.');
+            document.getElementById(`carbonMultiCard${i}`).classList.add('hidden');
+          }
+          setNote('carbonNote', '');
+          return;
+        }
+
+        let unit = carbonOption.unit;
+        const valueTransform = (carbonOption.key === 'emissions' && state.emissionsPerCapita) ? (value, meta) => {
+          const population = getValueFor(meta.country, meta.year, 'population');
+          if (!population) return null;
+          return (value !== null && value !== undefined) ? (value * 1000000 / population) : null;
+        } : null;
+
+        if (carbonOption.key === 'emissions' && state.emissionsPerCapita) {
+          unit = 'tCO2e per person';
+        }
+
+        elements.carbonMainTitle.textContent = carbonOption.label;
+        elements.carbonMainSubtitle.textContent = 'Carbon intensity or power-sector emissions over time.';
+
+        applyCompareModeAuto();
+        const showMultiples = state.compareMode === 'multiples' && countries.length > 1;
+        elements.carbonOverlaySection.classList.toggle('hidden', showMultiples);
+        elements.carbonMultiSection.classList.toggle('hidden', !showMultiples);
+
+        const compactLabels = countries.length > 2;
+
+        if (!showMultiples) {
+          const seriesData = buildSeriesData(carbonOption.col, {
+            labelFormatter: (country) => getCountryLabel(country, compactLabels),
+            valueTransform
+          });
+          updateChartSafely('carbonChart', seriesData.data, { chartOptions: buildLineOptions(unit) });
+          setEmptyState('carbonChartEmpty', seriesData.hasData ? '' : 'No data available for this metric in the selected years/countries.');
+          if (countries.length === 1) {
+            const latest = seriesData.axis.latestByCountry.get(countries[0]);
+            const note = latest ? `Latest available year for ${countries[0]}: ${latest}. Data available through ${latest}.` : 'Latest available year not available.';
+            setNote('carbonNote', note);
+          } else {
+            setNote('carbonNote', 'Latest available years vary by country.');
+          }
+        } else {
+          for (let i = 1; i <= 6; i += 1) {
+            const card = document.getElementById(`carbonMultiCard${i}`);
+            if (i <= countries.length) {
+              const country = countries[i - 1];
+              card.classList.remove('hidden');
+              document.getElementById(`carbonMultiTitle${i}`).textContent = country;
+              const seriesData = buildSeriesData(carbonOption.col, {
+                countries: [country],
+                valueTransform
+              });
+              updateChartSafely(`carbonMultiChart${i}`, seriesData.data, { chartOptions: buildSmallLineOptions(unit) });
+              setEmptyState(`carbonMultiChart${i}Empty`, seriesData.hasData ? '' : 'No data available for this metric in the selected years/countries.');
+              const latest = seriesData.axis.latestByCountry.get(country);
+              setNote(`carbonMultiNote${i}`, latest ? `Latest year: ${latest}.` : 'Latest available year not available.');
+            } else {
+              card.classList.add('hidden');
+            }
+          }
+        }
+      }
+
+      function updateCharts() {
+        updateSingleCharts();
+        updateMixCharts();
+        updateCarbonCharts();
+      }
+
+      function createCharts() {
+        const cache = { enabled: true, ttlMs: CACHE_TTL };
+        window.charting.createChartFromCSV({
+          canvasId: 'singleMainChart',
+          csvPath: CSV_PATH,
+          chartType: 'line',
+          dataProcessor: () => {
+            const energy = getEnergyOption(state.energyKey);
+            const config = getSourceMeasureConfig(energy);
+            if (!config) return { labels: [], datasets: [] };
+            return buildSeriesData(config.metricCol, { includeTrend: true, includeContext: state.showContext && state.sourceMeasure === 'twh', contextCol: 'electricity_generation' }).data;
+          },
+          chartOptions: buildLineOptions('TWh'),
+          cache
+        });
+
+        window.charting.createChartFromCSV({
+          canvasId: 'compareRankChart',
+          csvPath: CSV_PATH,
+          chartType: 'bar',
+          dataProcessor: () => buildRankingData(getEnergyOption(state.energyKey)?.shareCol).data,
+          chartOptions: buildBarOptions('%', false),
+          cache
+        });
+
+        for (let i = 1; i <= 6; i += 1) {
+          window.charting.createChartFromCSV({
+            canvasId: `singleMultiChart${i}`,
+            csvPath: CSV_PATH,
+            chartType: 'line',
+            dataProcessor: () => {
+              const energy = getEnergyOption(state.energyKey);
+              const config = getSourceMeasureConfig(energy);
+              const country = state.selectedCountries[i - 1] || '';
+              if (!config) return { labels: [], datasets: [] };
+              return buildSeriesData(config.metricCol, { countries: [country] }).data;
+            },
+            chartOptions: buildLineOptions('TWh'),
+            cache
+          });
+        }
+
+        window.charting.createChartFromCSV({
+          canvasId: 'mixSingleChart',
+          csvPath: CSV_PATH,
+          chartType: 'line',
+          dataProcessor: () => {
+            const country = state.selectedCountries[0] || '';
+            return buildMixTimeSeries(country, availableMixComponents(state.mixDetail, state.mixMeasure), state.mixMeasure).data;
+          },
+          chartOptions: buildStackedAreaOptions('%', { percent: true }),
+          cache
+        });
+
+        window.charting.createChartFromCSV({
+          canvasId: 'mixSingleSnapshot',
+          csvPath: CSV_PATH,
+          chartType: 'bar',
+          dataProcessor: () => {
+            const country = state.selectedCountries[0] || '';
+            const components = availableMixComponents(state.mixDetail, 'share');
+            const year = state.mixSnapshotYear || globalMaxYear;
+            return buildMixSnapshot(country, components, year, 'share').data;
+          },
+          chartOptions: buildStackedBarOptions('%', { percent: true }),
+          cache
+        });
+
+        for (let i = 1; i <= 6; i += 1) {
+          window.charting.createChartFromCSV({
+            canvasId: `mixMultiChart${i}`,
+            csvPath: CSV_PATH,
+            chartType: 'line',
+            dataProcessor: () => {
+              const country = state.selectedCountries[i - 1] || '';
+              return buildMixTimeSeries(country, availableMixComponents(state.mixDetail, state.mixMeasure), state.mixMeasure).data;
+            },
+            chartOptions: buildStackedAreaOptions('%', { percent: true }),
+            cache
+          });
+        }
+
+        window.charting.createChartFromCSV({
+          canvasId: 'mixCompareSnapshot',
+          csvPath: CSV_PATH,
+          chartType: 'bar',
+          dataProcessor: () => buildMixCompareSnapshot(state.selectedCountries, availableMixComponents(state.mixDetail, 'share'), state.mixSnapshotYear || globalMaxYear, 'share').data,
+          chartOptions: buildStackedBarOptions('%', { percent: true }),
+          cache
+        });
+
+        window.charting.createChartFromCSV({
+          canvasId: 'carbonChart',
+          csvPath: CSV_PATH,
+          chartType: 'line',
+          dataProcessor: () => {
+            const carbonOption = getCarbonOption(state.carbonMetric);
+            if (!carbonOption) return { labels: [], datasets: [] };
+            return buildSeriesData(carbonOption.col, {}).data;
+          },
+          chartOptions: buildLineOptions('gCO2e/kWh'),
+          cache
+        });
+
+        for (let i = 1; i <= 6; i += 1) {
+          window.charting.createChartFromCSV({
+            canvasId: `carbonMultiChart${i}`,
+            csvPath: CSV_PATH,
+            chartType: 'line',
+            dataProcessor: () => {
+              const carbonOption = getCarbonOption(state.carbonMetric);
+              const country = state.selectedCountries[i - 1] || '';
+              if (!carbonOption) return { labels: [], datasets: [] };
+              return buildSeriesData(carbonOption.col, { countries: [country] }).data;
+            },
+            chartOptions: buildLineOptions('gCO2e/kWh'),
+            cache
+          });
+        }
+      }
+
+      function attachListeners() {
+        elements.viewTabs.forEach(btn => {
+          btn.addEventListener('click', () => {
+            state.view = btn.dataset.view;
+            updateToggleButtons();
+            updateViewVisibility();
+            updateCharts();
+          });
+        });
+
+        elements.energySelect.addEventListener('change', () => {
+          state.energyKey = elements.energySelect.value;
+          updateCharts();
+        });
+
+        elements.contextToggle.addEventListener('change', () => {
+          state.showContext = elements.contextToggle.checked;
+          updateCharts();
+        });
+
+        elements.trendToggle.addEventListener('change', () => {
+          state.showTrend = elements.trendToggle.checked;
+          updateCharts();
+        });
+
+        elements.carbonSelect.addEventListener('change', () => {
+          state.carbonMetric = elements.carbonSelect.value;
+          updatePerCapitaToggleVisibility();
+          updateCharts();
+        });
+
+        elements.yearStartSelect.addEventListener('change', () => {
+          normalizeYearRange();
+          updateCharts();
+        });
+
+        elements.yearEndSelect.addEventListener('change', () => {
+          normalizeYearRange();
+          updateCharts();
+        });
+
+        elements.resetBtn.addEventListener('click', resetState);
+
+        elements.clearCountriesBtn.addEventListener('click', () => {
+          state.selectedCountries = [];
+          elements.countrySearch.value = '';
+          elements.countryResults.classList.add('hidden');
+          buildCountryChips();
+          applyCompareModeAuto();
+          updateToggleButtons();
+          updateViewVisibility();
+          updateCharts();
+        });
+
+        document.querySelectorAll('[data-mix]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            state.mixDetail = btn.dataset.mix;
+            updateToggleButtons();
+            updateCharts();
+          });
+        });
+
+        document.querySelectorAll('[data-mix-measure]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            state.mixMeasure = btn.dataset.mixMeasure;
+            updateToggleButtons();
+            updateCharts();
+          });
+        });
+
+        document.querySelectorAll('[data-measure]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            state.sourceMeasure = btn.dataset.measure;
+            updateToggleButtons();
+            updateCharts();
+          });
+        });
+
+        document.querySelectorAll('[data-compare]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            state.compareMode = btn.dataset.compare;
+            state.compareModeLocked = true;
+            updateToggleButtons();
+            updateCharts();
+          });
+        });
+
+        document.querySelectorAll('[data-emissions]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            state.emissionsPerCapita = btn.dataset.emissions === 'percapita';
+            updateToggleButtons();
+            updateCharts();
+          });
+        });
+
+        elements.countrySearch.addEventListener('input', () => {
+          updateCountryResults(elements.countrySearch.value);
+        });
+
+        elements.countrySearch.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter') {
+            event.preventDefault();
+            const first = elements.countryResults.querySelector('li button');
+            if (first) {
+              first.click();
+            }
+          }
+          if (event.key === 'Escape') {
+            elements.countryResults.classList.add('hidden');
+          }
+          if (event.key === 'ArrowDown') {
+            const first = elements.countryResults.querySelector('li button');
+            if (first) {
+              first.focus();
+            }
+          }
+        });
+
+        document.addEventListener('click', (event) => {
+          if (!elements.countryResults.contains(event.target) && event.target !== elements.countrySearch) {
+            elements.countryResults.classList.add('hidden');
+          }
+        });
+
+        elements.mixYearSelect.addEventListener('change', () => {
+          state.mixSnapshotYear = Number(elements.mixYearSelect.value);
+          updateCharts();
+        });
+
+        if (elements.singleRankYearSelect) {
+          elements.singleRankYearSelect.addEventListener('change', () => {
+            state.singleRankYear = Number(elements.singleRankYearSelect.value);
+            updateCharts();
+          });
+        }
+      }
+
+      function showParseError(message) {
+        elements.parseError.textContent = message;
+        elements.parseError.classList.remove('hidden');
+      }
+
+      function init() {
+        window.charting.preloadCSV(CSV_PATH, { ttlMs: CACHE_TTL })
+          .then(rows => {
+            cachedRows = rows || [];
+            if (!cachedRows.length) {
+              showParseError(`No rows loaded from ${CSV_PATH}.`);
+              return;
+            }
+            columnSet = new Set(Object.keys(cachedRows[0] || {}));
+            buildIndex();
+            buildControlOptions();
+            resetState();
+            createCharts();
+            attachListeners();
+            buildYearRangeControls();
+            updateCharts();
+            requestAnimationFrame(() => updateCharts());
+          })
+          .catch(err => {
+            showParseError(`CSV parse failed for ${CSV_PATH}: ${err.message || 'Unknown error'}`);
+          });
+      }
+
+      init();
+    });
+  </script>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-text">
+          <p>&copy; 2025 Houssem Chammam. All rights reserved.</p>
+        </div>
+        <div class="footer-social">
+          <a href="https://www.linkedin.com/in/houssem-chammam/" class="social-link" target="_blank">
+            <i class="fab fa-linkedin"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

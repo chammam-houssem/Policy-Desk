@@ -31,10 +31,13 @@
     .main-content { padding-top: 16px; }
     .profile-title { margin-top: 0 !important; font-size: 28px; }
     /* Make article cards' borders a bit more visible on blog page */
-    .news-item { border: 1px solid #d9dee3; }
+    .news-item { border: 1px solid #d9dee3; min-height: 420px; display: flex; flex-direction: column; }
     /* Restore bottom border even when it's the last child (overrides site-wide list style) */
     .news-item:last-child { border-bottom: 1px solid #d9dee3; }
     .news-item-link:hover .news-item, .news-item-link:focus .news-item { border-color: #007bff; }
+    /* Card body grows to fill; tags pinned to bottom */
+    .news-item > div { display: flex; flex-direction: column; flex: 1; }
+    .news-item > div > div:last-child { margin-top: auto; }
   </style>
 </head>
 <body>

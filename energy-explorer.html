@@ -35,8 +35,8 @@
     }
 
     .page-wrap {
-      padding: 32px 0 48px;
-      min-height: 100vh;
+      padding: 32px 0 1px;
+      min-height: calc(100vh - var(--nav-footer-offset, 0px));
     }
 
     .energy-profile-page {
@@ -270,6 +270,21 @@
       line-height: 1.3;
     }
 
+    .chart-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .chart-subtitle {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--muted);
+      max-width: 60ch;
+    }
+
     .chart-controls {
       display: flex;
       align-items: center;
@@ -385,7 +400,10 @@
           <div class="chart-stack">
             <article class="chart-block">
               <div class="chart-block-head">
-                <h2 class="chart-title" id="chart1Title"></h2>
+                <div class="chart-copy">
+                  <h2 class="chart-title" id="chart1Title"></h2>
+                  <p class="chart-subtitle" id="chart1Subtitle"></p>
+                </div>
               </div>
               <div class="chart-canvas-wrap">
                 <canvas id="chartRenewablesVsTotal"></canvas>
@@ -394,7 +412,10 @@
 
             <article class="chart-block">
               <div class="chart-block-head">
-                <h2 class="chart-title" id="chart2Title"></h2>
+                <div class="chart-copy">
+                  <h2 class="chart-title" id="chart2Title"></h2>
+                  <p class="chart-subtitle" id="chart2Subtitle"></p>
+                </div>
                 <div class="chart-controls">
                   <select id="chart2SourceSelect" aria-label="Selected source"></select>
                 </div>
@@ -406,7 +427,10 @@
 
             <article class="chart-block">
               <div class="chart-block-head chart-block-head--split">
-                <h2 class="chart-title" id="chart3Title"></h2>
+                <div class="chart-copy">
+                  <h2 class="chart-title" id="chart3Title"></h2>
+                  <p class="chart-subtitle" id="chart3Subtitle"></p>
+                </div>
                 <div class="chart-controls">
                   <select id="chart3SourceSelect" aria-label="Comparison source"></select>
                   <select id="chart3CompareCountrySelect" aria-label="Comparison country"></select>
@@ -419,7 +443,10 @@
 
             <article class="chart-block">
               <div class="chart-block-head chart-block-head--split">
-                <h2 class="chart-title" id="chart4Title"></h2>
+                <div class="chart-copy">
+                  <h2 class="chart-title" id="chart4Title"></h2>
+                  <p class="chart-subtitle" id="chart4Subtitle"></p>
+                </div>
                 <div class="chart-controls">
                   <button type="button" class="breakdown-toggle active" data-breakdown-unit="twh">TWh</button>
                   <button type="button" class="breakdown-toggle" data-breakdown-unit="share">Share %</button>
@@ -427,6 +454,23 @@
               </div>
               <div class="chart-canvas-wrap">
                 <canvas id="chartRenewablesBreakdown"></canvas>
+              </div>
+            </article>
+
+            <article class="chart-block">
+              <div class="chart-block-head chart-block-head--split">
+                <div class="chart-copy">
+                  <h2 class="chart-title" id="chart5Title"></h2>
+                  <p class="chart-subtitle" id="chart5Subtitle"></p>
+                </div>
+                <div class="chart-controls">
+                  <select id="chart5SourceSelect" aria-label="World comparison source"></select>
+                  <button type="button" class="breakdown-toggle active" data-world-mode="share">Share %</button>
+                  <button type="button" class="breakdown-toggle" data-world-mode="capacity" disabled title="Capacity data is not available in Data/electricity-data.csv">Capacity (GW)</button>
+                </div>
+              </div>
+              <div class="chart-canvas-wrap">
+                <canvas id="chartWorldComparison"></canvas>
               </div>
             </article>
           </div>
@@ -464,8 +508,11 @@
         chart3Source: 'Solar',
         chart3CompareCountry: 'Morocco',
         chart4Unit: 'twh',
+        chart5Source: 'Solar',
+        chart5Mode: 'share',
         rows: [],
-        countryList: []
+        countryList: [],
+        worldAverageRows: []
       };
 
       const elements = {
@@ -484,20 +531,30 @@
         sectionHydrogen: document.getElementById('section-hydrogen'),
         sectionSecurity: document.getElementById('section-security'),
         chart1Title: document.getElementById('chart1Title'),
+        chart1Subtitle: document.getElementById('chart1Subtitle'),
         chart2Title: document.getElementById('chart2Title'),
+        chart2Subtitle: document.getElementById('chart2Subtitle'),
         chart3Title: document.getElementById('chart3Title'),
+        chart3Subtitle: document.getElementById('chart3Subtitle'),
         chart4Title: document.getElementById('chart4Title'),
+        chart4Subtitle: document.getElementById('chart4Subtitle'),
+        chart5Title: document.getElementById('chart5Title'),
+        chart5Subtitle: document.getElementById('chart5Subtitle'),
+        chart5SourceSelect: document.getElementById('chart5SourceSelect'),
+        chart5Buttons: Array.from(document.querySelectorAll('[data-world-mode]')),
         chart1Canvas: document.getElementById('chartRenewablesVsTotal'),
         chart2Canvas: document.getElementById('chartSourceContext'),
         chart3Canvas: document.getElementById('chartCountryComparison'),
-        chart4Canvas: document.getElementById('chartRenewablesBreakdown')
+        chart4Canvas: document.getElementById('chartRenewablesBreakdown'),
+        chart5Canvas: document.getElementById('chartWorldComparison')
       };
 
       const charts = {
         chart1: null,
         chart2: null,
         chart3: null,
-        chart4: null
+        chart4: null,
+        chart5: null
       };
 
       const numberOrNull = value => {
@@ -509,25 +566,71 @@
       const rowsForCountry = (rows, country) => rows.filter(row => row.country === country).sort((a, b) => Number(a.year) - Number(b.year));
       const yearsFor = rows => rows.map(row => Number(row.year));
       const valuesFor = (rows, column) => rows.map(row => numberOrNull(row[column]));
-      const uniqueCountries = rows => [...new Set(rows.map(row => row.country).filter(Boolean))].sort((a, b) => a.localeCompare(b));
-      const sourceConfig = label => SOURCE_OPTIONS.find(option => option.label === label) || SOURCE_OPTIONS[0];
-      const sourceColumn = (label, unit = 'twh') => {
-        const config = sourceConfig(label);
-        return unit === 'share' ? config.share : config.twh;
-      };
-      const currentRows = () => rowsForCountry(state.rows, state.currentCountry);
-      const compareRows = () => rowsForCountry(state.rows, state.chart3CompareCountry);
-      const rgba = (hex, alpha) => {
-        const clean = hex.replace('#', '');
-        const full = clean.length === 3 ? clean.split('').map(char => char + char).join('') : clean;
-        const value = parseInt(full, 16);
-        const r = (value >> 16) & 255;
+        const uniqueCountries = rows => [...new Set(rows.map(row => row.country).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+        const sourceConfig = label => SOURCE_OPTIONS.find(option => option.label === label) || SOURCE_OPTIONS[0];
+        const sourceColumn = (label, unit = 'twh') => {
+          const config = sourceConfig(label);
+          return unit === 'share' ? config.share : config.twh;
+        };
+        const currentRows = () => rowsForCountry(state.rows, state.currentCountry);
+        const compareRows = () => rowsForCountry(state.rows, state.chart3CompareCountry);
+        const worldRows = () => rowsForCountry(state.rows, 'World');
+        const nonWorldRows = () => state.rows.filter(row => row.country && row.country !== 'World');
+        const rgba = (hex, alpha) => {
+          const clean = hex.replace('#', '');
+          const full = clean.length === 3 ? clean.split('').map(char => char + char).join('') : clean;
+          const value = parseInt(full, 16);
+          const r = (value >> 16) & 255;
         const g = (value >> 8) & 255;
-        const b = value & 255;
-        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-      };
+          const b = value & 255;
+          return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        };
 
-      function chartOptions({ stacked = false, legend = false } = {}) {
+        function averageByYear(rows, column) {
+          const years = [...new Set(rows.map(row => Number(row.year)).filter(Number.isFinite))].sort((a, b) => a - b);
+          const series = years.map(year => {
+            const values = rows
+              .filter(row => Number(row.year) === year)
+              .map(row => numberOrNull(row[column]))
+              .filter(value => value !== null);
+            if (!values.length) return null;
+            const sum = values.reduce((total, value) => total + value, 0);
+            return sum / values.length;
+          });
+          return { labels: years, data: series };
+        }
+
+        function worldAverageSourceSeries(sourceLabel) {
+          const config = sourceConfig(sourceLabel);
+          return averageByYear(nonWorldRows(), config.share);
+        }
+
+        function worldAverageMixSummary() {
+          const latestYear = [...new Set(nonWorldRows().map(row => Number(row.year)).filter(Number.isFinite))].sort((a, b) => b - a)[0];
+          if (!latestYear) return '<p>World average mix is unavailable.</p>';
+          const latestRows = nonWorldRows().filter(row => Number(row.year) === latestYear);
+          const avg = column => {
+            const values = latestRows.map(row => numberOrNull(row[column])).filter(value => value !== null);
+            if (!values.length) return null;
+            return values.reduce((total, value) => total + value, 0) / values.length;
+          };
+          const fossil = (avg('coal_share_elec') || 0) + (avg('gas_share_elec') || 0) + (avg('oil_share_elec') || 0);
+          const renewablesExNuclear = (avg('hydro_share_elec') || 0) + (avg('wind_share_elec') || 0) + (avg('solar_share_elec') || 0) + (avg('biofuel_share_elec') || 0) + (avg('other_renewables_share_elec') || 0);
+          const nuclear = avg('nuclear_share_elec') || 0;
+          const worldTotal = worldRows().find(row => Number(row.year) === latestYear);
+          const totalGeneration = worldTotal ? numberOrNull(worldTotal.electricity_generation) : null;
+          return `
+            <p><strong>World total generation:</strong> ${totalGeneration !== null ? `${totalGeneration.toLocaleString(undefined, { maximumFractionDigits: 1 })} TWh` : 'not available'}.</p>
+            <p><strong>World average energy mix</strong> is computed across country-level shares, not from the World total row.</p>
+            <ul>
+              <li>Fossil fuels combined: ${fossil.toFixed(1)}%</li>
+              <li>Renewables excluding nuclear: ${renewablesExNuclear.toFixed(1)}%</li>
+              <li>Nuclear: ${nuclear.toFixed(1)}%</li>
+            </ul>
+          `;
+        }
+
+      function chartOptions({ stacked = false, legend = false, yTitle = 'Electricity generation (TWh)', tooltipUnit = 'TWh', derivedShare = false } = {}) {
         return {
           responsive: true,
           maintainAspectRatio: false,
@@ -550,19 +653,48 @@
               bodyColor: '#e2e8f0',
               borderColor: 'rgba(255, 255, 255, 0.1)',
               borderWidth: 1,
-              padding: 12
+              padding: 12,
+              callbacks: {
+                label(context) {
+                  const value = context.parsed.y;
+                  if (value === null || value === undefined) {
+                    return `${context.dataset.label}: no data`;
+                  }
+                  const formatted = Number.isFinite(value) ? value.toLocaleString(undefined, { maximumFractionDigits: 2 }) : String(value);
+                  if (derivedShare) {
+                    return `${context.dataset.label}: ${formatted}% of electricity mix (derived from percentage shares)`;
+                  }
+                  return `${context.dataset.label}: ${formatted} ${tooltipUnit}`;
+                }
+              }
             }
           },
           scales: {
             x: {
               grid: { color: 'rgba(15, 23, 42, 0.05)' },
-              ticks: { color: '#64748b', maxTicksLimit: 9 }
+              ticks: { color: '#64748b', maxTicksLimit: 9 },
+              title: {
+                display: true,
+                text: 'Year',
+                color: '#64748b'
+              }
             },
             y: {
               beginAtZero: true,
               stacked,
               grid: { color: 'rgba(15, 23, 42, 0.06)' },
-              ticks: { color: '#64748b' }
+              ticks: {
+                color: '#64748b',
+                callback(value) {
+                  if (derivedShare) return `${value}%`;
+                  return value;
+                }
+              },
+              title: {
+                display: true,
+                text: yTitle,
+                color: '#64748b'
+              }
             }
           }
         };
@@ -589,6 +721,11 @@
           data: { labels: [], datasets: [] },
           options: chartOptions({ stacked: true, legend: true })
         });
+        charts.chart5 = new Chart(elements.chart5Canvas.getContext('2d'), {
+          type: 'line',
+          data: { labels: [], datasets: [] },
+          options: chartOptions({ yTitle: 'Share of electricity mix (%)', tooltipUnit: '%', derivedShare: true })
+        });
       }
 
       function updateChart(chart, labels, datasets, options = null) {
@@ -603,7 +740,7 @@
         const rows = currentRows();
         updateChart(charts.chart1, yearsFor(rows), [
           {
-            label: 'Total generation',
+            label: 'Total generation (TWh)',
             data: valuesFor(rows, 'electricity_generation'),
             borderColor: rgba('#0f4c81', 0.9),
             backgroundColor: rgba('#0f4c81', 0.08),
@@ -613,7 +750,7 @@
             fill: false
           },
           {
-            label: 'Renewables',
+            label: 'Renewables (TWh)',
             data: valuesFor(rows, 'renewables_electricity'),
             borderColor: rgba('#7c3aed', 0.9),
             backgroundColor: rgba('#7c3aed', 0.08),
@@ -623,8 +760,9 @@
             tension: 0.28,
             fill: false
           }
-        ]);
+        ], chartOptions({ yTitle: 'Electricity generation (TWh)', tooltipUnit: 'TWh' }));
         elements.chart1Title.textContent = `${state.currentCountry} — Renewables against total generation`;
+        elements.chart1Subtitle.textContent = 'Y-axis: electricity generation (TWh). Hover values are shown in TWh.';
       }
 
       function renderChart2() {
@@ -634,7 +772,7 @@
           const isSelected = option.label === selected.label;
           const color = option.color;
           return {
-            label: option.label,
+            label: `${option.label} (TWh)`,
             data: valuesFor(rows, option.twh),
             borderColor: isSelected ? color : rgba(color, 0.12),
             backgroundColor: isSelected ? rgba(color, 0.08) : rgba(color, 0.04),
@@ -643,8 +781,9 @@
             tension: 0.28,
             fill: false
           };
-        }));
+        }), chartOptions({ yTitle: 'Electricity generation (TWh)', tooltipUnit: 'TWh' }));
         elements.chart2Title.textContent = `${state.currentCountry} — ${selected.label} against other sources`;
+        elements.chart2Subtitle.textContent = 'Y-axis: electricity generation (TWh). The selected source is highlighted against faint TWh context lines.';
       }
 
       function renderChart3() {
@@ -665,7 +804,7 @@
 
         updateChart(charts.chart3, years, [
           {
-            label: state.currentCountry,
+            label: `${state.currentCountry} (TWh)`,
             data: leftData,
             borderColor: rgba('#0f4c81', 0.92),
             backgroundColor: rgba('#0f4c81', 0.08),
@@ -675,7 +814,7 @@
             fill: false
           },
           {
-            label: state.chart3CompareCountry,
+            label: `${state.chart3CompareCountry} (TWh)`,
             data: rightData,
             borderColor: rgba('#b45309', 0.9),
             backgroundColor: rgba('#b45309', 0.08),
@@ -684,17 +823,19 @@
             tension: 0.28,
             fill: false
           }
-        ]);
+        ], chartOptions({ yTitle: 'Electricity generation (TWh)', tooltipUnit: 'TWh' }));
         elements.chart3Title.textContent = `${state.chart3Source}: ${state.currentCountry} vs. ${state.chart3CompareCountry}`;
+        elements.chart3Subtitle.textContent = 'Y-axis: electricity generation (TWh). The same source is compared across both countries.';
       }
 
       function renderChart4() {
         const rows = currentRows();
         const unit = state.chart4Unit;
+        const yTitle = unit === 'share' ? 'Share of electricity mix (%)' : 'Electricity generation (TWh)';
         updateChart(charts.chart4, yearsFor(rows), RENEWABLE_BREAKDOWN.map((item, index) => {
           const column = unit === 'share' ? item.share : item.twh;
           return {
-            label: item.label,
+            label: unit === 'share' ? `${item.label} (% of mix)` : `${item.label} (TWh)`,
             data: valuesFor(rows, column),
             borderColor: rgba(item.color, 0.95),
             backgroundColor: rgba(item.color, 0.16 + (index * 0.015)),
@@ -704,8 +845,55 @@
             fill: true,
             stack: 'renewables'
           };
-        }));
+        }), chartOptions({ stacked: true, legend: true, yTitle, tooltipUnit: unit === 'share' ? '%' : 'TWh', derivedShare: unit === 'share' }));
         elements.chart4Title.textContent = `${state.currentCountry} — Breakdown of renewable generation`;
+        elements.chart4Subtitle.textContent = unit === 'share'
+          ? 'Stacked composition shown as % of the electricity mix. The percentages are derived from the share columns in the dataset.'
+          : 'Stacked renewable generation in TWh.';
+      }
+
+      function renderChart5() {
+        const selectedRows = currentRows();
+        const selectedConfig = sourceConfig(state.chart5Source);
+        const selectedSourceColumn = selectedConfig.share;
+        const selectedSeries = averageByYear(selectedRows, selectedSourceColumn);
+        const worldSeries = worldAverageSourceSeries(state.chart5Source);
+        const years = [...new Set([...selectedSeries.labels, ...worldSeries.labels])].sort((a, b) => a - b);
+        const selectedMap = new Map(selectedRows.map(row => [Number(row.year), numberOrNull(row[selectedSourceColumn])]));
+        const worldMap = new Map();
+        worldSeries.labels.forEach((year, index) => {
+          worldMap.set(year, worldSeries.data[index]);
+        });
+        const selectedData = years.map(year => selectedMap.get(year) ?? null);
+        const worldData = years.map(year => worldMap.get(year) ?? null);
+        const selectedLabel = state.currentCountry === 'World' ? 'World total row' : state.currentCountry;
+
+        updateChart(charts.chart5, years, [
+          {
+            label: `${selectedLabel} (${state.chart5Source} share %)`,
+            data: selectedData,
+            borderColor: rgba('#0f4c81', 0.92),
+            backgroundColor: rgba('#0f4c81', 0.08),
+            borderWidth: 2.4,
+            pointRadius: 0,
+            tension: 0.28,
+            fill: false
+          },
+          {
+            label: `World average (${state.chart5Source} share %)`,
+            data: worldData,
+            borderColor: rgba('#64748b', 0.9),
+            backgroundColor: rgba('#64748b', 0.08),
+            borderWidth: 2.2,
+            borderDash: [6, 5],
+            pointRadius: 0,
+            tension: 0.28,
+            fill: false
+          }
+        ], chartOptions({ yTitle: 'Share of electricity mix (%)', tooltipUnit: '%', derivedShare: true }));
+
+        elements.chart5Title.textContent = `${state.currentCountry} vs. world average: ${state.chart5Source} share`;
+        elements.chart5Subtitle.textContent = 'Y-axis: share of electricity mix (%). World average is the average of country-level shares. Capacity (GW) is not available in Data/electricity-data.csv.';
       }
 
       function renderAllCharts() {
@@ -713,18 +901,27 @@
         renderChart2();
         renderChart3();
         renderChart4();
+        renderChart5();
       }
 
-      function renderSectionContent(markdown) {
-        if (!markdown) return '<p>Content not yet available.</p>';
-        return window.marked && typeof window.marked.parse === 'function' ? window.marked.parse(markdown) : `<p>${markdown}</p>`;
-      }
+        function renderSectionContent(markdown) {
+          if (!markdown) return '<p>Content not yet available.</p>';
+          return window.marked && typeof window.marked.parse === 'function' ? window.marked.parse(markdown) : `<p>${markdown}</p>`;
+        }
 
-      function splitMarkdownSections(markdown) {
-        const body = markdown.replace(/^---[\s\S]*?---\s*/m, '').trim();
-        const sections = { mix: '', solarWind: '', hydrogen: '', security: '' };
-        let current = '';
-        let buffer = [];
+        function buildWorldSummaryHtml() {
+          return `
+            <p><strong>World total generation</strong> comes from the World rows in the CSV.</p>
+            ${worldAverageMixSummary()}
+            <p>The simplified world mix groups the average country-level shares into fossil fuels, renewables excluding nuclear, and nuclear so the global average does not get confused with the World total row.</p>
+          `;
+        }
+
+        function splitMarkdownSections(markdown) {
+          const body = markdown.replace(/^---[\s\S]*?---\s*/m, '').trim();
+          const sections = { mix: '', solarWind: '', hydrogen: '', security: '' };
+          let current = '';
+          let buffer = [];
         const flush = () => {
           if (current) sections[current] = buffer.join('\n').trim();
           buffer = [];
@@ -742,12 +939,19 @@
         return sections;
       }
 
-      async function loadCountryContent(country) {
-        try {
-          const response = await fetch(`content/countries/${country.toLowerCase()}.md`, { cache: 'no-store' });
-          if (!response.ok) throw new Error(`Failed to load content/countries/${country.toLowerCase()}.md`);
-          const sections = splitMarkdownSections(await response.text());
-          elements.contentMix.innerHTML = renderSectionContent(sections.mix);
+        async function loadCountryContent(country) {
+          if (country === 'World') {
+            elements.contentMix.innerHTML = buildWorldSummaryHtml();
+            elements.contentSolarWind.innerHTML = '<p>World solar and wind context is summarized through the average country-level mix and kept separate from World totals.</p>';
+            elements.contentHydrogen.innerHTML = '<p>Hydrogen remains a separate strategic topic for the World profile, distinct from aggregate generation totals.</p>';
+            elements.contentSecurity.innerHTML = '<p>World energy security combines import dependence, regional concentration, and system resilience across country-level averages.</p>';
+            return;
+          }
+          try {
+            const response = await fetch(`content/countries/${country.toLowerCase()}.md`, { cache: 'no-store' });
+            if (!response.ok) throw new Error(`Failed to load content/countries/${country.toLowerCase()}.md`);
+            const sections = splitMarkdownSections(await response.text());
+            elements.contentMix.innerHTML = renderSectionContent(sections.mix);
           elements.contentSolarWind.innerHTML = renderSectionContent(sections.solarWind);
           elements.contentHydrogen.innerHTML = renderSectionContent(sections.hydrogen);
           elements.contentSecurity.innerHTML = renderSectionContent(sections.security);
@@ -771,11 +975,11 @@
         elements.countrySelect.value = state.currentCountry;
       }
 
-      function populateSourceSelect(selectEl, value) {
-        selectEl.innerHTML = '';
-        SOURCE_OPTIONS.forEach(option => {
-          const opt = document.createElement('option');
-          opt.value = option.label;
+        function populateSourceSelect(selectEl, value) {
+          selectEl.innerHTML = '';
+          SOURCE_OPTIONS.forEach(option => {
+            const opt = document.createElement('option');
+            opt.value = option.label;
           opt.textContent = option.label;
           selectEl.appendChild(opt);
         });
@@ -820,13 +1024,17 @@
         return state.countryList.find(item => item !== country) || country;
       }
 
-      function syncControls() {
-        elements.countrySelect.value = state.currentCountry;
-        elements.chart2SourceSelect.value = state.chart2Source;
-        elements.chart3SourceSelect.value = state.chart3Source;
-        elements.chart3CompareCountrySelect.value = state.chart3CompareCountry;
-        syncUnitButtons();
-      }
+        function syncControls() {
+          elements.countrySelect.value = state.currentCountry;
+          elements.chart2SourceSelect.value = state.chart2Source;
+          elements.chart3SourceSelect.value = state.chart3Source;
+          elements.chart3CompareCountrySelect.value = state.chart3CompareCountry;
+          elements.chart5SourceSelect.value = state.chart5Source;
+          syncUnitButtons();
+          elements.chart5Buttons.forEach(button => {
+            button.classList.toggle('active', button.dataset.worldMode === state.chart5Mode);
+          });
+        }
 
       async function updateCountry(country) {
         state.currentCountry = country;
@@ -875,11 +1083,26 @@
           renderChart3();
         });
 
+        elements.chart5SourceSelect.addEventListener('change', () => {
+          state.chart5Source = elements.chart5SourceSelect.value;
+          syncControls();
+          renderChart5();
+        });
+
         elements.chart4Buttons.forEach(button => {
           button.addEventListener('click', () => {
             state.chart4Unit = button.dataset.breakdownUnit;
             syncUnitButtons();
             renderChart4();
+          });
+        });
+
+        elements.chart5Buttons.forEach(button => {
+          button.addEventListener('click', () => {
+            if (button.disabled) return;
+            state.chart5Mode = button.dataset.worldMode;
+            syncControls();
+            renderChart5();
           });
         });
       }
@@ -898,6 +1121,7 @@
           populateMainCountrySelect();
           populateSourceSelect(elements.chart2SourceSelect, state.chart2Source);
           populateSourceSelect(elements.chart3SourceSelect, state.chart3Source);
+          populateSourceSelect(elements.chart5SourceSelect, state.chart5Source);
           populateCompareCountrySelect();
           createCharts();
           bindEvents();

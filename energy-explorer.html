@@ -779,7 +779,7 @@
           }
         ], chartOptions({ yTitle: 'Electricity generation (TWh)', tooltipUnit: 'TWh' }));
         elements.chart1Title.textContent = `${state.currentCountry} — Renewables against total generation`;
-        elements.chart1Subtitle.textContent = 'Y-axis: electricity generation (TWh). Hover values are shown in TWh.';
+        elements.chart1Subtitle.textContent = 'Y-axis: electricity generation (TWh)';
       }
 
       function renderChart2() {
@@ -800,7 +800,7 @@
           };
         }), chartOptions({ yTitle: 'Electricity generation (TWh)', tooltipUnit: 'TWh' }));
         elements.chart2Title.textContent = `${state.currentCountry} — ${selected.label} against other sources`;
-        elements.chart2Subtitle.textContent = 'Y-axis: electricity generation (TWh). The selected source is highlighted against faint TWh context lines.';
+        elements.chart2Subtitle.textContent = 'Y-axis: electricity generation (TWh)';
       }
 
       function renderChart3() {
@@ -842,7 +842,7 @@
           }
         ], chartOptions({ yTitle: 'Electricity generation (TWh)', tooltipUnit: 'TWh' }));
         elements.chart3Title.textContent = `${state.chart3Source}: ${state.currentCountry} vs. ${state.chart3CompareCountry}`;
-        elements.chart3Subtitle.textContent = 'Y-axis: electricity generation (TWh). The same source is compared across both countries.';
+        elements.chart3Subtitle.textContent = 'Y-axis: electricity generation (TWh)';
       }
 
       function renderChart4() {
@@ -866,7 +866,7 @@
         elements.chart4Title.textContent = `${state.currentCountry} — Breakdown of renewable generation`;
         elements.chart4Subtitle.textContent = unit === 'share'
           ? 'Stacked composition shown as % of the electricity mix. The percentages are derived from the share columns in the dataset.'
-          : 'Stacked renewable generation in TWh.';
+          : 'Stacked renewable generation in TWh';
       }
 
       function renderChart5() {

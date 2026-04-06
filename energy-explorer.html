@@ -511,9 +511,19 @@
   <script src="script.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const CSV_PATH = 'Data/electricity-data.csv';
-      const CACHE_TTL = 1800000;
-      const MAIN_COUNTRIES = ['Tunisia', 'Morocco', 'Algeria', 'Egypt', 'Jordan', 'World'];
+        if (window.marked && typeof window.marked.Renderer === 'function') {
+          const renderer = new window.marked.Renderer();
+          const originalLink = renderer.link.bind(renderer);
+          renderer.link = (href, title, text) => {
+            const html = originalLink(href, title, text);
+            return html.replace('<a ', '<a target="_blank" rel="noopener noreferrer" ');
+          };
+          window.marked.setOptions({ renderer });
+        }
+
+        const CSV_PATH = 'Data/electricity-data.csv';
+        const CACHE_TTL = 1800000;
+        const MAIN_COUNTRIES = ['Tunisia', 'Morocco', 'Algeria', 'Egypt', 'Jordan', 'World'];
       const SOURCE_OPTIONS = [
         { label: 'Solar', twh: 'solar_electricity', share: 'solar_share_elec', color: '#0f4c81' },
         { label: 'Wind', twh: 'wind_electricity', share: 'wind_share_elec', color: '#0f766e' },
@@ -782,7 +792,7 @@
       function renderChart0() {
         const rows = currentRows();
         updateChart(charts.chart0, yearsFor(rows), ENERGY_MIX_BREAKDOWN.map((item, index) => ({
-          label: `${item.label} (TWh)`,
+          label: item.label,
           data: valuesFor(rows, item.twh),
           borderColor: rgba(item.color, 0.95),
           backgroundColor: rgba(item.color, 0.15 + (index * 0.01)),
@@ -828,21 +838,30 @@
       function renderChart2() {
         const rows = currentRows();
         const selected = sourceConfig(state.chart2Source);
-        updateChart(charts.chart2, yearsFor(rows), SOURCE_OPTIONS.map(option => {
-          const isSelected = option.label === selected.label;
-          const color = option.color;
-          return {
-            label: `${option.label} (TWh)`,
-            data: valuesFor(rows, option.twh),
-            borderColor: isSelected ? color : rgba(color, 0.12),
-            backgroundColor: isSelected ? rgba(color, 0.08) : rgba(color, 0.04),
-            borderWidth: isSelected ? 2.6 : 1.1,
+        updateChart(charts.chart2, yearsFor(rows), [
+          {
+            label: selected.label,
+            data: valuesFor(rows, selected.twh),
+            borderColor: rgba(selected.color, 0.92),
+            backgroundColor: rgba(selected.color, 0.08),
+            borderWidth: 2.6,
             pointRadius: 0,
             tension: 0.28,
             fill: false
-          };
-        }), chartOptions({ yTitle: 'Electricity generation (TWh)', tooltipUnit: 'TWh' }));
-        elements.chart2Title.textContent = `${state.currentCountry} — ${selected.label} against other sources`;
+          },
+          {
+            label: 'Total generation',
+            data: valuesFor(rows, 'electricity_generation'),
+            borderColor: rgba('#64748b', 0.9),
+            backgroundColor: rgba('#64748b', 0.08),
+            borderWidth: 2.2,
+            borderDash: [6, 5],
+            pointRadius: 0,
+            tension: 0.28,
+            fill: false
+          }
+        ], chartOptions({ yTitle: 'Electricity generation (TWh)', tooltipUnit: 'TWh' }));
+        elements.chart2Title.textContent = `${state.currentCountry} — ${selected.label} against total generation`;
         elements.chart2Subtitle.textContent = 'Y-axis: electricity generation (TWh)';
       }
 
@@ -895,7 +914,7 @@
         updateChart(charts.chart4, yearsFor(rows), RENEWABLE_BREAKDOWN.map((item, index) => {
           const column = unit === 'share' ? item.share : item.twh;
           return {
-            label: unit === 'share' ? `${item.label} (% of mix)` : `${item.label} (TWh)`,
+            label: item.label,
             data: valuesFor(rows, column),
             borderColor: rgba(item.color, 0.95),
             backgroundColor: rgba(item.color, 0.16 + (index * 0.015)),

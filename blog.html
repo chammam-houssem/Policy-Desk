@@ -51,6 +51,10 @@
       color: inherit;
     }
 
+    .blog-grid .news-item-link.hidden {
+      display: none !important;
+    }
+
     .blog-card {
       display: flex;
       flex-direction: column;
@@ -104,6 +108,49 @@
     .blog-card .dept-tag {
       margin-right: 6px;
       margin-bottom: 6px;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+      outline: none;
+    }
+
+    .blog-card .dept-tag:hover,
+    .blog-card .dept-tag:focus-visible {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    .blog-card .dept-tag.is-active {
+      box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+      opacity: 1;
+    }
+
+    .blog-filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 0 0 28px;
+      flex-wrap: wrap;
+      color: #495057;
+      font-size: 15px;
+    }
+
+    .blog-filter-clear {
+      border: 1px solid #d9dee3;
+      background: #fff;
+      color: #1a365d;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+    }
+
+    .blog-filter-clear:hover,
+    .blog-filter-clear:focus-visible {
+      background: #f4f8fc;
+      border-color: #007bff;
+      transform: translateY(-1px);
     }
 
     @media (max-width: 900px) {
@@ -149,6 +196,10 @@
       <div class="profile-header" style="text-align:center; margin-bottom: 40px;">
         <h2 class="profile-title">Insights on public policy, digitalization, and sustainable development.</h2>
       </div>
+      <div class="blog-filter-bar" id="blog-filter-bar" aria-live="polite">
+        <span id="blog-filter-status">Showing all articles</span>
+        <button type="button" class="blog-filter-clear hidden" id="blog-filter-clear">Clear filter</button>
+      </div>
       <div class="blog-grid">
         <!-- Blog Post 5 -->
         <a href="Articles/article5.html" class="news-item-link">
@@ -161,7 +212,7 @@
               <div class="blog-card-tags">
                 <span class="dept-tag">Energy</span>
                 <span class="dept-tag">AI</span>
-                <span class="dept-tag">Infrastructure</span>
+                <span class="dept-tag">Digital Infrastructure</span>
               </div>
 
             </div>
@@ -177,6 +228,7 @@
               <p style="color: #495057;">Why lawful AI depends on machine-readable rules, registries, and polycentric verification.</p>
               <div class="blog-card-tags">
                 <span class="dept-tag">AI Governance</span>
+                <span class="dept-tag">AI</span>
                 <span class="dept-tag">Digital Infrastructure</span>
               </div>
 
@@ -246,6 +298,59 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   setTimeout(typeWriter, 400);
+
+  const cards = Array.from(document.querySelectorAll('.news-item-link'));
+  const tags = Array.from(document.querySelectorAll('.blog-card .dept-tag'));
+  const status = document.getElementById('blog-filter-status');
+  const clearButton = document.getElementById('blog-filter-clear');
+  let activeTag = '';
+
+  function setActiveTag(tag) {
+    activeTag = tag;
+    cards.forEach((card) => {
+      const cardTags = Array.from(card.querySelectorAll('.dept-tag')).map((el) => el.textContent.trim());
+      const matches = !tag || cardTags.includes(tag);
+      card.classList.toggle('hidden', !matches);
+    });
+
+    tags.forEach((tagEl) => {
+      tagEl.classList.toggle('is-active', tagEl.textContent.trim() === tag && !!tag);
+      tagEl.setAttribute('aria-pressed', String(tagEl.textContent.trim() === tag && !!tag));
+    });
+
+    if (tag) {
+      status.textContent = `Showing articles tagged "${tag}"`;
+      clearButton.classList.remove('hidden');
+    } else {
+      status.textContent = 'Showing all articles';
+      clearButton.classList.add('hidden');
+    }
+  }
+
+  tags.forEach((tagEl) => {
+    tagEl.setAttribute('role', 'button');
+    tagEl.setAttribute('tabindex', '0');
+    tagEl.setAttribute('aria-pressed', 'false');
+
+    const activate = (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const tag = tagEl.textContent.trim();
+      setActiveTag(activeTag === tag ? '' : tag);
+    };
+
+    tagEl.addEventListener('click', activate);
+    tagEl.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        activate(event);
+      }
+    });
+  });
+
+  clearButton.addEventListener('click', function() {
+    setActiveTag('');
+  });
 });
 </script>
 </body>

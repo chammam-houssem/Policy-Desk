@@ -34,15 +34,24 @@
       --seam: rgba(15, 23, 42, 0.06);
     }
 
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
     .page-wrap {
-      padding: 32px 0 1px;
-      min-height: calc(100vh - var(--nav-footer-offset, 0px));
+     flex: 1 0 auto;
+      padding: 32px 0 0;
+      min-height: 0;
     }
 
     .energy-profile-page {
+      flex: 1;
       display: flex;
       flex-direction: column;
       gap: 16px;
+      min-height: 0;
     }
 
     .energy-profile-header {
@@ -84,6 +93,8 @@
     }
 
     .energy-profile-stage {
+      flex: 1;
+      min-height: 0;
       display: grid;
       grid-template-columns: minmax(360px, 0.95fr) minmax(0, 1.45fr);
       gap: 0;
@@ -333,7 +344,7 @@
     }
 
     @media (max-width: 900px) {
-      .page-wrap { padding: 24px 0 36px; }
+      .page-wrap { padding: 24px 0 0; }
       .energy-profile-stage { grid-template-columns: 1fr; border-radius: 20px; }
       .energy-profile-panel { position: static; max-height: none; overflow: visible; }
       .energy-profile-left { border-right: 0; border-bottom: 1px solid rgba(15, 23, 42, 0.05); }
@@ -343,6 +354,12 @@
       .chart-controls { justify-content: flex-start; }
       .chart-controls select { min-width: 0; width: 100%; }
     }
+
+    .footer {
+      margin-top: 0;
+      flex-shrink: 0;
+    }
+
   </style>
 </head>
 <body class="antialiased">
@@ -360,8 +377,8 @@
   <main class="page-wrap">
     <div class="container energy-profile-page">
       <header class="energy-profile-header">
-        <h1 class="text-3xl md:text-4xl page-title">Energy Explorer</h1>
-        <p class="mt-3 page-subtitle">A split-view electricity profile that pairs concise country notes with four independent charts. Data is loaded from <a href="Data/electricity-data.csv" download>the shared CSV dataset</a> and rendered with Chart.js.</p>
+        <h1 class="text-3xl md:text-4xl page-title">Energy Data Explorer</h1>
+        <p class="mt-3 page-subtitle"> Explore electricity generation, energy mix, and carbon metrics across countries from <a href="Data/electricity-data.csv" download>Our World in Data and Ember</a>.</p>
       </header>
 
       <div id="parseError" class="error-panel hidden"></div>
@@ -1147,7 +1164,7 @@
     <div class="container">
       <div class="footer-content">
         <div class="footer-text">
-          <p>&copy; 2025 Houssem Chammam. All rights reserved.</p>
+          <p>&copy; 2026 Houssem Chammam. All rights reserved.</p>
         </div>
         <div class="footer-social">
           <a href="https://www.linkedin.com/in/houssem-chammam/" class="social-link" target="_blank">

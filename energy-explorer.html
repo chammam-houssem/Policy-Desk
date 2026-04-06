@@ -168,6 +168,59 @@
       background: linear-gradient(to right, transparent, rgba(15, 23, 42, 0.1), transparent);
     }
 
+    .country-analysis-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .analysis-placeholder {
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.42);
+      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.04);
+      padding: 18px 16px;
+    }
+
+    .analysis-placeholder__row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .analysis-placeholder__icon {
+      flex: 0 0 auto;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(16, 42, 67, 0.56);
+      background: rgba(15, 23, 42, 0.04);
+      margin-top: 1px;
+    }
+
+    .analysis-placeholder__icon svg {
+      width: 13px;
+      height: 13px;
+      display: block;
+    }
+
+    .analysis-placeholder__title {
+      margin: 0;
+      font-family: 'Roboto Serif', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #102a43;
+      line-height: 1.35;
+    }
+
+    .analysis-placeholder__text {
+      margin: 8px 0 0;
+      color: #475569;
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
     .profile-section {
       padding: 0;
       border: 0;
@@ -392,25 +445,41 @@
 
           <div class="left-divider"></div>
 
-          <details class="profile-section" id="section-mix">
-            <summary>The energy mix and how it developed</summary>
-            <div id="content-mix" class="profile-body"></div>
-          </details>
+          <div id="featuredCountryAnalysis" class="country-analysis-stack">
+            <details class="profile-section" id="section-mix">
+              <summary>The energy mix and how it developed</summary>
+              <div id="content-mix" class="profile-body"></div>
+            </details>
 
-          <details class="profile-section" id="section-solar-wind">
-            <summary>Solar and wind</summary>
-            <div id="content-solar-wind" class="profile-body"></div>
-          </details>
+            <details class="profile-section" id="section-solar-wind">
+              <summary>Solar and wind</summary>
+              <div id="content-solar-wind" class="profile-body"></div>
+            </details>
 
-          <details class="profile-section" id="section-hydrogen">
-            <summary>Hydrogen</summary>
-            <div id="content-hydrogen" class="profile-body"></div>
-          </details>
+            <details class="profile-section" id="section-hydrogen">
+              <summary>Hydrogen</summary>
+              <div id="content-hydrogen" class="profile-body"></div>
+            </details>
 
-          <details class="profile-section" id="section-security" hidden>
-            <summary>Energy security and geopolitics</summary>
-            <div id="content-security" class="profile-body"></div>
-          </details>
+            <details class="profile-section" id="section-security" hidden>
+              <summary>Energy security and geopolitics</summary>
+              <div id="content-security" class="profile-body"></div>
+            </details>
+          </div>
+
+          <div id="analysisPlaceholder" class="analysis-placeholder" hidden aria-live="polite">
+            <div class="analysis-placeholder__row">
+              <div class="analysis-placeholder__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M14.7 6.3a4.2 4.2 0 0 0-5.9 5.9L4.5 16.5l3 3 4.3-4.3a4.2 4.2 0 0 0 5.9-5.9l-3.3 1-1-1 1-3.3Z" />
+                </svg>
+              </div>
+              <div>
+                <p class="analysis-placeholder__title">Analysis coming soon</p>
+                <p class="analysis-placeholder__text">Data visualisations are available on the right while written country analysis is being rolled out.</p>
+              </div>
+            </div>
+          </div>
         </aside>
 
         <section class="energy-profile-panel energy-profile-right">
@@ -521,7 +590,8 @@
 
         const CSV_PATH = 'Data/electricity-data.csv';
         const CACHE_TTL = 1800000;
-        const MAIN_COUNTRIES = ['Tunisia', 'Morocco', 'Algeria', 'Egypt', 'Jordan'];
+        const FEATURED_COUNTRIES = ['Tunisia', 'Algeria', 'Morocco', 'Egypt', 'Jordan'];
+        const FEATURED_COUNTRY_SET = new Set(FEATURED_COUNTRIES);
       const SOURCE_OPTIONS = [
         { label: 'Solar', twh: 'solar_electricity', share: 'solar_share_elec', color: '#0f4c81' },
         { label: 'Wind', twh: 'wind_electricity', share: 'wind_share_elec', color: '#0f766e' },
@@ -564,6 +634,8 @@
         chart3SourceSelect: document.getElementById('chart3SourceSelect'),
         chart3CompareCountrySelect: document.getElementById('chart3CompareCountrySelect'),
         chart4Buttons: Array.from(document.querySelectorAll('[data-breakdown-unit]')),
+        featuredCountryAnalysis: document.getElementById('featuredCountryAnalysis'),
+        analysisPlaceholder: document.getElementById('analysisPlaceholder'),
         contentMix: document.getElementById('content-mix'),
         contentSolarWind: document.getElementById('content-solar-wind'),
         contentHydrogen: document.getElementById('content-hydrogen'),
@@ -613,6 +685,13 @@
       const yearsFor = rows => rows.map(row => Number(row.year));
       const valuesFor = (rows, column) => rows.map(row => numberOrNull(row[column]));
         const uniqueCountries = rows => [...new Set(rows.map(row => row.country).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+        const isFeaturedCountry = country => FEATURED_COUNTRY_SET.has(country);
+        const orderedCountryOptions = countries => {
+          const available = countries.filter(Boolean);
+          const featured = FEATURED_COUNTRIES.filter(country => available.includes(country));
+          const rest = available.filter(country => !FEATURED_COUNTRY_SET.has(country)).sort((a, b) => a.localeCompare(b));
+          return { featured, rest };
+        };
         const sourceConfig = label => SOURCE_OPTIONS.find(option => option.label === label) || SOURCE_OPTIONS[0];
         const sourceColumn = (label, unit = 'twh') => {
           const config = sourceConfig(label);
@@ -1017,34 +1096,59 @@
         return sections;
       }
 
+        function showFeaturedCountryAnalysis() {
+          elements.featuredCountryAnalysis.hidden = false;
+          elements.analysisPlaceholder.hidden = true;
+        }
+
+        function showAnalysisPlaceholder() {
+          elements.featuredCountryAnalysis.hidden = true;
+          elements.analysisPlaceholder.hidden = false;
+        }
+
         async function loadCountryContent(country) {
           if (country === 'World') {
+            showFeaturedCountryAnalysis();
             elements.contentMix.innerHTML = buildWorldSummaryHtml();
             elements.contentSolarWind.innerHTML = '<p>World solar and wind context is summarized through the average country-level mix and kept separate from World totals.</p>';
             elements.contentHydrogen.innerHTML = '<p>Hydrogen remains a separate strategic topic for the World profile, distinct from aggregate generation totals.</p>';
             elements.contentSecurity.innerHTML = '<p>World energy security combines import dependence, regional concentration, and system resilience across country-level averages.</p>';
             return;
           }
+          if (!isFeaturedCountry(country)) {
+            showAnalysisPlaceholder();
+            return;
+          }
+          showFeaturedCountryAnalysis();
           try {
             const response = await fetch(`content/countries/${country.toLowerCase()}.md`, { cache: 'no-store' });
             if (!response.ok) throw new Error(`Failed to load content/countries/${country.toLowerCase()}.md`);
             const sections = splitMarkdownSections(await response.text());
             elements.contentMix.innerHTML = renderSectionContent(sections.mix);
-          elements.contentSolarWind.innerHTML = renderSectionContent(sections.solarWind);
-          elements.contentHydrogen.innerHTML = renderSectionContent(sections.hydrogen);
-          elements.contentSecurity.innerHTML = renderSectionContent(sections.security);
-        } catch {
-          const fallback = '<p>Content not yet available.</p>';
-          elements.contentMix.innerHTML = fallback;
-          elements.contentSolarWind.innerHTML = fallback;
-          elements.contentHydrogen.innerHTML = fallback;
-          elements.contentSecurity.innerHTML = fallback;
+            elements.contentSolarWind.innerHTML = renderSectionContent(sections.solarWind);
+            elements.contentHydrogen.innerHTML = renderSectionContent(sections.hydrogen);
+            elements.contentSecurity.innerHTML = renderSectionContent(sections.security);
+          } catch {
+            const fallback = '<p>Content not yet available.</p>';
+            elements.contentMix.innerHTML = fallback;
+            elements.contentSolarWind.innerHTML = fallback;
+            elements.contentHydrogen.innerHTML = fallback;
+            elements.contentSecurity.innerHTML = fallback;
+          }
         }
-      }
 
       function populateMainCountrySelect() {
         elements.countrySelect.innerHTML = '';
-        MAIN_COUNTRIES.forEach(country => {
+        const { featured, rest } = orderedCountryOptions(state.countryList);
+        [...featured, '__separator__', ...rest].forEach(country => {
+          if (country === '__separator__') {
+            const separator = document.createElement('option');
+            separator.disabled = true;
+            separator.textContent = '-----------';
+            separator.setAttribute('aria-hidden', 'true');
+            elements.countrySelect.appendChild(separator);
+            return;
+          }
           const option = document.createElement('option');
           option.value = country;
           option.textContent = country;

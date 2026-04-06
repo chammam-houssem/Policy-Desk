@@ -87,5 +87,5 @@ To run this project locally:
 
 ---
 
-© 2025 Houssem Chammam. All rights reserved.
+© 2026 Houssem Chammam. All rights reserved.
 

@@ -416,6 +416,34 @@
         <section class="energy-profile-panel energy-profile-right">
           <div class="chart-stack">
             <article class="chart-block">
+              <div class="chart-block-head chart-block-head--split">
+                <div class="chart-copy">
+                  <h2 class="chart-title" id="chart0Title"></h2>
+                  <p class="chart-subtitle" id="chart0Subtitle"></p>
+                </div>
+              </div>
+              <div class="chart-canvas-wrap">
+                <canvas id="chartEnergyMixStack"></canvas>
+              </div>
+            </article>
+
+            <article class="chart-block">
+              <div class="chart-block-head chart-block-head--split">
+                <div class="chart-copy">
+                  <h2 class="chart-title" id="chart4Title"></h2>
+                  <p class="chart-subtitle" id="chart4Subtitle"></p>
+                </div>
+                <div class="chart-controls">
+                  <button type="button" class="breakdown-toggle active" data-breakdown-unit="twh">TWh</button>
+                  <button type="button" class="breakdown-toggle" data-breakdown-unit="share">Share %</button>
+                </div>
+              </div>
+              <div class="chart-canvas-wrap">
+                <canvas id="chartRenewablesBreakdown"></canvas>
+              </div>
+            </article>
+
+            <article class="chart-block">
               <div class="chart-block-head">
                 <div class="chart-copy">
                   <h2 class="chart-title" id="chart1Title"></h2>
@@ -461,22 +489,6 @@
             <article class="chart-block">
               <div class="chart-block-head chart-block-head--split">
                 <div class="chart-copy">
-                  <h2 class="chart-title" id="chart4Title"></h2>
-                  <p class="chart-subtitle" id="chart4Subtitle"></p>
-                </div>
-                <div class="chart-controls">
-                  <button type="button" class="breakdown-toggle active" data-breakdown-unit="twh">TWh</button>
-                  <button type="button" class="breakdown-toggle" data-breakdown-unit="share">Share %</button>
-                </div>
-              </div>
-              <div class="chart-canvas-wrap">
-                <canvas id="chartRenewablesBreakdown"></canvas>
-              </div>
-            </article>
-
-            <article class="chart-block">
-              <div class="chart-block-head chart-block-head--split">
-                <div class="chart-copy">
                   <h2 class="chart-title" id="chart5Title"></h2>
                   <p class="chart-subtitle" id="chart5Subtitle"></p>
                 </div>
@@ -512,6 +524,11 @@
         { label: 'Oil', twh: 'oil_electricity', share: 'oil_share_elec', color: '#b45309' },
         { label: 'Bioenergy', twh: 'biofuel_electricity', share: 'biofuel_share_elec', color: '#16a34a' }
       ];
+      const ENERGY_MIX_BREAKDOWN = SOURCE_OPTIONS.map(option =>
+        option.label === 'Gas' ? { ...option, color: '#7A6F66' } : option
+      ).concat([
+        { label: 'Other renewables', twh: 'other_renewable_electricity', share: 'other_renewables_share_elec', color: '#64748b' }
+      ]);
       const RENEWABLE_BREAKDOWN = [
         { label: 'Solar', twh: 'solar_electricity', share: 'solar_share_elec', color: '#f59e0b' },
         { label: 'Wind', twh: 'wind_electricity', share: 'wind_share_elec', color: '#0f766e' },
@@ -547,6 +564,8 @@
         sectionSolarWind: document.getElementById('section-solar-wind'),
         sectionHydrogen: document.getElementById('section-hydrogen'),
         sectionSecurity: document.getElementById('section-security'),
+        chart0Title: document.getElementById('chart0Title'),
+        chart0Subtitle: document.getElementById('chart0Subtitle'),
         chart1Title: document.getElementById('chart1Title'),
         chart1Subtitle: document.getElementById('chart1Subtitle'),
         chart2Title: document.getElementById('chart2Title'),
@@ -559,6 +578,7 @@
         chart5Subtitle: document.getElementById('chart5Subtitle'),
         chart5SourceSelect: document.getElementById('chart5SourceSelect'),
         chart5Buttons: Array.from(document.querySelectorAll('[data-world-mode]')),
+        chart0Canvas: document.getElementById('chartEnergyMixStack'),
         chart1Canvas: document.getElementById('chartRenewablesVsTotal'),
         chart2Canvas: document.getElementById('chartSourceContext'),
         chart3Canvas: document.getElementById('chartCountryComparison'),
@@ -567,6 +587,7 @@
       };
 
       const charts = {
+        chart0: null,
         chart1: null,
         chart2: null,
         chart3: null,
@@ -718,6 +739,11 @@
       }
 
       function createCharts() {
+        charts.chart0 = new Chart(elements.chart0Canvas.getContext('2d'), {
+          type: 'line',
+          data: { labels: [], datasets: [] },
+          options: chartOptions({ stacked: true, legend: true })
+        });
         charts.chart1 = new Chart(elements.chart1Canvas.getContext('2d'), {
           type: 'line',
           data: { labels: [], datasets: [] },
@@ -751,6 +777,23 @@
         chart.data.datasets = datasets;
         if (options) chart.options = options;
         chart.update('none');
+      }
+
+      function renderChart0() {
+        const rows = currentRows();
+        updateChart(charts.chart0, yearsFor(rows), ENERGY_MIX_BREAKDOWN.map((item, index) => ({
+          label: `${item.label} (TWh)`,
+          data: valuesFor(rows, item.twh),
+          borderColor: rgba(item.color, 0.95),
+          backgroundColor: rgba(item.color, 0.15 + (index * 0.01)),
+          borderWidth: 1.5,
+          pointRadius: 0,
+          tension: 0.26,
+          fill: true,
+          stack: 'energy-mix'
+        })), chartOptions({ stacked: true, legend: true, yTitle: 'Electricity generation (TWh)', tooltipUnit: 'TWh' }));
+        elements.chart0Title.textContent = `${state.currentCountry} - Stacked generation by source`;
+        elements.chart0Subtitle.textContent = 'Electricity generation in TWh across major sources in the energy mix.';
       }
 
       function renderChart1() {
@@ -914,6 +957,7 @@
       }
 
       function renderAllCharts() {
+        renderChart0();
         renderChart1();
         renderChart2();
         renderChart3();

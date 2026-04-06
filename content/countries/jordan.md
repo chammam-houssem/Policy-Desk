@@ -6,7 +6,7 @@ owid_name: Jordan
 
 ## mix
 
-Jordan's system moved from oil to gas and then to a hybrid structure where gas still leads but renewables and oil shale now matter. The post-2011 supply crisis was the decisive turning point, triggering LNG imports, long-term gas contracts, and the renewable procurement framework. Policy now favors more renewables, but fossil lock-in and overcapacity still shape dispatch.
+Jordan's energy mix is moving to a hybrid structure where gas still leads but renewables now reaching ~27% of electricity generation by 2024 from near zero in 2014. The post-2011 supply crisis was the decisive turning point, triggering LNG imports, long-term gas contracts, and the renewable procurement framework. Policy now favors more renewables, but fossil lock-in and overcapacity still shape dispatch.
 
 **System profile:** Fossil-heavy with gradual diversification
 

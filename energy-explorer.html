@@ -378,7 +378,7 @@
     <div class="container energy-profile-page">
       <header class="energy-profile-header">
         <h1 class="text-3xl md:text-4xl page-title">Energy Data Explorer</h1>
-        <p class="mt-3 page-subtitle"> Explore electricity generation, energy mix, and carbon metrics across countries from <a href="Data/electricity-data.csv" download>Our World in Data and Ember</a>.</p>
+        <p class="mt-3 page-subtitle"> Explore electricity generation, energy mix, and carbon metrics across countries from <a href="Data/electricity-data.csv" download>Our World in Data and Ember</a>. Text coverage currently focused on selected MENA countries.</p>
       </header>
 
       <div id="parseError" class="error-panel hidden"></div>
@@ -392,7 +392,7 @@
 
           <div class="left-divider"></div>
 
-          <details class="profile-section" id="section-mix" open>
+          <details class="profile-section" id="section-mix">
             <summary>The energy mix and how it developed</summary>
             <div id="content-mix" class="profile-body"></div>
           </details>
@@ -407,7 +407,7 @@
             <div id="content-hydrogen" class="profile-body"></div>
           </details>
 
-          <details class="profile-section" id="section-security">
+          <details class="profile-section" id="section-security" hidden>
             <summary>Energy security and geopolitics</summary>
             <div id="content-security" class="profile-body"></div>
           </details>
@@ -440,18 +440,6 @@
               </div>
               <div class="chart-canvas-wrap">
                 <canvas id="chartRenewablesBreakdown"></canvas>
-              </div>
-            </article>
-
-            <article class="chart-block">
-              <div class="chart-block-head">
-                <div class="chart-copy">
-                  <h2 class="chart-title" id="chart1Title"></h2>
-                  <p class="chart-subtitle" id="chart1Subtitle"></p>
-                </div>
-              </div>
-              <div class="chart-canvas-wrap">
-                <canvas id="chartRenewablesVsTotal"></canvas>
               </div>
             </article>
 
@@ -494,12 +482,22 @@
                 </div>
                 <div class="chart-controls">
                   <select id="chart5SourceSelect" aria-label="World comparison source"></select>
-                  <button type="button" class="breakdown-toggle active" data-world-mode="share">Share %</button>
-                  <button type="button" class="breakdown-toggle" data-world-mode="capacity" disabled title="Capacity data is not available in Data/electricity-data.csv">Capacity (GW)</button>
                 </div>
               </div>
               <div class="chart-canvas-wrap">
                 <canvas id="chartWorldComparison"></canvas>
+              </div>
+            </article>
+
+            <article class="chart-block">
+              <div class="chart-block-head">
+                <div class="chart-copy">
+                  <h2 class="chart-title" id="chart1Title"></h2>
+                  <p class="chart-subtitle" id="chart1Subtitle"></p>
+                </div>
+              </div>
+              <div class="chart-canvas-wrap">
+                <canvas id="chartRenewablesVsTotal"></canvas>
               </div>
             </article>
           </div>
@@ -523,7 +521,7 @@
 
         const CSV_PATH = 'Data/electricity-data.csv';
         const CACHE_TTL = 1800000;
-        const MAIN_COUNTRIES = ['Tunisia', 'Morocco', 'Algeria', 'Egypt', 'Jordan', 'World'];
+        const MAIN_COUNTRIES = ['Tunisia', 'Morocco', 'Algeria', 'Egypt', 'Jordan'];
       const SOURCE_OPTIONS = [
         { label: 'Solar', twh: 'solar_electricity', share: 'solar_share_elec', color: '#0f4c81' },
         { label: 'Wind', twh: 'wind_electricity', share: 'wind_share_elec', color: '#0f766e' },
@@ -547,10 +545,10 @@
         { label: 'Other renewables', twh: 'other_renewable_electricity', share: 'other_renewables_share_elec', color: '#64748b' }
       ];
       const state = {
-        currentCountry: 'Tunisia',
+        currentCountry: 'Jordan',
         chart2Source: 'Solar',
         chart3Source: 'Solar',
-        chart3CompareCountry: 'Morocco',
+        chart3CompareCountry: 'Tunisia',
         chart4Unit: 'twh',
         chart5Source: 'Solar',
         chart5Mode: 'share',
@@ -802,7 +800,7 @@
           fill: true,
           stack: 'energy-mix'
         })), chartOptions({ stacked: true, legend: true, yTitle: 'Electricity generation (TWh)', tooltipUnit: 'TWh' }));
-        elements.chart0Title.textContent = `${state.currentCountry} - Stacked generation by source`;
+        elements.chart0Title.textContent = `${state.currentCountry} — Stacked generation by source`;
         elements.chart0Subtitle.textContent = 'Electricity generation in TWh across major sources in the energy mix.';
       }
 
@@ -832,7 +830,7 @@
           }
         ], chartOptions({ yTitle: 'Electricity generation (TWh)', tooltipUnit: 'TWh' }));
         elements.chart1Title.textContent = `${state.currentCountry} — Renewables against total generation`;
-        elements.chart1Subtitle.textContent = 'Y-axis: electricity generation (TWh)';
+        elements.chart1Subtitle.textContent = 'Electricity generation (TWh)';
       }
 
       function renderChart2() {
@@ -862,7 +860,7 @@
           }
         ], chartOptions({ yTitle: 'Electricity generation (TWh)', tooltipUnit: 'TWh' }));
         elements.chart2Title.textContent = `${state.currentCountry} — ${selected.label} against total generation`;
-        elements.chart2Subtitle.textContent = 'Y-axis: electricity generation (TWh)';
+        elements.chart2Subtitle.textContent = 'Electricity generation (TWh)';
       }
 
       function renderChart3() {
@@ -904,7 +902,7 @@
           }
         ], chartOptions({ yTitle: 'Electricity generation (TWh)', tooltipUnit: 'TWh' }));
         elements.chart3Title.textContent = `${state.chart3Source}: ${state.currentCountry} vs. ${state.chart3CompareCountry}`;
-        elements.chart3Subtitle.textContent = 'Y-axis: electricity generation (TWh)';
+        elements.chart3Subtitle.textContent = 'Electricity generation (TWh)';
       }
 
       function renderChart4() {
@@ -972,7 +970,7 @@
         ], chartOptions({ yTitle: 'Share of electricity mix (%)', tooltipUnit: '%', derivedShare: true }));
 
         elements.chart5Title.textContent = `${state.currentCountry} vs. world average: ${state.chart5Source} share`;
-        elements.chart5Subtitle.textContent = 'Y-axis: share of electricity mix (%). World average is the average of country-level shares. Capacity (GW) is not available in Data/electricity-data.csv.';
+        elements.chart5Subtitle.textContent = 'Share of electricity mix (%)';
       }
 
       function renderAllCharts() {
@@ -1068,7 +1066,7 @@
 
       function populateCompareCountrySelect() {
         elements.chart3CompareCountrySelect.innerHTML = '';
-        state.countryList.forEach(country => {
+        state.countryList.filter(country => country !== 'World').forEach(country => {
           const option = document.createElement('option');
           option.value = country;
           option.textContent = country;
@@ -1085,8 +1083,7 @@
 
       function resetAccordionState() {
         [elements.sectionMix, elements.sectionSolarWind, elements.sectionHydrogen, elements.sectionSecurity].forEach((section, index) => {
-          if (index === 0) section.setAttribute('open', '');
-          else section.removeAttribute('open');
+          section.removeAttribute('open');
         });
       }
 

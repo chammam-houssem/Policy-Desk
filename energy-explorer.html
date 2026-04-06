@@ -14,7 +14,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css">
@@ -578,20 +577,129 @@
   <script src="script.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-        if (window.marked && typeof window.marked.Renderer === 'function') {
-          const renderer = new window.marked.Renderer();
-          const originalLink = renderer.link.bind(renderer);
-          renderer.link = (href, title, text) => {
-            const html = originalLink(href, title, text);
-            return html.replace('<a ', '<a target="_blank" rel="noopener noreferrer" ');
-          };
-          window.marked.setOptions({ renderer });
-        }
-
         const CSV_PATH = 'Data/electricity-data.csv';
         const CACHE_TTL = 1800000;
         const FEATURED_COUNTRIES = ['Tunisia', 'Algeria', 'Morocco', 'Egypt', 'Jordan'];
         const FEATURED_COUNTRY_SET = new Set(FEATURED_COUNTRIES);
+        const FEATURED_COUNTRY_CONTENT = {
+          Morocco: {
+            mix: `
+              <p>Morocco's energy mix has diversified since the 2009 strategy, but coal still dominates generation even as renewable capacity expanded. The driver for RE adoption was import dependence and subsidy pressure, which pushed the country to adopt RE for energy security and diversification. The near-term trajectory remains a coal-backed transition until storage, grids, and replacement capacity scale further.</p>
+              <p><strong>System profile:</strong> Coal-heavy transition</p>
+              <ul>
+                <li>Coal still provides around 60-62% of generation</li>
+                <li>Renewables are close to half of installed capacity but far lower in generation</li>
+                <li>Hydro output has weakened as drought reduced reservoir levels</li>
+              </ul>
+              <p><strong>Main driver:</strong> energy security</p>
+              <p><strong>Trajectory:</strong> Morocco will keep diversifying through solar, wind, and storage while coal remains central in the near term.</p>
+              <p><strong>Sources:</strong> <a href="https://www.iea.org/countries/morocco/electricity" target="_blank" rel="noopener noreferrer">IEA</a>; <a href="https://www.masen.ma/en/projects" target="_blank" rel="noopener noreferrer">MASEN</a></p>
+            `,
+            solarWind: `
+              <p>Solar and wind are central to Morocco's diversification, with wind already contributing materially and solar shifting toward PV plus storage. Deployment is moving through MASEN-led utility projects, repowering, and larger solar-plus-battery tenders, while self-generation is also expanding. The binding limit is transmission and system integration as variable capacity grows faster than the grid.</p>
+              <p><strong>Status:</strong> Scaling</p>
+              <ul>
+                <li>Wind contributes about 15% of generation and solar about 4.8%</li>
+                <li>Noor Midelt II and III moved to PV plus battery storage</li>
+                <li>Self-generation solar expanded quickly by mid-2025</li>
+              </ul>
+              <p><strong>Constraint:</strong> transmission infrastructure</p>
+              <p><strong>Implication:</strong> Solar and wind will deepen the transition, but generation dominance depends on storage and north-south grid expansion.</p>
+              <p><strong>Sources:</strong> <a href="https://www.masen.ma/en/projects" target="_blank" rel="noopener noreferrer">MASEN</a>; <a href="https://documents1.worldbank.org/curated/en/099081425124511419/pdf/P511426-583aaa13-1c09-4fd7-98e2-66d4471815a3.pdf" target="_blank" rel="noopener noreferrer">World Bank</a></p>
+            `,
+            hydrogen: `
+              <p>Hydrogen is central to Morocco's industrial and export strategy, with OCP giving the story a strong domestic anchor. The policy frame is well developed, and projects like Chbika and Jorf are moving beyond MoUs, but real scale still depends on export contracts and shared infrastructure arriving on time. It remains the region's clearest export-oriented case.</p>
+              <p><strong>Status:</strong> Scaling / export-oriented</p>
+              <ul>
+                <li>Offre Maroc and MASEN single-window framework</li>
+                <li>OCP green ammonia and Jorf platform advancing</li>
+                <li>Chbika and other consortium projects selected for development</li>
+              </ul>
+              <p><strong>Constraint:</strong> demand uncertainty</p>
+              <p><strong>Implication:</strong> Morocco is closest to turning hydrogen into a real export industry, but only if European offtake contracts materialize.</p>
+              <p><strong>Sources:</strong> <a href="https://www.masen.ma/en/green-hydrogen-moroccan-offer" target="_blank" rel="noopener noreferrer">MASEN offer</a>; <a href="https://ammoniaenergy.org/organization/ocp/" target="_blank" rel="noopener noreferrer">OCP green investment</a>; <a href="https://totalenergies.com/news/press-releases/renewables-green-hydrogen-te-h2-cip-and-ap-moller-capital-partner-large-scale" target="_blank" rel="noopener noreferrer">Chbika project</a></p>
+            `,
+            security: `<p>TODO: Placeholder text.</p>`
+          },
+          Jordan: {
+            mix: `
+              <p>Jordan's energy mix is moving to a hybrid structure where gas still leads but renewables now reaching ~27% of electricity generation by 2024 from near zero in 2014. The post-2011 supply crisis was the decisive turning point, triggering LNG imports, long-term gas contracts, and the renewable procurement framework. Policy now favors more renewables, but fossil lock-in and overcapacity still shape dispatch.</p>
+              <p><strong>System profile:</strong> Fossil-heavy with gradual diversification</p>
+              <ul>
+                <li>Gas remains the largest source of electricity</li>
+                <li>Renewables rose from near zero in 2014 to roughly one-quarter of generation by 2024</li>
+                <li>Oil shale became material after Attarat entered service</li>
+              </ul>
+              <p><strong>Main driver:</strong> energy security</p>
+              <p><strong>Trajectory:</strong> Jordan is likely to add renewables, but gas and oil shale will continue to shape dispatch while contracts persist.</p>
+              <p><strong>Sources:</strong> <a href="https://www.iea.org/countries/jordan/electricity" target="_blank" rel="noopener noreferrer">IEA</a>; <a href="https://www.iea.org/policies/18604-revisedupdated-ndc-of-jordan" target="_blank" rel="noopener noreferrer">Revised/Updated NDC of Jordan</a></p>
+            `,
+            solarWind: `
+              <p>Solar and wind now play a meaningful role, with solar clearly the larger technology. Deployment accelerated through utility-scale tenders and distributed PV, then slowed after the 2019 freeze before reopening in 2024. The main constraint is the grid and contract structure's ability to absorb more variable generation.</p>
+              <p><strong>Status:</strong> Policy ambition ahead of reality</p>
+              <ul>
+                <li>Renewables reached about 24-27% of generation by 2024</li>
+                <li>Distributed solar exceeded 1 GW by end-2024</li>
+                <li>No new wind farm was commissioned after 2021</li>
+              </ul>
+              <p><strong>Constraint:</strong> grid integration</p>
+              <p><strong>Implication:</strong> Further solar and wind growth is possible, but storage, interconnections, and fossil contract management will determine system impact.</p>
+              <p><strong>Sources:</strong> <a href="https://www.iea.org/countries/jordan/electricity" target="_blank" rel="noopener noreferrer">IEA</a>; <a href="https://www.iea.org/policies/18604-revisedupdated-ndc-of-jordan" target="_blank" rel="noopener noreferrer">Revised/Updated NDC of Jordan</a></p>
+            `,
+            hydrogen: `
+              <p>Hydrogen is framed as a new export platform for Jordan, closely tied to its renewable buildout and water strategy. The strategy and laws are moving, and the Aqaba hub plus 14 MoUs show real momentum, but deployment is still early and expensive. Desalination makes water more manageable, so infrastructure remains the tighter bottleneck.</p>
+              <p><strong>Status:</strong> Project pipeline</p>
+              <ul>
+                <li>National green hydrogen strategy and new gas/electricity rules</li>
+                <li>14 MoUs and one FEED-stage project</li>
+                <li>Planned Aqaba hub linked to desalination and renewables</li>
+              </ul>
+              <p><strong>Constraint:</strong> infrastructure</p>
+              <p><strong>Implication:</strong> Jordan is laying the groundwork for export-scale hydrogen, but near-term output will likely stay at pilot or early hub scale.</p>
+              <p><strong>Sources:</strong> <a href="https://www.iea.org/policies/28776-national-green-hydrogen-strategy" target="_blank" rel="noopener noreferrer">IEA strategy</a>; <a href="https://www.memr.gov.jo/EBV4.0/Root_Storage/AR/EB_Info_Page/GH2_Strategy.pdf" target="_blank" rel="noopener noreferrer">MEMR draft strategy</a>; <a href="https://www.aiib.org/en/projects/details/2025/approved/jordan-aqaba-amman-water-desalination-and-conveyance-project-aawdcp.html" target="_blank" rel="noopener noreferrer">AAWDCP</a></p>
+            `,
+            security: `<p>TODO: Placeholder text.</p>`
+          },
+          Algeria: {
+            mix: `
+              <p>Algeria's electricity mix has evolved mainly through gas-system expansion rather than fuel diversification, with oil shrinking to a residual role and renewables still marginal. The main turning point was the renewables planning cycle launched in 2011 and updated in 2015, which framed renewables as a way to save natural gas while demand kept rising. Current signals point to gradual PV-led diversification, but the system remains structurally centered on gas.</p>
+              <p><strong>System profile:</strong> Gas-dominated</p>
+              <ul>
+                <li>Fossil generation accounted for about 99% of electricity in 2023</li>
+                <li>Renewables were about 2% of installed capacity but only 1% of generation</li>
+                <li>Oil has declined steadily while gas remains the dominant fuel</li>
+              </ul>
+              <p><strong>Main driver:</strong> domestic fossil resource availability</p>
+              <p><strong>Trajectory:</strong> Algeria is likely to stay gas-dominated in the near term while solar expands gradually through state-led procurement.</p>
+              <p><strong>Sources:</strong> <a href="https://www.iea.org/countries/algeria/electricity" target="_blank" rel="noopener noreferrer">IEA electricity</a>; <a href="https://www.iea.org/policies/6103-renewable-energy-and-energy-efficiency-development-plan-2015-2030?country=Algeria" target="_blank" rel="noopener noreferrer">IEA renewable plan update</a></p>
+            `,
+            solarWind: `
+              <p>Solar and wind still play a minimal role in Algeria's power system, with solar far ahead of wind and CSP increasingly de-prioritized. Deployment is moving toward utility-scale solar PV through the Solar 1000 and larger tender model, but implementation has been slower than official targets. The main limitation is execution capacity across procurement, delivery, and grid integration rather than resource potential.</p>
+              <p><strong>Status:</strong> Project pipeline</p>
+              <ul>
+                <li>Solar provided most of the 926 GWh of renewable generation in 2023</li>
+                <li>Installed renewables were led by solar at 462 MW, while wind remained at 10 MW</li>
+                <li>Official plans shifted toward large-scale PV and delayed CSP because of cost</li>
+              </ul>
+              <p><strong>Constraint:</strong> limited implementation capacity</p>
+              <p><strong>Implication:</strong> Solar is likely to grow first and shape Algeria's renewable path, but system impact will remain limited until tenders translate into operating capacity.</p>
+              <p><strong>Sources:</strong> <a href="https://www.iea.org/countries/algeria/electricity" target="_blank" rel="noopener noreferrer">IEA electricity</a>; <a href="https://www.iea.org/policies/6103-renewable-energy-and-energy-efficiency-development-plan-2015-2030?country=Algeria" target="_blank" rel="noopener noreferrer">IEA renewable plan update</a></p>
+            `,
+            hydrogen: `
+              <p>Hydrogen is meant to carry Algeria's long-standing energy role into a cleaner era, but the transition might be slow. The strategy is in place, and the 50 MW Arzew pilot plus the SoutH2 Corridor are the clearest signs of intent, yet nothing has reached final investment decision. Real scale still rests on faster renewable growth and clearer rules.</p>
+              <p><strong>Status:</strong> Early strategy</p>
+              <ul>
+                <li>National hydrogen strategy approved in 2022</li>
+                <li>50 MW Arzew pilot and SoutH2 Corridor feasibility work</li>
+                <li>Strong link to solar buildout and ammonia exports</li>
+              </ul>
+              <p><strong>Constraint:</strong> Renewables</p>
+              <p><strong>Implication:</strong> Algeria's hydrogen plan will remain hard to finance until renewable capacity grows enough to support green hydrogen instead of Blue or Grey Hydrogen.</p>
+              <p><strong>Sources:</strong> <a href="https://energypartnership-algeria.org/fileadmin/algeria/5JAAE-MEM.pdf" target="_blank" rel="noopener noreferrer">Ministry strategy</a>; <a href="https://sonatrach.com/en/sonatrach-strengthens-its-strategic-cooperation-with-its-european-partners-for-the-development-of-green-hydrogen/" target="_blank" rel="noopener noreferrer">Sonatrach ALTEH2A</a>; <a href="https://www.irena.org/Publications/2025/Jun/Enabling-green-hydrogen-development-North-Africa" target="_blank" rel="noopener noreferrer">IRENA North Africa</a></p>
+            `,
+            security: `<p>TODO: Placeholder text.</p>`
+          }
+        };
       const SOURCE_OPTIONS = [
         { label: 'Solar', twh: 'solar_electricity', share: 'solar_share_elec', color: '#0f4c81' },
         { label: 'Wind', twh: 'wind_electricity', share: 'wind_share_elec', color: '#0f766e' },
@@ -1061,11 +1169,6 @@
         renderChart5();
       }
 
-        function renderSectionContent(markdown) {
-          if (!markdown) return '<p>Content not yet available.</p>';
-          return window.marked && typeof window.marked.parse === 'function' ? window.marked.parse(markdown) : `<p>${markdown}</p>`;
-        }
-
         function buildWorldSummaryHtml() {
           return `
             <p><strong>World total generation</strong> comes from the World rows in the CSV.</p>
@@ -1073,28 +1176,6 @@
             <p>The simplified world mix groups the average country-level shares into fossil fuels, renewables excluding nuclear, and nuclear so the global average does not get confused with the World total row.</p>
           `;
         }
-
-        function splitMarkdownSections(markdown) {
-          const body = markdown.replace(/^---[\s\S]*?---\s*/m, '').trim();
-          const sections = { mix: '', solarWind: '', hydrogen: '', security: '' };
-          let current = '';
-          let buffer = [];
-        const flush = () => {
-          if (current) sections[current] = buffer.join('\n').trim();
-          buffer = [];
-        };
-
-        body.split(/\r?\n/).forEach(line => {
-          const trimmed = line.trim();
-          if (trimmed === '## mix') { flush(); current = 'mix'; return; }
-          if (trimmed === '## solar-wind') { flush(); current = 'solarWind'; return; }
-          if (trimmed === '## hydrogen') { flush(); current = 'hydrogen'; return; }
-          if (trimmed === '## security') { flush(); current = 'security'; return; }
-          if (current) buffer.push(line);
-        });
-        flush();
-        return sections;
-      }
 
         function showFeaturedCountryAnalysis() {
           elements.featuredCountryAnalysis.hidden = false;
@@ -1120,21 +1201,19 @@
             return;
           }
           showFeaturedCountryAnalysis();
-          try {
-            const response = await fetch(`content/countries/${country.toLowerCase()}.md`, { cache: 'no-store' });
-            if (!response.ok) throw new Error(`Failed to load content/countries/${country.toLowerCase()}.md`);
-            const sections = splitMarkdownSections(await response.text());
-            elements.contentMix.innerHTML = renderSectionContent(sections.mix);
-            elements.contentSolarWind.innerHTML = renderSectionContent(sections.solarWind);
-            elements.contentHydrogen.innerHTML = renderSectionContent(sections.hydrogen);
-            elements.contentSecurity.innerHTML = renderSectionContent(sections.security);
-          } catch {
+          const sections = FEATURED_COUNTRY_CONTENT[country];
+          if (!sections) {
             const fallback = '<p>Content not yet available.</p>';
             elements.contentMix.innerHTML = fallback;
             elements.contentSolarWind.innerHTML = fallback;
             elements.contentHydrogen.innerHTML = fallback;
             elements.contentSecurity.innerHTML = fallback;
+            return;
           }
+          elements.contentMix.innerHTML = sections.mix;
+          elements.contentSolarWind.innerHTML = sections.solarWind;
+          elements.contentHydrogen.innerHTML = sections.hydrogen;
+          elements.contentSecurity.innerHTML = sections.security;
         }
 
       function populateMainCountrySelect() {

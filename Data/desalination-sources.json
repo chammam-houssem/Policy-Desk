@@ -1,0 +1,10 @@
+{
+  "weg_djerba_2020": {
+    "label": "WEG Djerba (2020)",
+    "note": "Source indicates the Djerba SWRO plant has 50,000 m3/day capacity, expandable to 75,000 m3/day."
+  },
+  "world_bank_2026_zarat": {
+    "label": "World Bank (2026) – Zarat",
+    "note": "Source indicates the Zarat expansion would increase capacity from 50,000 to 100,000 m3/day, serving Gabès, Médenine, and Tataouine."
+  }
+}

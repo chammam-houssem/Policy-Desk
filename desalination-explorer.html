@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QMG7PT3J0Z"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QMG7PT3J0Z');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tunisia Desalination Explorer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <style>
+    :root {
+      --card-bg: #ffffff;
+      --card-border: #e9ecef;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --accent: #0f4c81;
+      --accent-soft: #edf2f7;
+      --planned: #7c3aed;
+      --planned-soft: #ede9fe;
+      --warning: #92400e;
+      --panel-left: #f7f7f5;
+      --panel-right: #ffffff;
+      --gov-fill: #f1efe9;
+      --gov-stroke: rgba(15, 23, 42, 0.18);
+      --gov-fill-served: rgba(15, 76, 129, 0.16);
+      --seam: rgba(15, 23, 42, 0.06);
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page-wrap {
+      flex: 1 0 auto;
+      padding: 32px 0 0;
+      min-height: 0;
+    }
+
+    .desal-page {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-height: 0;
+    }
+
+    .desal-header {
+      max-width: 960px;
+      padding: 0 4px;
+    }
+
+    .page-title {
+      font-family: 'Roboto Serif', serif;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      color: #102a43;
+    }
+
+    .page-subtitle {
+      color: var(--muted);
+      max-width: 840px;
+      line-height: 1.65;
+    }
+
+    .draft-banner {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #fef3c7;
+      border: 1px solid #fde68a;
+      color: #92400e;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .desal-stage {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(360px, 0.95fr) minmax(0, 1.45fr);
+      gap: 0;
+      border-radius: 24px;
+      overflow: hidden;
+      background: linear-gradient(to right, rgba(15, 23, 42, 0.03), rgba(15, 23, 42, 0.07) 50%, rgba(15, 23, 42, 0.03));
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+    }
+
+    .desal-panel {
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .desal-left {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0));
+      background-color: var(--panel-left);
+      padding: 24px;
+      border-right: 1px solid rgba(15, 23, 42, 0.05);
+      box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.6);
+      max-height: calc(100vh - 48px);
+      overflow-y: auto;
+      position: sticky;
+      top: 24px;
+      scrollbar-gutter: stable;
+    }
+
+    .desal-right {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0)), var(--panel-right);
+      padding: 24px 28px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .selector-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #475569;
+      margin: 0 0 8px;
+    }
+
+    .plant-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .plant-pill {
+      font: inherit;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(15, 23, 42, 0.12);
+      color: #334155;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13.5px;
+      font-weight: 500;
+      line-height: 1.2;
+      transition: all 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .plant-pill:hover {
+      border-color: rgba(15, 76, 129, 0.45);
+      color: #102a43;
+    }
+
+    .plant-pill[aria-pressed="true"] {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
+    .plant-pill .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      flex: 0 0 auto;
+    }
+
+    .plant-pill[data-status="expansion"] .pill-dot { background: var(--planned); }
+    .plant-pill[data-status="planned"] .pill-dot { background: var(--planned); }
+    .plant-pill[aria-pressed="true"] .pill-dot { background: #ffffff; }
+
+    .left-divider {
+      height: 1px;
+      margin: 18px 0 14px;
+      background: linear-gradient(to right, transparent, rgba(15, 23, 42, 0.1), transparent);
+    }
+
+    .plant-profile {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .plant-name {
+      margin: 0;
+      font-family: 'Roboto Serif', serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #102a43;
+      line-height: 1.25;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid rgba(15, 76, 129, 0.18);
+    }
+
+    .badge--operational { background: var(--accent-soft); color: var(--accent); border-color: rgba(15, 76, 129, 0.18); }
+    .badge--expansion { background: var(--planned-soft); color: var(--planned); border-color: rgba(124, 58, 237, 0.22); }
+    .badge--planned { background: #f5f3ff; color: var(--planned); border-color: rgba(124, 58, 237, 0.22); }
+    .badge--draft { background: #fff7ed; color: #9a3412; border-color: #fed7aa; }
+    .badge--confidence { background: #f1f5f9; color: #475569; border-color: #e2e8f0; }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 14px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 14px;
+      padding: 14px 16px;
+      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.04);
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .field-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #6b7280;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .field-value {
+      font-size: 14px;
+      color: #1f2937;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .field-value.is-unknown {
+      color: #94a3b8;
+      font-style: italic;
+    }
+
+    .field-note {
+      font-size: 11.5px;
+      color: #64748b;
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+
+    .profile-section {
+      padding: 0;
+      border: 0;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.42);
+      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.04);
+      overflow: hidden;
+    }
+
+    .profile-section + .profile-section { margin-top: 10px; }
+
+    .profile-section summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 14px 16px 12px;
+      font-family: 'Roboto Serif', serif;
+      font-weight: 600;
+      color: #102a43;
+      font-size: 0.98rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .profile-section summary::-webkit-details-marker { display: none; }
+    .profile-section summary::after {
+      content: '+';
+      font-family: Inter, sans-serif;
+      font-size: 18px;
+      line-height: 1;
+      color: rgba(16, 42, 67, 0.48);
+      transition: color 0.2s ease;
+    }
+    .profile-section[open] summary { border-bottom: 1px solid rgba(15, 23, 42, 0.05); }
+    .profile-section[open] summary::after { content: '–'; color: rgba(16, 42, 67, 0.75); }
+    .profile-body {
+      padding: 12px 16px 16px;
+      color: #334155;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .profile-body p { margin: 0 0 0.6em; }
+    .profile-body p:last-child { margin-bottom: 0; }
+
+    .stat-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .stat-card {
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      border-radius: 14px;
+      padding: 12px 14px;
+      min-width: 0;
+    }
+    .stat-card-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #6b7280;
+    }
+    .stat-card-value {
+      margin-top: 4px;
+      font-family: 'Roboto Serif', serif;
+      font-size: 1.18rem;
+      font-weight: 600;
+      color: #102a43;
+      line-height: 1.2;
+    }
+    .stat-card-sub {
+      font-size: 11.5px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    .map-card {
+      flex: 1;
+      min-height: 0;
+      background: #ffffff;
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      border-radius: 18px;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .map-head {
+      padding: 14px 18px 8px;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+    }
+    .map-title {
+      margin: 0;
+      font-family: 'Roboto Serif', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #102a43;
+    }
+    .map-subtitle {
+      margin: 2px 0 0;
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+
+    .map-canvas-wrap {
+      flex: 1;
+      min-height: 420px;
+      position: relative;
+    }
+
+    #tunisiaMap {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .gov-path {
+      fill: var(--gov-fill);
+      stroke: var(--gov-stroke);
+      stroke-width: 0.6;
+      transition: fill 0.2s ease;
+    }
+    .gov-path.is-served {
+      fill: var(--gov-fill-served);
+      stroke: rgba(15, 76, 129, 0.55);
+      stroke-width: 0.9;
+    }
+
+    .plant-marker {
+      cursor: pointer;
+      transition: r 0.2s ease, stroke-width 0.2s ease;
+    }
+    .plant-marker-ring {
+      pointer-events: none;
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 1.5;
+      opacity: 0;
+      transition: opacity 0.2s ease, r 0.2s ease;
+    }
+    .plant-marker-ring.is-selected { opacity: 0.85; }
+
+    .map-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      padding: 10px 18px 14px;
+      border-top: 1px solid rgba(15, 23, 42, 0.05);
+      font-size: 12px;
+      color: #475569;
+    }
+    .map-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--accent);
+      flex: 0 0 auto;
+    }
+    .legend-dot--planned { background: var(--planned); }
+    .legend-swatch {
+      width: 14px;
+      height: 10px;
+      border-radius: 3px;
+      background: var(--gov-fill-served);
+      border: 1px solid rgba(15, 76, 129, 0.45);
+      flex: 0 0 auto;
+    }
+    .legend-tag {
+      display: inline-flex;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #fff7ed;
+      color: #9a3412;
+      border: 1px solid #fed7aa;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .map-error {
+      color: #991b1b;
+      background: #fee2e2;
+      border: 1px solid #fecaca;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      margin: 10px;
+    }
+
+    @media (max-width: 1100px) {
+      .desal-stage { grid-template-columns: minmax(320px, 0.9fr) minmax(0, 1.1fr); }
+      .stat-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 900px) {
+      .page-wrap { padding: 24px 0 0; }
+      .desal-stage { grid-template-columns: 1fr; border-radius: 20px; }
+      .desal-left {
+        position: static;
+        max-height: none;
+        overflow: visible;
+        border-right: 0;
+        border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+      }
+      .desal-right { padding: 22px; }
+      .field-grid { grid-template-columns: 1fr; }
+      .map-canvas-wrap { min-height: 360px; }
+    }
+
+    .footer { margin-top: 0; flex-shrink: 0; }
+  </style>
+</head>
+<body class="antialiased">
+  <nav class="tab-navigation">
+    <div class="container">
+      <div class="tab-nav">
+        <a class="tab-btn" href="index.html">Overview</a>
+        <a class="tab-btn" href="featured-work.html">Featured Work</a>
+        <div class="tab-projects is-current">
+          <button type="button" class="tab-btn active">Projects</button>
+          <div class="tab-projects-menu" role="menu">
+            <a href="energy-explorer.html" role="menuitem">Energy Explorer</a>
+            <a href="desalination-explorer.html" role="menuitem" aria-current="page">Desalination Explorer</a>
+          </div>
+        </div>
+        <a class="tab-btn" href="blog.html">Blog</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-wrap">
+    <div class="container desal-page">
+      <header class="desal-header">
+        <h1 class="text-3xl md:text-4xl page-title">Tunisia Desalination Explorer</h1>
+        <p class="mt-3 page-subtitle">
+          Tunisia's water security is increasingly being shaped by energy-intensive coastal desalination infrastructure.
+          This explorer maps public and announced desalination projects so capacity, served regions, and the energy
+          and brine implications can be read together. Figures are drawn from public source notes; unknowns are
+          marked rather than guessed.
+        </p>
+        <span class="draft-banner" role="note">First draft &middot; Some fields are placeholders or estimates</span>
+      </header>
+
+      <section class="desal-stage" aria-label="Desalination explorer split view">
+        <aside class="desal-panel desal-left" id="leftPanel">
+          <p class="selector-label">Select a plant</p>
+          <div class="plant-selector" id="plantSelector" role="group" aria-label="Plant selector"></div>
+
+          <div class="left-divider"></div>
+
+          <div class="plant-profile" id="plantProfile" aria-live="polite">
+            <h2 class="plant-name" id="plantName">—</h2>
+            <div class="badge-row" id="plantBadges"></div>
+
+            <div class="field-grid" id="plantFields"></div>
+
+            <details class="profile-section" open>
+              <summary>What it supplies</summary>
+              <div class="profile-body" id="supplyText"></div>
+            </details>
+            <details class="profile-section">
+              <summary>Energy and brine implications</summary>
+              <div class="profile-body" id="energyText"></div>
+            </details>
+            <details class="profile-section">
+              <summary>Institutional context</summary>
+              <div class="profile-body" id="institutionalText"></div>
+            </details>
+          </div>
+        </aside>
+
+        <section class="desal-panel desal-right">
+          <div class="stat-strip" id="statStrip" aria-label="Aggregate desalination statistics">
+            <div class="stat-card">
+              <div class="stat-card-label">Operational capacity</div>
+              <div class="stat-card-value" id="statOperational">—</div>
+              <div class="stat-card-sub">m³/day, design capacity</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-label">Planned / additional</div>
+              <div class="stat-card-value" id="statPlanned">—</div>
+              <div class="stat-card-sub">m³/day, announced expansion</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-label">Mapped plants</div>
+              <div class="stat-card-value" id="statCount">—</div>
+              <div class="stat-card-sub">in this draft</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-label">Brine estimate</div>
+              <div class="stat-card-value" id="statBrine">Not yet calculated</div>
+              <div class="stat-card-sub">to be added per plant</div>
+            </div>
+          </div>
+
+          <div class="map-card">
+            <div class="map-head">
+              <h2 class="map-title">Tunisia &mdash; Desalination plant locations</h2>
+              <p class="map-subtitle">Click a marker on the map or a pill on the left to read the plant profile. Served governorates highlight in blue.</p>
+            </div>
+            <div class="map-canvas-wrap" id="mapWrap">
+              <svg id="tunisiaMap" role="img" aria-label="Map of Tunisia governorates with desalination plant markers" preserveAspectRatio="xMidYMid meet"></svg>
+            </div>
+            <div class="map-legend" aria-label="Map legend">
+              <span class="map-legend-item"><span class="legend-dot"></span>Operational</span>
+              <span class="map-legend-item"><span class="legend-dot legend-dot--planned"></span>Planned / expansion</span>
+              <span class="map-legend-item"><span class="legend-swatch"></span>Served governorate</span>
+              <span class="map-legend-item"><span class="legend-tag">Estimated</span>Estimated or unverified data</span>
+            </div>
+          </div>
+        </section>
+      </section>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+    (function () {
+      const PLANTS_PATH = 'Data/desalination-plants.json';
+      const GEO_PATH = 'Data/tunisia-governorates.geojson';
+      const SOURCES_PATH = 'Data/desalination-sources.json';
+
+      const STATUS_COLORS = {
+        operational: '#0f4c81',
+        operational_renewable_integrated: '#0f766e',
+        expansion: '#7c3aed',
+        planned: '#7c3aed',
+        feasibility: '#94a3b8',
+        under_construction: '#7c3aed',
+        private_industrial: '#b45309'
+      };
+
+      const STATUS_BADGE_CLASS = {
+        operational: 'badge--operational',
+        operational_renewable_integrated: 'badge--operational',
+        expansion: 'badge--expansion',
+        planned: 'badge--planned',
+        feasibility: 'badge--planned',
+        under_construction: 'badge--planned',
+        private_industrial: 'badge--planned'
+      };
+
+      const state = {
+        plants: [],
+        sources: {},
+        geo: null,
+        selectedId: null,
+        projection: null,
+        path: null
+      };
+
+      const els = {
+        selector: document.getElementById('plantSelector'),
+        plantName: document.getElementById('plantName'),
+        plantBadges: document.getElementById('plantBadges'),
+        plantFields: document.getElementById('plantFields'),
+        supplyText: document.getElementById('supplyText'),
+        energyText: document.getElementById('energyText'),
+        institutionalText: document.getElementById('institutionalText'),
+        statOperational: document.getElementById('statOperational'),
+        statPlanned: document.getElementById('statPlanned'),
+        statCount: document.getElementById('statCount'),
+        statBrine: document.getElementById('statBrine'),
+        mapWrap: document.getElementById('mapWrap'),
+        svg: document.getElementById('tunisiaMap')
+      };
+
+      // Normalise governorate names so "Médenine" / "Medenine" / "Kebili" match.
+      function normName(name) {
+        if (!name) return '';
+        return String(name)
+          .normalize('NFD')
+          .replace(/[̀-ͯ]/g, '')
+          .toLowerCase()
+          .replace(/[^a-z]+/g, '');
+      }
+
+      function fmtNumber(n) {
+        if (n === null || n === undefined || Number.isNaN(n)) return null;
+        return Number(n).toLocaleString();
+      }
+
+      function unknownValueHTML(label) {
+        return `<span class="is-unknown">${label || 'Not specified'}</span>`;
+      }
+
+      function buildFieldGrid(plant) {
+        const rows = [];
+        const capacityDesign = fmtNumber(plant.capacityDesignM3Day);
+        const capacityPlanned = fmtNumber(plant.capacityPlannedM3Day);
+        let capacityHtml = capacityDesign ? `${capacityDesign} m³/day` : unknownValueHTML('Capacity not specified');
+        if (capacityPlanned) {
+          capacityHtml += `<div class="field-note">Planned / expanded: ${capacityPlanned} m³/day</div>`;
+        }
+        rows.push({ label: 'Capacity (design)', html: capacityHtml });
+
+        const served = (plant.servedGovernorates || []).join(', ');
+        const localities = (plant.servedLocalities || []).join(', ');
+        let servedHtml = served ? served : unknownValueHTML('Service area not specified');
+        if (localities) servedHtml += `<div class="field-note">Localities: ${localities}</div>`;
+        rows.push({ label: 'Served governorates', html: servedHtml });
+
+        let benefHtml;
+        if (plant.beneficiaries) {
+          benefHtml = fmtNumber(plant.beneficiaries) + ' people';
+        } else {
+          benefHtml = unknownValueHTML('Beneficiaries not yet verified');
+        }
+        if (plant.beneficiaryMethod) {
+          benefHtml += `<div class="field-note">Note: ${plant.beneficiaryMethod}</div>`;
+        }
+        rows.push({ label: 'Beneficiaries', html: benefHtml });
+
+        rows.push({
+          label: 'Technology',
+          html: plant.technology ? plant.technology : unknownValueHTML('Technology not specified')
+        });
+
+        let energyHtml = plant.energySource ? plant.energySource : unknownValueHTML('Energy source not specified');
+        if (plant.renewableComponent && plant.renewableComponent !== 'unknown' && plant.renewableComponent !== 'not specified') {
+          energyHtml += `<div class="field-note">Renewable: ${plant.renewableComponent}</div>`;
+        } else if (plant.renewableComponent) {
+          energyHtml += `<div class="field-note">Renewable: <span class="is-unknown">${plant.renewableComponent}</span></div>`;
+        }
+        rows.push({ label: 'Energy source', html: energyHtml });
+
+        let brineHtml;
+        if (plant.brineM3Day) {
+          brineHtml = `${fmtNumber(plant.brineM3Day)} m³/day`;
+        } else {
+          brineHtml = unknownValueHTML('Brine volume not yet calculated');
+        }
+        if (plant.brineMethod) {
+          brineHtml += `<div class="field-note">${plant.brineMethod}</div>`;
+        }
+        rows.push({ label: 'Brine estimate', html: brineHtml });
+
+        rows.push({
+          label: 'Commissioning year',
+          html: plant.commissioningYear ? String(plant.commissioningYear) : unknownValueHTML('Year not specified')
+        });
+
+        const sourceLabels = (plant.sourceKeys || []).map(key => {
+          const src = state.sources[key];
+          return src ? src.label : key;
+        });
+        const conf = plant.confidence ? plant.confidence.charAt(0).toUpperCase() + plant.confidence.slice(1) : 'Unknown';
+        const sourceHtml = (sourceLabels.length ? sourceLabels.join(', ') : unknownValueHTML('No source listed'))
+          + `<div class="field-note">Confidence: ${conf}</div>`;
+        rows.push({ label: 'Source / confidence', html: sourceHtml });
+
+        els.plantFields.innerHTML = rows.map(row => `
+          <div class="field">
+            <div class="field-label">${row.label}</div>
+            <div class="field-value">${row.html}</div>
+          </div>
+        `).join('');
+      }
+
+      function renderProfile(plant) {
+        if (!plant) return;
+        els.plantName.textContent = plant.name;
+        const badgeClass = STATUS_BADGE_CLASS[plant.statusCategory] || 'badge--operational';
+        const badges = [];
+        badges.push(`<span class="badge ${badgeClass}">${plant.status || plant.statusCategory || 'unknown'}</span>`);
+        if (plant.confidence) badges.push(`<span class="badge badge--confidence">Confidence: ${plant.confidence}</span>`);
+        if ((plant.beneficiaries === null && plant.beneficiaryMethod && plant.beneficiaryMethod !== 'not provided')
+            || plant.brineM3Day === null) {
+          badges.push('<span class="badge badge--draft">Draft / estimated fields</span>');
+        }
+        els.plantBadges.innerHTML = badges.join('');
+        buildFieldGrid(plant);
+        els.supplyText.innerHTML = plant.supplyText ? `<p>${plant.supplyText}</p>` : '<p class="is-unknown">Not yet written.</p>';
+        els.energyText.innerHTML = plant.energyText ? `<p>${plant.energyText}</p>` : '<p class="is-unknown">Not yet written.</p>';
+        els.institutionalText.innerHTML = plant.institutionalText ? `<p>${plant.institutionalText}</p>` : '<p class="is-unknown">Not yet written.</p>';
+      }
+
+      function renderStats() {
+        let opCapacity = 0;
+        let plannedCapacity = 0;
+        state.plants.forEach(p => {
+          if (p.capacityDesignM3Day) opCapacity += p.capacityDesignM3Day;
+          if (p.capacityPlannedM3Day) {
+            const additional = Math.max(p.capacityPlannedM3Day - (p.capacityDesignM3Day || 0), 0);
+            plannedCapacity += additional;
+          }
+        });
+        els.statOperational.textContent = opCapacity ? fmtNumber(opCapacity) : '—';
+        els.statPlanned.textContent = plannedCapacity ? '+' + fmtNumber(plannedCapacity) : '—';
+        els.statCount.textContent = String(state.plants.length);
+      }
+
+      function renderSelector() {
+        els.selector.innerHTML = '';
+        state.plants.forEach(plant => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'plant-pill';
+          btn.dataset.plantId = plant.id;
+          btn.dataset.status = plant.statusCategory || 'operational';
+          btn.setAttribute('aria-pressed', 'false');
+          btn.innerHTML = `<span class="pill-dot" aria-hidden="true"></span><span>${plant.name.replace(/Desalination Plant/i, '').replace(/Plant$/i, '').trim()}</span>`;
+          btn.title = plant.name;
+          btn.addEventListener('click', () => selectPlant(plant.id, { fromMap: false }));
+          els.selector.appendChild(btn);
+        });
+      }
+
+      function syncSelectorState() {
+        els.selector.querySelectorAll('.plant-pill').forEach(btn => {
+          btn.setAttribute('aria-pressed', btn.dataset.plantId === state.selectedId ? 'true' : 'false');
+        });
+      }
+
+      function selectPlant(id, opts) {
+        const plant = state.plants.find(p => p.id === id);
+        if (!plant) return;
+        state.selectedId = id;
+        if (window.location.hash !== '#' + id) {
+          history.replaceState(null, '', '#' + id);
+        }
+        renderProfile(plant);
+        syncSelectorState();
+        updateMapSelection();
+      }
+
+      function plantsForGovernorate(govName) {
+        const target = normName(govName);
+        const matches = new Set();
+        state.plants.forEach(plant => {
+          (plant.servedGovernorates || []).forEach(g => {
+            if (normName(g) === target) matches.add(plant.id);
+          });
+        });
+        return matches;
+      }
+
+      function updateMapSelection() {
+        const selected = state.plants.find(p => p.id === state.selectedId);
+        const servedSet = new Set((selected && selected.servedGovernorates) ? selected.servedGovernorates.map(normName) : []);
+
+        d3.select('#tunisiaMap').selectAll('.gov-path')
+          .classed('is-served', function (d) {
+            const props = d.properties || {};
+            const candidates = [props.name, props.name_en].filter(Boolean).map(normName);
+            return candidates.some(c => servedSet.has(c));
+          });
+
+        d3.select('#tunisiaMap').selectAll('.plant-marker')
+          .attr('r', d => d.id === state.selectedId ? 8 : 5.5)
+          .attr('stroke-width', d => d.id === state.selectedId ? 2 : 1.2);
+        d3.select('#tunisiaMap').selectAll('.plant-marker-ring')
+          .classed('is-selected', d => d.id === state.selectedId)
+          .attr('r', d => d.id === state.selectedId ? 13 : 0);
+      }
+
+      function renderMap() {
+        const svg = d3.select('#tunisiaMap');
+        svg.selectAll('*').remove();
+
+        const wrap = els.mapWrap;
+        const width = wrap.clientWidth || 600;
+        const height = wrap.clientHeight || 480;
+        svg.attr('viewBox', `0 0 ${width} ${height}`);
+
+        const projection = d3.geoMercator().fitExtent(
+          [[16, 16], [width - 16, height - 16]],
+          state.geo
+        );
+        const path = d3.geoPath(projection);
+        state.projection = projection;
+        state.path = path;
+
+        const govLayer = svg.append('g').attr('class', 'gov-layer');
+        govLayer.selectAll('path')
+          .data(state.geo.features)
+          .enter()
+          .append('path')
+          .attr('class', 'gov-path')
+          .attr('d', path)
+          .append('title')
+          .text(d => (d.properties && (d.properties.name_en || d.properties.name)) || '');
+
+        const plantLayer = svg.append('g').attr('class', 'plant-layer');
+        plantLayer.selectAll('circle.plant-marker-ring')
+          .data(state.plants)
+          .enter()
+          .append('circle')
+          .attr('class', 'plant-marker-ring')
+          .attr('cx', d => projection([d.longitude, d.latitude])[0])
+          .attr('cy', d => projection([d.longitude, d.latitude])[1])
+          .attr('r', 0);
+
+        plantLayer.selectAll('circle.plant-marker')
+          .data(state.plants)
+          .enter()
+          .append('circle')
+          .attr('class', 'plant-marker')
+          .attr('cx', d => projection([d.longitude, d.latitude])[0])
+          .attr('cy', d => projection([d.longitude, d.latitude])[1])
+          .attr('r', 5.5)
+          .attr('fill', d => STATUS_COLORS[d.statusCategory] || STATUS_COLORS.operational)
+          .attr('stroke', '#ffffff')
+          .attr('stroke-width', 1.2)
+          .attr('tabindex', 0)
+          .attr('role', 'button')
+          .attr('aria-label', d => `${d.name} (${d.status || d.statusCategory || ''})`)
+          .on('click', (event, d) => selectPlant(d.id, { fromMap: true }))
+          .on('keydown', (event, d) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              selectPlant(d.id, { fromMap: true });
+            }
+          })
+          .append('title')
+          .text(d => d.name);
+
+        updateMapSelection();
+      }
+
+      function showMapError(msg) {
+        const div = document.createElement('div');
+        div.className = 'map-error';
+        div.textContent = msg;
+        els.mapWrap.appendChild(div);
+      }
+
+      async function loadJSON(path) {
+        const res = await fetch(path);
+        if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);
+        return res.json();
+      }
+
+      async function init() {
+        try {
+          const [plants, geo, sources] = await Promise.all([
+            loadJSON(PLANTS_PATH),
+            loadJSON(GEO_PATH),
+            loadJSON(SOURCES_PATH).catch(() => ({}))
+          ]);
+          state.plants = plants;
+          state.geo = geo;
+          state.sources = sources || {};
+
+          renderSelector();
+          renderStats();
+          renderMap();
+
+          // Resize handling
+          const ro = new ResizeObserver(() => renderMap());
+          ro.observe(els.mapWrap);
+
+          // Hash selection or default
+          const hashId = window.location.hash.replace(/^#/, '');
+          const initial = state.plants.find(p => p.id === hashId) || state.plants[0];
+          if (initial) selectPlant(initial.id, { fromMap: false });
+
+          window.addEventListener('hashchange', () => {
+            const next = window.location.hash.replace(/^#/, '');
+            if (next && next !== state.selectedId) selectPlant(next, { fromMap: false });
+          });
+        } catch (err) {
+          console.error(err);
+          showMapError('Could not load desalination data: ' + (err.message || err));
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-text">
+          <p>&copy; 2026 Houssem Chammam. All rights reserved.</p>
+        </div>
+        <div class="footer-social">
+          <a href="https://www.linkedin.com/in/houssem-chammam/" class="social-link" target="_blank">
+            <i class="fab fa-linkedin"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

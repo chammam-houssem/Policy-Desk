@@ -151,6 +151,87 @@ html { overflow-y: scroll; }
     display: none !important;
 }
 
+/* Projects dropdown - native to site styling, not Bootstrap */
+.tab-projects {
+    position: relative;
+    display: inline-block;
+}
+
+.tab-projects > .tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tab-projects > .tab-btn::after {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-left: 4px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: translateY(-2px) rotate(45deg);
+    opacity: 0.6;
+    transition: transform 0.18s ease, opacity 0.18s ease;
+}
+
+.tab-projects.is-open > .tab-btn::after,
+.tab-projects:hover > .tab-btn::after {
+    opacity: 1;
+}
+
+.tab-projects-menu {
+    position: absolute;
+    top: 100%;
+    left: 8px;
+    min-width: 240px;
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.10);
+    padding: 6px;
+    margin-top: 4px;
+    display: none;
+    z-index: 200;
+}
+
+.tab-projects.is-open > .tab-projects-menu {
+    display: block;
+}
+
+.tab-projects-menu a {
+    display: block;
+    padding: 10px 14px;
+    font-family: 'Roboto Serif', serif;
+    font-size: 14.5px;
+    color: #374151;
+    text-decoration: none;
+    border-radius: 6px;
+    line-height: 1.35;
+    letter-spacing: 0.01em;
+}
+
+.tab-projects-menu a:hover,
+.tab-projects-menu a:focus {
+    background: #f4f6f8;
+    color: #102a43;
+    outline: none;
+}
+
+.tab-projects-menu a[aria-current="page"] {
+    color: #007bff;
+    background: #eef4fb;
+}
+
+@media (max-width: 700px) {
+    .tab-projects-menu {
+        left: 0;
+        right: auto;
+        min-width: 200px;
+    }
+}
+
 /* Blog tab should be visible across the site (previous hide removed) */
 
 /* Main Content */

@@ -583,3 +583,54 @@ window.addEventListener('load', function() {
     handleScrollAnimations(); // Run once on load
 });
 
+// Projects dropdown behavior (shared across pages)
+document.addEventListener('DOMContentLoaded', () => {
+    const dropdowns = document.querySelectorAll('.tab-projects');
+    if (!dropdowns.length) return;
+
+    function closeAll(except) {
+        dropdowns.forEach(d => {
+            if (d !== except) {
+                d.classList.remove('is-open');
+                const btn = d.querySelector('.tab-btn');
+                if (btn) btn.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+
+    dropdowns.forEach(dropdown => {
+        const toggle = dropdown.querySelector('.tab-btn');
+        const menu = dropdown.querySelector('.tab-projects-menu');
+        if (!toggle || !menu) return;
+        toggle.setAttribute('aria-haspopup', 'true');
+        toggle.setAttribute('aria-expanded', 'false');
+
+        toggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            const isOpen = dropdown.classList.toggle('is-open');
+            toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            closeAll(dropdown);
+        });
+
+        toggle.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                dropdown.classList.add('is-open');
+                toggle.setAttribute('aria-expanded', 'true');
+                const firstLink = menu.querySelector('a');
+                if (firstLink) firstLink.focus();
+            } else if (e.key === 'Escape') {
+                dropdown.classList.remove('is-open');
+                toggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.tab-projects')) closeAll(null);
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeAll(null);
+    });
+});
+

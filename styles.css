@@ -181,21 +181,22 @@ html { overflow-y: scroll; }
     opacity: 1;
 }
 
+/* Fixed + JS placement avoids clipping from .tab-nav overflow-x: auto
+   (which forces overflow-y to scroll and traps absolutely positioned menus). */
 .tab-projects-menu {
-    position: absolute;
-    top: 100%;
-    left: 8px;
+    position: fixed;
     min-width: 240px;
     background: #ffffff;
     border: 1px solid #e9ecef;
     border-radius: 10px;
     box-shadow: 0 12px 28px rgba(15, 23, 42, 0.10);
     padding: 6px;
-    margin-top: 4px;
+    margin: 0;
     display: none;
-    z-index: 200;
+    z-index: 1100;
 }
 
+.tab-projects:hover > .tab-projects-menu,
 .tab-projects.is-open > .tab-projects-menu {
     display: block;
 }
@@ -226,8 +227,6 @@ html { overflow-y: scroll; }
 
 @media (max-width: 700px) {
     .tab-projects-menu {
-        left: 0;
-        right: auto;
         min-width: 200px;
     }
 }

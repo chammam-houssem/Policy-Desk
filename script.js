@@ -588,12 +588,56 @@ document.addEventListener('DOMContentLoaded', () => {
     const dropdowns = document.querySelectorAll('.tab-projects');
     if (!dropdowns.length) return;
 
+    function clearMenuPosition(dropdown) {
+        const menu = dropdown.querySelector('.tab-projects-menu');
+        if (!menu) return;
+        menu.style.top = '';
+        menu.style.left = '';
+    }
+
+    function isProjectsMenuActive(dropdown) {
+        return (
+            dropdown.classList.contains('is-open') ||
+            (typeof dropdown.matches === 'function' && dropdown.matches(':hover'))
+        );
+    }
+
+    function positionProjectsMenu(dropdown) {
+        const menu = dropdown.querySelector('.tab-projects-menu');
+        const toggle = dropdown.querySelector('.tab-btn');
+        if (!menu || !toggle || !isProjectsMenuActive(dropdown)) return;
+
+        const rect = toggle.getBoundingClientRect();
+        const margin = 4;
+        menu.style.top = `${Math.round(rect.bottom + margin)}px`;
+        menu.style.left = `${Math.round(rect.left)}px`;
+
+        requestAnimationFrame(() => {
+            if (!isProjectsMenuActive(dropdown)) return;
+            const bounds = menu.getBoundingClientRect();
+            const pad = 8;
+            let left = bounds.left;
+            if (bounds.right > window.innerWidth - pad) {
+                left = window.innerWidth - bounds.width - pad;
+            }
+            if (left < pad) left = pad;
+            menu.style.left = `${Math.round(left)}px`;
+        });
+    }
+
+    function refreshOpenProjectsMenus() {
+        dropdowns.forEach(d => {
+            if (isProjectsMenuActive(d)) positionProjectsMenu(d);
+        });
+    }
+
     function closeAll(except) {
         dropdowns.forEach(d => {
             if (d !== except) {
                 d.classList.remove('is-open');
                 const btn = d.querySelector('.tab-btn');
                 if (btn) btn.setAttribute('aria-expanded', 'false');
+                clearMenuPosition(d);
             }
         });
     }
@@ -610,6 +654,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const isOpen = dropdown.classList.toggle('is-open');
             toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
             closeAll(dropdown);
+            if (isOpen) {
+                positionProjectsMenu(dropdown);
+            } else if (!dropdown.matches(':hover')) {
+                clearMenuPosition(dropdown);
+            } else {
+                positionProjectsMenu(dropdown);
+            }
+        });
+
+        dropdown.addEventListener('mouseenter', () => {
+            positionProjectsMenu(dropdown);
+        });
+        dropdown.addEventListener('mouseleave', () => {
+            if (!dropdown.classList.contains('is-open')) {
+                clearMenuPosition(dropdown);
+            }
         });
 
         toggle.addEventListener('keydown', (e) => {
@@ -617,14 +677,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 dropdown.classList.add('is-open');
                 toggle.setAttribute('aria-expanded', 'true');
+                closeAll(dropdown);
+                positionProjectsMenu(dropdown);
                 const firstLink = menu.querySelector('a');
                 if (firstLink) firstLink.focus();
             } else if (e.key === 'Escape') {
                 dropdown.classList.remove('is-open');
                 toggle.setAttribute('aria-expanded', 'false');
+                clearMenuPosition(dropdown);
             }
         });
     });
+
+    window.addEventListener('resize', refreshOpenProjectsMenus);
+    window.addEventListener('scroll', refreshOpenProjectsMenus, true);
 
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.tab-projects')) closeAll(null);

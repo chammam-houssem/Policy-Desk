@@ -58,7 +58,6 @@
     }
 
     .desal-header {
-      max-width: 960px;
       padding: 0 4px;
     }
 
@@ -71,23 +70,8 @@
 
     .page-subtitle {
       color: var(--muted);
-      max-width: 840px;
+      max-width: none;
       line-height: 1.65;
-    }
-
-    .draft-banner {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 10px;
-      padding: 6px 12px;
-      border-radius: 999px;
-      background: #fef3c7;
-      border: 1px solid #fde68a;
-      color: #92400e;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.02em;
     }
 
     .desal-stage {
@@ -108,6 +92,9 @@
     }
 
     .desal-left {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
       background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0));
       background-color: var(--panel-left);
       padding: 24px;
@@ -522,34 +509,24 @@
           and brine implications can be read together. Figures are drawn from public source notes; unknowns are
           marked rather than guessed.
         </p>
-        <span class="draft-banner" role="note">First draft &middot; Some fields are placeholders or estimates</span>
       </header>
 
       <section class="desal-stage" aria-label="Desalination explorer split view">
         <aside class="desal-panel desal-left" id="leftPanel">
-          <p class="selector-label">Select a plant</p>
-          <div class="plant-selector" id="plantSelector" role="group" aria-label="Plant selector"></div>
-
-          <div class="left-divider"></div>
-
-          <div class="plant-profile" id="plantProfile" aria-live="polite">
-            <h2 class="plant-name" id="plantName">—</h2>
-            <div class="badge-row" id="plantBadges"></div>
-
-            <div class="field-grid" id="plantFields"></div>
-
-            <details class="profile-section" open>
-              <summary>What it supplies</summary>
-              <div class="profile-body" id="supplyText"></div>
-            </details>
-            <details class="profile-section">
-              <summary>Energy and brine implications</summary>
-              <div class="profile-body" id="energyText"></div>
-            </details>
-            <details class="profile-section">
-              <summary>Institutional context</summary>
-              <div class="profile-body" id="institutionalText"></div>
-            </details>
+          <div class="map-card">
+            <div class="map-head">
+              <h2 class="map-title">Tunisia &mdash; Desalination plant locations</h2>
+              <p class="map-subtitle">Click a marker on the map or a governorate name. Served governorates highlighted in blue.</p>
+            </div>
+            <div class="map-canvas-wrap" id="mapWrap">
+              <svg id="tunisiaMap" role="img" aria-label="Map of Tunisia governorates with desalination plant markers" preserveAspectRatio="xMidYMid meet"></svg>
+            </div>
+            <div class="map-legend" aria-label="Map legend">
+              <span class="map-legend-item"><span class="legend-dot"></span>Operational</span>
+              <span class="map-legend-item"><span class="legend-dot legend-dot--planned"></span>Planned / expansion</span>
+              <span class="map-legend-item"><span class="legend-swatch"></span>Served governorate</span>
+              <span class="map-legend-item"><span class="legend-tag">Estimated</span>Estimated or unverified data</span>
+            </div>
           </div>
         </aside>
 
@@ -577,20 +554,29 @@
             </div>
           </div>
 
-          <div class="map-card">
-            <div class="map-head">
-              <h2 class="map-title">Tunisia &mdash; Desalination plant locations</h2>
-              <p class="map-subtitle">Click a marker on the map or a pill on the left to read the plant profile. Served governorates highlight in blue.</p>
-            </div>
-            <div class="map-canvas-wrap" id="mapWrap">
-              <svg id="tunisiaMap" role="img" aria-label="Map of Tunisia governorates with desalination plant markers" preserveAspectRatio="xMidYMid meet"></svg>
-            </div>
-            <div class="map-legend" aria-label="Map legend">
-              <span class="map-legend-item"><span class="legend-dot"></span>Operational</span>
-              <span class="map-legend-item"><span class="legend-dot legend-dot--planned"></span>Planned / expansion</span>
-              <span class="map-legend-item"><span class="legend-swatch"></span>Served governorate</span>
-              <span class="map-legend-item"><span class="legend-tag">Estimated</span>Estimated or unverified data</span>
-            </div>
+          <p class="selector-label">Select a plant</p>
+          <div class="plant-selector" id="plantSelector" role="group" aria-label="Plant selector"></div>
+
+          <div class="left-divider"></div>
+
+          <div class="plant-profile" id="plantProfile" aria-live="polite">
+            <h2 class="plant-name" id="plantName">—</h2>
+            <div class="badge-row" id="plantBadges"></div>
+
+            <div class="field-grid" id="plantFields"></div>
+
+            <details class="profile-section" open>
+              <summary>What it supplies</summary>
+              <div class="profile-body" id="supplyText"></div>
+            </details>
+            <details class="profile-section">
+              <summary>Energy and brine implications</summary>
+              <div class="profile-body" id="energyText"></div>
+            </details>
+            <details class="profile-section">
+              <summary>Institutional context</summary>
+              <div class="profile-body" id="institutionalText"></div>
+            </details>
           </div>
         </section>
       </section>

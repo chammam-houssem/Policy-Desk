@@ -33,6 +33,8 @@
       /* Three semantic colours */
       --c-primary:    #0f4c81;   /* navy: operational */
       --c-primary-soft: #e7eef5;
+      --c-brackish:   #218a54;   /* green: brackish water */
+      --c-not-operational: #c7443e; /* red: not yet operational */
       --c-planned:    #6b5e96;   /* desaturated plum: planned / announced */
       --c-planned-soft: #ecebf2;
       --c-ochre:      #946a2b;   /* muted ochre: estimate / caveat */
@@ -69,12 +71,23 @@
     .desal-page {
       display: flex;
       flex-direction: column;
-      gap: 0;
+      gap: 48px;
     }
 
     /* ---------- Header & intro ---------- */
 
     .desal-header { padding: 0 4px; max-width: 1280px; }
+
+    .intro-kpi-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+      gap: 48px;
+      align-items: start;
+    }
+
+    .intro-copy {
+      min-width: 0;
+    }
 
     .eyebrow {
       font-family: 'Inter', sans-serif;
@@ -120,32 +133,30 @@
 
     .kpi-strip {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 0;
-      border-top: 1px solid var(--rule);
-      border-bottom: 1px solid var(--rule);
+      border: 1px solid var(--rule);
     }
     .kpi-cell {
-      padding: 24px 28px 24px 0;
-      border-right: 1px solid var(--rule);
+      padding: 16px 18px;
       min-width: 0;
     }
-    .kpi-cell:first-child { /* no left padding adjustment */ }
-    .kpi-cell:last-child { border-right: 0; padding-right: 0; }
-    .kpi-cell + .kpi-cell { padding-left: 28px; }
+    .kpi-cell:nth-child(odd) { border-right: 1px solid var(--rule); }
+    .kpi-cell:nth-child(-n+2) { border-bottom: 1px solid var(--rule); }
     .kpi-label {
-      font-size: 11px;
+      font-size: 9.5px;
       font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--n-600);
-      margin: 0 0 12px;
+      margin: 0 0 8px;
     }
     .kpi-value {
       font-family: 'Roboto Serif', serif;
       font-weight: 500;
-      font-size: 34px;
+      font-size: 26px;
       line-height: 1.05;
+      min-height: 1.05em;
       color: var(--ink);
       letter-spacing: -0.01em;
       font-feature-settings: "tnum" 1, "lnum" 1;
@@ -153,8 +164,8 @@
     .kpi-value.is-muted { color: var(--n-400); font-weight: 400; }
     .kpi-unit {
       display: block;
-      margin-top: 8px;
-      font-size: 12.5px;
+      margin-top: 6px;
+      font-size: 11px;
       color: var(--n-600);
       letter-spacing: 0;
     }
@@ -305,10 +316,24 @@
     }
     .plant-marker {
       cursor: pointer;
-      transition: r 0.18s ease, stroke-width 0.18s ease, opacity 0.18s ease;
+      transition: stroke-width 0.18s ease, opacity 0.18s ease;
+    }
+    .plant-marker.is-hidden,
+    .plant-marker-ring.is-hidden {
+      display: none;
     }
     .plant-marker--operational {
       fill: var(--c-primary);
+      stroke: var(--n-00);
+      stroke-width: 1.5;
+    }
+    .plant-marker--brackish {
+      fill: var(--c-brackish);
+      stroke: var(--n-00);
+      stroke-width: 1.5;
+    }
+    .plant-marker--not-operational {
+      fill: var(--c-not-operational);
       stroke: var(--n-00);
       stroke-width: 1.5;
     }
@@ -347,8 +372,16 @@
       flex: 0 0 auto;
     }
     .legend-dot--planned {
-      background: var(--n-00);
-      border: 1.5px solid var(--c-planned);
+      background: var(--c-not-operational);
+    }
+    .legend-dot--brackish {
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-bottom: 11px solid var(--c-brackish);
+      border-radius: 0;
+      background: transparent;
     }
     .legend-dot--sized {
       position: relative;
@@ -446,9 +479,25 @@
       background: var(--c-primary);
       flex: 0 0 auto;
     }
+    .plant-pill[data-water-type="brackish"] .pill-dot {
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-bottom: 7px solid var(--c-brackish);
+      border-radius: 0;
+      background: transparent;
+    }
     .plant-pill[data-status="expansion"] .pill-dot,
-    .plant-pill[data-status="planned"] .pill-dot { background: var(--c-planned); }
+    .plant-pill[data-status="planned"] .pill-dot,
+    .plant-pill[data-status="feasibility"] .pill-dot,
+    .plant-pill[data-status="under_construction"] .pill-dot,
+    .plant-pill[data-status="private_industrial"] .pill-dot { background: var(--c-not-operational); }
     .plant-pill[aria-pressed="true"] .pill-dot { background: var(--n-00); }
+    .plant-pill[aria-pressed="true"][data-water-type="brackish"] .pill-dot {
+      background: transparent;
+      border-bottom-color: var(--n-00);
+    }
 
     /* Plant profile */
     .plant-profile {
@@ -537,10 +586,12 @@
     }
     .badge--operational { color: var(--c-primary); }
     .badge--operational::before { background: var(--c-primary); }
-    .badge--expansion,
-    .badge--planned { color: var(--c-planned); }
-    .badge--expansion::before,
-    .badge--planned::before { background: var(--c-planned); }
+    .badge--expansion { color: var(--c-planned); }
+    .badge--expansion::before { background: var(--c-planned); }
+    .badge--planned,
+    .badge--not-operational { color: var(--c-not-operational); }
+    .badge--planned::before,
+    .badge--not-operational::before { background: var(--c-not-operational); }
     .badge--draft { color: var(--c-ochre); }
     .badge--draft::before { background: var(--c-ochre); }
     .badge--confidence { color: var(--n-600); }
@@ -673,19 +724,18 @@
     @media (max-width: 1100px) {
       .desal-stage { grid-template-columns: 1fr; gap: 40px; }
       .map-card { position: static; }
-      .kpi-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .kpi-cell { border-right: 0; }
-      .kpi-cell:nth-child(odd) { border-right: 1px solid var(--rule); }
-      .kpi-cell:nth-child(3), .kpi-cell:nth-child(4) { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--rule); }
+      .intro-kpi-row { grid-template-columns: 1fr; gap: 28px; }
+      .page-subtitle { max-width: 760px; }
+      .kpi-strip { max-width: 560px; }
     }
 
     @media (max-width: 720px) {
       .page-title { font-size: 30px; }
       .page-wrap { padding: 32px 0 0; }
       .field-grid { grid-template-columns: 1fr; gap: 18px; }
-      .kpi-strip { grid-template-columns: 1fr; }
-      .kpi-cell { border-right: 0 !important; padding: 20px 0 !important; border-top: 1px solid var(--rule); margin: 0 !important; }
-      .kpi-cell:first-child { border-top: 0; }
+      .intro-kpi-row { gap: 24px; }
+      .kpi-cell { padding: 14px 15px; }
+      .kpi-value { font-size: 24px; }
       .map-canvas-wrap { min-height: 360px; }
     }
 
@@ -713,41 +763,41 @@
   <main class="page-wrap">
     <div class="container desal-page">
       <header class="desal-header">
-        <p class="eyebrow"><span class="dot" aria-hidden="true"></span>Data current as of November 2025</p>
-        <h1 class="page-title">Tunisia Desalination Explorer</h1>
-        <p class="page-subtitle">
-          Tunisia's water security is being reshaped by energy-intensive coastal desalination. This explorer
-          maps operational and announced plants so capacity, served regions, and the energy and brine
-          implications can be read together. Unknowns are marked rather than guessed.
-        </p>
+        <div class="intro-kpi-row">
+          <div class="intro-copy">
+            <p class="eyebrow"><span class="dot" aria-hidden="true"></span>Data current as of May 2026</p>
+            <h1 class="page-title">Tunisia Desalination Explorer</h1>
+            <p class="page-subtitle">
+              Tunisia's water security is being reshaped by energy-intensive coastal desalination. This explorer
+              maps operational and announced plants so capacity, served regions, and the energy and brine
+              implications can be read together. Unknowns are marked rather than guessed.
+            </p>
+          </div>
+
+          <section class="kpi-strip" aria-label="Aggregate desalination statistics">
+            <div class="kpi-cell">
+              <p class="kpi-label">Operational capacity</p>
+              <div class="kpi-value" id="statOperational"></div>
+              <span class="kpi-unit">m³ per day, design</span>
+            </div>
+            <div class="kpi-cell">
+              <p class="kpi-label">Planned / additional</p>
+              <div class="kpi-value" id="statPlanned"></div>
+              <span class="kpi-unit">m³ per day, announced</span>
+            </div>
+            <div class="kpi-cell">
+              <p class="kpi-label">Mapped plants</p>
+              <div class="kpi-value" id="statCount"></div>
+              <span class="kpi-unit">in this draft</span>
+            </div>
+            <div class="kpi-cell">
+              <p class="kpi-label">Energy demand</p>
+              <div class="kpi-value">X GW</div>
+              <span class="kpi-unit">estimated grid draw, all plants</span>
+            </div>
+          </section>
+        </div>
       </header>
-
-      <hr class="rule rule--major" />
-
-      <section class="kpi-strip" aria-label="Aggregate desalination statistics">
-        <div class="kpi-cell">
-          <p class="kpi-label">Operational capacity</p>
-          <div class="kpi-value" id="statOperational">—</div>
-          <span class="kpi-unit">m³ per day, design</span>
-        </div>
-        <div class="kpi-cell">
-          <p class="kpi-label">Planned / additional</p>
-          <div class="kpi-value" id="statPlanned">—</div>
-          <span class="kpi-unit">m³ per day, announced</span>
-        </div>
-        <div class="kpi-cell">
-          <p class="kpi-label">Mapped plants</p>
-          <div class="kpi-value" id="statCount">—</div>
-          <span class="kpi-unit">in this draft</span>
-        </div>
-        <div class="kpi-cell">
-          <p class="kpi-label">Brine estimate</p>
-          <div class="kpi-value is-muted" id="statBrine">Not yet calculated</div>
-          <span class="kpi-unit">to be added per plant</span>
-        </div>
-      </section>
-
-      <hr class="rule rule--major" />
 
       <section class="desal-stage" aria-label="Desalination explorer">
         <div class="map-card">
@@ -774,12 +824,13 @@
             <div class="map-tooltip" id="mapTooltip" role="tooltip" aria-hidden="true"></div>
           </div>
           <div class="map-legend" aria-label="Map legend">
-            <span class="map-legend-item"><span class="legend-dot"></span>Operational</span>
-            <span class="map-legend-item"><span class="legend-dot legend-dot--planned"></span>Planned / expansion</span>
+            <span class="map-legend-item"><span class="legend-dot"></span>Operational seawater</span>
+            <span class="map-legend-item"><span class="legend-dot legend-dot--brackish"></span>Operational brackish</span>
+            <span class="map-legend-item"><span class="legend-dot legend-dot--planned"></span>Not yet operational</span>
             <span class="map-legend-item"><span class="legend-dot--sized"></span>Size ∝ design capacity</span>
             <span class="map-legend-item"><span class="legend-swatch"></span>Served governorate</span>
           </div>
-          <p class="map-attribution">Boundaries: Natural Earth 10m (public domain) · Plants: WEG, MIME, ONAS · Projection: Lambert Conformal Conic, parallels 32°N / 36°N</p>
+          <p class="map-attribution">Boundaries: Natural Earth 10m (public domain) · Plants: SONEDE, KfW, JICA, WABAG, Tedagua, Lantania, TAP · Projection: Lambert Conformal Conic, parallels 32°N / 36°N</p>
         </div>
 
         <div class="desal-right">
@@ -843,7 +894,7 @@
           plant-level counts.</p>
 
           <h3>Data vintage</h3>
-          <p>Source documents are dated where available. The dataset itself is current as of November 2025;
+          <p>Source documents are dated where available. The dataset itself is current as of May 2026;
           subsequent announcements are not yet incorporated.</p>
         </div>
       </details>
@@ -861,10 +912,10 @@
         operational: 'badge--operational',
         operational_renewable_integrated: 'badge--operational',
         expansion: 'badge--expansion',
-        planned: 'badge--planned',
-        feasibility: 'badge--planned',
-        under_construction: 'badge--planned',
-        private_industrial: 'badge--planned'
+        planned: 'badge--not-operational',
+        feasibility: 'badge--not-operational',
+        under_construction: 'badge--not-operational',
+        private_industrial: 'badge--not-operational'
       };
 
       const OPERATIONAL_STATUSES = new Set([
@@ -875,6 +926,9 @@
 
       const state = {
         plants: [],
+        brackishClusters: [],
+        brackishClusterByPlant: new Map(),
+        expandedBrackishGovs: new Set(),
         sources: {},
         geo: null,
         selectedId: null,
@@ -933,13 +987,106 @@
         return OPERATIONAL_STATUSES.has(plant.statusCategory);
       }
 
+      function isBrackishKind(plant) {
+        return plant.waterType === 'brackish' || /brackish/i.test(plant.technology || '');
+      }
+
+      function markerClass(plant) {
+        if (!isOperationalKind(plant)) return 'plant-marker--not-operational';
+        if (isBrackishKind(plant)) return 'plant-marker--brackish';
+        return 'plant-marker--operational';
+      }
+
+      function markerSymbolType(plant) {
+        if (!isOperationalKind(plant)) return d3.symbolCircle;
+        if (isBrackishKind(plant)) return d3.symbolTriangle;
+        return d3.symbolCircle;
+      }
+
+      function markerSymbolPath(plant, scale, multiplier) {
+        const radius = markerRadius(plant, scale) * (multiplier || 1);
+        return d3.symbol()
+          .type(markerSymbolType(plant))
+          .size(Math.PI * radius * radius)();
+      }
+
+      function markerRingColor(plant) {
+        if (!isOperationalKind(plant)) return 'var(--c-not-operational)';
+        if (isBrackishKind(plant)) return 'var(--c-brackish)';
+        return 'var(--c-primary)';
+      }
+
       function markerRadius(plant, scale) {
         // sqrt scale on design capacity. Range tuned for 360–900px map widths.
         const cap = plant.capacityDesignM3Day || plant.capacityPlannedM3Day || 0;
-        if (!state.maxCapacity || !cap) return 4;
+        if (!state.maxCapacity || !cap) return plant.isCluster ? 11 : 4;
         const t = Math.sqrt(cap / state.maxCapacity);
         const minR = 4.5, maxR = scale && scale > 600 ? 13 : 11;
-        return minR + t * (maxR - minR);
+        const radius = minR + t * (maxR - minR);
+        return plant.isCluster ? Math.max(radius, 11) : radius;
+      }
+
+      function brackishClusterKeyForPlant(plant) {
+        return state.brackishClusterByPlant.get(plant.id) || null;
+      }
+
+      function isPlantHiddenByCluster(plant) {
+        const key = brackishClusterKeyForPlant(plant);
+        return key ? !state.expandedBrackishGovs.has(key) : false;
+      }
+
+      function isClusterVisible(cluster) {
+        return !state.expandedBrackishGovs.has(cluster.clusterKey);
+      }
+
+      function buildBrackishClusters() {
+        const byGov = new Map();
+        state.plants.forEach(plant => {
+          (plant.servedGovernorates || []).forEach(gov => {
+            const key = normName(gov);
+            if (!key) return;
+            if (!byGov.has(key)) byGov.set(key, { key, name: gov, plants: [] });
+            byGov.get(key).plants.push(plant);
+          });
+        });
+
+        state.brackishClusters = [];
+        state.brackishClusterByPlant = new Map();
+
+        byGov.forEach(group => {
+          const plants = group.plants;
+          const isBrackishOnly = plants.length > 1 && plants.every(p => isOperationalKind(p) && isBrackishKind(p));
+          if (!isBrackishOnly) return;
+
+          const capacity = plants.reduce((sum, p) => sum + (p.capacityDesignM3Day || 0), 0) || null;
+          const sourceKeys = Array.from(new Set(plants.flatMap(p => p.sourceKeys || [])));
+          const localities = Array.from(new Set(plants.flatMap(p => p.servedLocalities || [])));
+          const latitude = plants.reduce((sum, p) => sum + p.latitude, 0) / plants.length;
+          const longitude = plants.reduce((sum, p) => sum + p.longitude, 0) / plants.length;
+
+          const cluster = {
+            id: `brackish-cluster-${group.key}`,
+            isCluster: true,
+            clusterKey: group.key,
+            plantIds: plants.map(p => p.id),
+            name: `${group.name} brackish desalination stations`,
+            status: `${plants.length} operational brackish facilities`,
+            statusCategory: 'operational',
+            waterType: 'brackish',
+            technology: 'Brackish water reverse osmosis',
+            latitude,
+            longitude,
+            capacityDesignM3Day: capacity,
+            capacityPlannedM3Day: null,
+            servedGovernorates: [group.name],
+            servedLocalities: localities,
+            sourceKeys,
+            confidence: plants.some(p => p.confidence === 'low') ? 'low' : 'medium'
+          };
+
+          state.brackishClusters.push(cluster);
+          plants.forEach(plant => state.brackishClusterByPlant.set(plant.id, group.key));
+        });
       }
 
       /* ---------- Plant profile rendering ---------- */
@@ -1106,14 +1253,44 @@
 
       /* ---------- Aggregate KPIs ---------- */
 
+      function animateKpiValues() {
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        document.querySelectorAll('.kpi-value').forEach(value => {
+          const fullText = value.textContent;
+          if (reduceMotion || fullText.length <= 1) {
+            value.textContent = fullText;
+            return;
+          }
+          const duration = 300;
+          const fixedChars = 1;
+          const startedAt = performance.now();
+          value.textContent = fullText.slice(0, fixedChars);
+
+          function tick(now) {
+            const progress = Math.min((now - startedAt) / duration, 1);
+            const visibleChars = Math.max(
+              fixedChars,
+              Math.ceil(fixedChars + progress * (fullText.length - fixedChars))
+            );
+            value.textContent = fullText.slice(0, visibleChars);
+            if (progress < 1) requestAnimationFrame(tick);
+          }
+
+          requestAnimationFrame(tick);
+        });
+      }
+
       function renderStats() {
         let opCapacity = 0;
         let plannedCapacity = 0;
         state.plants.forEach(p => {
-          if (p.capacityDesignM3Day) opCapacity += p.capacityDesignM3Day;
-          if (p.capacityPlannedM3Day) {
-            const additional = Math.max(p.capacityPlannedM3Day - (p.capacityDesignM3Day || 0), 0);
-            plannedCapacity += additional;
+          const design = p.capacityDesignM3Day || 0;
+          const planned = p.capacityPlannedM3Day || 0;
+          if (isOperationalKind(p)) {
+            opCapacity += design;
+            if (planned) plannedCapacity += Math.max(planned - design, 0);
+          } else {
+            plannedCapacity += planned || design;
           }
         });
         els.statOperational.textContent = opCapacity ? fmtNumber(opCapacity) : '—';
@@ -1121,6 +1298,7 @@
         els.statCount.textContent = String(state.plants.length);
         state.maxCapacity = state.plants.reduce((m, p) =>
           Math.max(m, p.capacityDesignM3Day || 0, p.capacityPlannedM3Day || 0), 0);
+        animateKpiValues();
       }
 
       /* ---------- Selector pills ---------- */
@@ -1133,6 +1311,7 @@
           btn.className = 'plant-pill';
           btn.dataset.plantId = plant.id;
           btn.dataset.status = plant.statusCategory || 'operational';
+          btn.dataset.waterType = plant.waterType || '';
           btn.setAttribute('aria-pressed', 'false');
           const shortName = plant.name.replace(/Desalination Plant/i, '').replace(/Plant$/i, '').trim();
           btn.innerHTML = `<span class="pill-dot" aria-hidden="true"></span><span>${shortName}</span>`;
@@ -1152,11 +1331,19 @@
         const plant = state.plants.find(p => p.id === id);
         if (!plant) return;
         state.selectedId = id;
+        const clusterKey = brackishClusterKeyForPlant(plant);
+        if (clusterKey) state.expandedBrackishGovs.add(clusterKey);
         if (window.location.hash !== '#' + id) {
           history.replaceState(null, '', '#' + id);
         }
         renderProfile(plant);
         syncSelectorState();
+        updateMapSelection();
+      }
+
+      function expandBrackishCluster(cluster) {
+        state.expandedBrackishGovs.add(cluster.clusterKey);
+        hideTooltip();
         updateMapSelection();
       }
 
@@ -1184,10 +1371,13 @@
 
         const w = els.mapWrap.clientWidth;
         d3.select('#tunisiaMap').selectAll('.plant-marker')
-          .attr('r', d => markerRadius(d, w) * (d.id === state.selectedId ? 1.15 : 1))
+          .classed('is-hidden', d => d.isCluster ? !isClusterVisible(d) : isPlantHiddenByCluster(d))
+          .attr('d', d => markerSymbolPath(d, w, d.id === state.selectedId ? 1.15 : 1))
           .attr('stroke-width', d => d.id === state.selectedId ? 2 : 1.5);
         d3.select('#tunisiaMap').selectAll('.plant-marker-ring')
+          .classed('is-hidden', d => isPlantHiddenByCluster(d))
           .classed('is-selected', d => d.id === state.selectedId)
+          .attr('stroke', d => markerRingColor(d))
           .attr('r', d => d.id === state.selectedId ? markerRadius(d, w) + 6 : 0);
       }
 
@@ -1292,16 +1482,19 @@
           .attr('class', 'plant-marker-ring')
           .attr('cx', d => projection([d.longitude, d.latitude])[0])
           .attr('cy', d => projection([d.longitude, d.latitude])[1])
+          .attr('stroke', d => markerRingColor(d))
           .attr('r', 0);
 
-        plantLayer.selectAll('circle.plant-marker')
+        plantLayer.selectAll('path.plant-marker')
           .data(state.plants)
           .enter()
-          .append('circle')
-          .attr('class', d => 'plant-marker ' + (isOperationalKind(d) ? 'plant-marker--operational' : 'plant-marker--planned'))
-          .attr('cx', d => projection([d.longitude, d.latitude])[0])
-          .attr('cy', d => projection([d.longitude, d.latitude])[1])
-          .attr('r', d => markerRadius(d, width))
+          .append('path')
+          .attr('class', d => 'plant-marker ' + markerClass(d))
+          .attr('transform', d => {
+            const point = projection([d.longitude, d.latitude]);
+            return `translate(${point[0]},${point[1]})`;
+          })
+          .attr('d', d => markerSymbolPath(d, width))
           .attr('tabindex', 0)
           .attr('role', 'button')
           .attr('aria-label', d => `${d.name} (${d.status || d.statusCategory || ''})`)
@@ -1318,6 +1511,35 @@
             if (event.key === 'Enter' || event.key === ' ') {
               event.preventDefault();
               selectPlant(d.id, { fromMap: true });
+            }
+          });
+
+        plantLayer.selectAll('path.brackish-cluster-marker')
+          .data(state.brackishClusters)
+          .enter()
+          .append('path')
+          .attr('class', 'plant-marker brackish-cluster-marker plant-marker--brackish')
+          .attr('transform', d => {
+            const point = projection([d.longitude, d.latitude]);
+            return `translate(${point[0]},${point[1]})`;
+          })
+          .attr('d', d => markerSymbolPath(d, width))
+          .attr('tabindex', 0)
+          .attr('role', 'button')
+          .attr('aria-label', d => `Show ${d.name}`)
+          .on('click', (event, d) => expandBrackishCluster(d))
+          .on('mouseenter', (event, d) => showTooltip(d, event))
+          .on('mousemove', (event, d) => showTooltip(d, event))
+          .on('mouseleave', hideTooltip)
+          .on('focus', function (event, d) {
+            const bbox = this.getBoundingClientRect();
+            showTooltip(d, { clientX: bbox.left + bbox.width/2, clientY: bbox.top + bbox.height/2 });
+          })
+          .on('blur', hideTooltip)
+          .on('keydown', (event, d) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              expandBrackishCluster(d);
             }
           });
 
@@ -1346,6 +1568,7 @@
             loadJSON(SOURCES_PATH).catch(() => ({}))
           ]);
           state.plants = plants;
+          buildBrackishClusters();
           state.geo = geo;
           state.sources = sources || {};
 

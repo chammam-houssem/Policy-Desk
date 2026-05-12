@@ -1,10 +1,58 @@
 {
+  "overview_md": {
+    "label": "Tunisia Desalination Projects Overview (2026)",
+    "note": "User-provided overview document used to extract station names, capacities, statuses, regional roles, and cited source mapping."
+  },
+  "kfw_djerba_stories": {
+    "label": "KfW Stories – Djerba seawater desalination",
+    "note": "Overview citation reports Djerba SWRO commissioning, capacity, intake infrastructure, energy consumption, and recovery ratio."
+  },
+  "rosalux_desalination_2025": {
+    "label": "Rosa Luxemburg Stiftung – Desalination Projects in Tunisia",
+    "note": "Overview citation used for Djerba brine, desalination cost, and wider energy-water nexus context."
+  },
   "weg_djerba_2020": {
     "label": "WEG Djerba (2020)",
     "note": "Source indicates the Djerba SWRO plant has 50,000 m3/day capacity, expandable to 75,000 m3/day."
   },
+  "wabag_zarat": {
+    "label": "WABAG – Zarat SWRO project",
+    "note": "Overview citation identifies Zarat as a seawater reverse osmosis plant with 50,000 m3/day capacity and offshore intake and outfall works."
+  },
   "world_bank_2026_zarat": {
     "label": "World Bank (2026) – Zarat",
     "note": "Source indicates the Zarat expansion would increase capacity from 50,000 to 100,000 m3/day, serving Gabès, Médenine, and Tataouine."
+  },
+  "sonede_brackish_2021": {
+    "label": "SONEDE / UN – Desalination in Tunisia, Solar Energy Bengardane Plant (2021)",
+    "note": "Overview citation provides the main brackish station table, including Kerkennah, Gabès, Djerba BWD, Zarzis, Ben Guerdane, Tozeur, Nafta, Kébili, Douz, Souk Lahad, and Matmata."
+  },
+  "jica_sfax_preparatory_2015": {
+    "label": "JICA Preparatory Survey – Sfax SWRO",
+    "note": "Overview citation used for context on southern brackish systems and water quality constraints."
+  },
+  "jica_sfax_evaluation_2017": {
+    "label": "JICA Ex-Ante Evaluation – Sfax Sea Water Desalination Project",
+    "note": "Overview citation provides Sfax project rationale, initial and planned capacity, location, and Japanese ODA financing context."
+  },
+  "tedagua_sfax": {
+    "label": "Tedagua – Sfax desalination plant",
+    "note": "Overview citation used for Sfax EPC/O&M consortium, infrastructure scope, and project implementation details."
+  },
+  "libyaherald_sousse_veolia": {
+    "label": "Libya Herald – Veolia-Sidem Sousse rehabilitation report",
+    "note": "Overview citation notes rehabilitation and technical support work connected to Sousse readiness."
+  },
+  "tap_2026_2030_strategy": {
+    "label": "TAP – Tunisia 2026-2030 economic and water infrastructure strategy",
+    "note": "Overview citation identifies Mahdia and Mahres 2 as future industrial-zone and supporting water infrastructure sites."
+  },
+  "lantania_hicha_project": {
+    "label": "Lantania – Hicha SWRO desalination plant",
+    "note": "Overview citation identifies the private Hicha seawater reverse osmosis project capacity and agricultural purpose."
+  },
+  "lantania_agro_care": {
+    "label": "Lantania – Agro Care Tunisia desalination announcement",
+    "note": "Overview citation links Hicha to Agro Care greenhouse irrigation and private agricultural investment."
   }
 }
